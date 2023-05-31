@@ -1,3 +1,16 @@
+body{
+    margin: 0;
+}
+
+#root{
+    height:100vh;
+}
+
+a{
+    text-decoration: none;
+    color:black;
+}
+
 .nav {
     display: flex;
     flex-direction: row;
