@@ -10,49 +10,9 @@ import TableRow from '@mui/material/TableRow';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-const columns = [
-  { id: 'editar', label: '', align: 'center', minWidth: 20 },
-  { id: 'nome', label: 'Nome', align: 'center', minWidth: 150 },
-  {
-    id: 'rfid',
-    label: 'RFID',
-    minWidth: 150,
-    align: 'center',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'deletar',
-    label: '',
-    minWidth: 20,
-    align: 'center',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-];
-
-function createData(editar, nome, rfid, deletar) {
-  return { editar, nome, rfid, deletar};
-}
-
-const rows = [
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-  createData(<EditIcon />, 'Marcelo Maia', "13b957gj", <DeleteOutlineIcon />),
-];
-
-export default function TabelaColaboradores() {
+export default function TabelaColaboradores(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -65,7 +25,7 @@ export default function TabelaColaboradores() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {props.columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -77,12 +37,12 @@ export default function TabelaColaboradores() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {props.rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
+                    {props.columns.map((column) => {
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
@@ -98,15 +58,6 @@ export default function TabelaColaboradores() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Paper>
   );
 }
