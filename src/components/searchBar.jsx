@@ -14,6 +14,7 @@ export default function SearchBar(props) {
       <TextField
         id="input-with-icon-textfield"
         label=""
+        placeholder="Pesquisar colaborador"
         onChange={handleChange}
         InputProps={{
           startAdornment: (
