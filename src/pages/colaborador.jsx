@@ -5,7 +5,7 @@ const Colaborador = () => {
   let params = useParams();
   return (
     <div>
-      Eu sou o colaborador {params.colaboradorId}
+      Olá. Meu id é {params.colaboradorId}
     </div>
   )
 }
