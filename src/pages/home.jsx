@@ -7,7 +7,6 @@ import MiniDrawer from '../components/sidebar.jsx'
 const Home = () => {
   return (
     <div>
-      <MiniDrawer/>
       <MapaFabrica />
       <TableMain />
 

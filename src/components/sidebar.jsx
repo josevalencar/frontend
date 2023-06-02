@@ -1,6 +1,7 @@
 import React from 'react'
 import logo from '../images/logoPirelli.png'
 import { styled, useTheme } from '@mui/material/styles';
+import { Route, Routes } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -26,6 +27,8 @@ import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
 
 const drawerWidth = 240;
+const path = ["/tablets","/colaboradores","/setores","/roteadores"];
+const teste = ''
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -128,7 +131,7 @@ export default function MiniDrawer() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton  edge="start">
+          <IconButton  edge="start" component={Link} to="/">
               <img src={logo} alt="Logo" height={30} />
           </IconButton>
           <IconButton onClick={handleDrawerClose}>
@@ -140,6 +143,7 @@ export default function MiniDrawer() {
           {['Tablets', 'Colaboradores', 'Setores', 'Roteadores'].map((text,index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
+                component={Link} to={teste}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
@@ -153,10 +157,10 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 > 
-                  {index == 0 ? <IconButton component={Link} to="/colaboradores"> <TabletMacIcon sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index == 1 ? <GroupIcon sx={{ color: '#000000' }} /> : null }
-                  {index == 2 ? <FactoryIcon sx={{ color: '#000000' }} /> : null }
-                  {index == 3 ? <RouterIcon  sx={{ color: '#000000' }} /> : null }
+                  {index === 0 ? <IconButton component={Link} to={path[0]} ><TabletMacIcon sx={{ color: '#000000' }} /></IconButton> : null }
+                  {index === 1 ? <IconButton component={Link} to={path[1]}><GroupIcon sx={{ color: '#000000' }} /></IconButton> : null }
+                  {index === 2 ? <IconButton component={Link} to={path[2]}><FactoryIcon  sx={{ color: '#000000' }} /></IconButton> : null }
+                  {index === 3 ? <IconButton component={Link} to={path[3]} ><RouterIcon  sx={{ color: '#000000' }} /></IconButton> : null }
 
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -169,7 +173,6 @@ export default function MiniDrawer() {
             bottom: 0,
             width: drawerWidth,
             padding: '16px',
-            // justifyContent: open ? 'initial' : 'cennter',
             display: open ? 'flex' : 'none',
             justifyContent: open ? 'initial' : 'space-between',
           }} 
@@ -177,7 +180,7 @@ export default function MiniDrawer() {
               <IconButton  edge="start" sx={{ marginRight: 'auto'}}>
                 <SettingsSharpIcon sx={{ color: '#000000' }} />
               </IconButton>
-              <IconButton  edge="end" sx={{ marginLeft: 'auto'}} >
+              <IconButton component={Link} to='notificacoes'  edge="end" sx={{ marginLeft: 'auto'}} >
                 <NotificationsSharpIcon sx={{ color: '#000000' }} />
               </IconButton>
         </Box>
