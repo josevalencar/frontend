@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import TabelaColaboradores from '../components/tabelaColaboradores'
 import SearchBar from '../components/searchBar'
