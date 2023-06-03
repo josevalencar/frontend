@@ -25,10 +25,14 @@ import FactoryIcon from '@mui/icons-material/Factory';
 import RouterIcon from '@mui/icons-material/Router';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
+import { colors } from '@mui/joy';
+import {Switch, useLocation } from 'react-router-dom';
+
 
 const drawerWidth = 240;
 const path = ["/tablets","/colaboradores","/setores","/roteadores"];
-const teste = ''
+var rota = ''
+
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -100,7 +104,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
+  var page = useLocation();
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -108,6 +113,7 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -131,19 +137,25 @@ export default function MiniDrawer() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton  edge="start" component={Link} to="/">
+          <IconButton IconButton onClick={handleDrawerClose} edge="start" component={Link} to="/">
               <img src={logo} alt="Logo" height={30} />
           </IconButton>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} sx={{ color: '#000000' }}>
             {theme.direction === 'rtl' ? <ChevronRightIcon sx={{ color: '#000000' }} /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
           {['Tablets', 'Colaboradores', 'Setores', 'Roteadores'].map((text,index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <ListItem key={text} disablePadding sx={{ display: 'block'  }}>
               <ListItemButton
-                component={Link} to={teste}
+                {...index === 0 ? rota = path[0]: null}
+                {...index === 1 ? rota = path[1]: null}
+                {...index === 2 ? rota = path[2]: null}
+                {...index === 3 ? rota = path[3]: null}
+                component={Link}
+                to={rota}
+                IconButton onClick={handleDrawerClose}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
@@ -157,10 +169,10 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 > 
-                  {index === 0 ? <IconButton component={Link} to={path[0]} ><TabletMacIcon sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index === 1 ? <IconButton component={Link} to={path[1]}><GroupIcon sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index === 2 ? <IconButton component={Link} to={path[2]}><FactoryIcon  sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index === 3 ? <IconButton component={Link} to={path[3]} ><RouterIcon  sx={{ color: '#000000' }} /></IconButton> : null }
+                  {index === 0 ? <IconButton ><TabletMacIcon sx={{ color: page === path[0] ? '#42e6f5': '#000000'  }} /></IconButton> : null }
+                  {index === 1 ? <IconButton><GroupIcon sx={{ color: '#000000' }} /></IconButton> : null }
+                  {index === 2 ? <IconButton><FactoryIcon  sx={{ color: '#000000' }} /></IconButton> : null }
+                  {index === 3 ? <IconButton ><RouterIcon  sx={{ color: '#000000' }} /></IconButton> : null }
 
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -180,7 +192,7 @@ export default function MiniDrawer() {
               <IconButton  edge="start" sx={{ marginRight: 'auto'}}>
                 <SettingsSharpIcon sx={{ color: '#000000' }} />
               </IconButton>
-              <IconButton component={Link} to='notificacoes'  edge="end" sx={{ marginLeft: 'auto'}} >
+              <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes'  edge="end" sx={{ marginLeft: 'auto'}} >
                 <NotificationsSharpIcon sx={{ color: '#000000' }} />
               </IconButton>
         </Box>

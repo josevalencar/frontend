@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import TabelaColaboradores from '../components/tabelaColaboradores'
 import SearchBar from '../components/searchBar'
 import EditIcon from '@mui/icons-material/Edit';
+import Typography from '@mui/joy/Typography';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import removerAcentos from '../helpers/removerAcentos'
 
@@ -95,7 +96,9 @@ const Colaboradores = () => {
     <>
       <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"100%"}}>
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
-          <h1>Colaboradores</h1>
+          <Typography level="display2"  sx={{ mb: 2 }}>
+            Colaboradores
+          </Typography>
           <SearchBar updateFilter={updateFilter} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>

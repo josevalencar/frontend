@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-
+import Typography from '@mui/joy/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
@@ -93,13 +93,11 @@ const Notifications = () => {
 
     return (
         <>
-            <div className="selectDiv" style={{ paddingLeft: 100, paddingRight: 30 }}>
-                <div style={{}}>
-                    <h1>
-                        Notificações
-                    </h1>
-                </div>
-                <div style={{ height: 70, width: '15%' }}>
+            <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+                <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
+                    Notificações
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
                     <button>Export to Excel</button>
 
                     <Box sx={{ minWidth: 120, m: 1.5 }}>
@@ -119,11 +117,12 @@ const Notifications = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                </div>
-                <div style={{ height: 300, width: '100%' }}>
+                </Box>
+                <div style={{ height: 300, width: 1200 }}>
                     <DataGrid rows={rows} columns={columns} disableColumnMenu />
                 </div>
             </div>
+
         </>
 
     );
