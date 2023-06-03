@@ -93,26 +93,36 @@ const Notifications = () => {
 
     return (
         <>
-            <div style={{ height: 70, width: '15%' }}>
-                <Box sx={{ minWidth: 120, m: 1.5 }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Filtro</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={age}
-                            label="Tipo"
-                            onChange={handleChange}
-                        >
-                            <MenuItem value={10}>Todos</MenuItem>
-                            <MenuItem value={10}>Pendente</MenuItem>
-                            <MenuItem value={20}>Info</MenuItem>
-                            <MenuItem value={30}>Feito</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>        </div>
-            <div style={{ height: 500, width: '100%' }}>
-                <DataGrid rows={rows} columns={columns} disableColumnMenu />
+            <div className="selectDiv" style={{ paddingLeft: 100, paddingRight: 30 }}>
+                <div style={{}}>
+                    <h1>
+                        Notificações
+                    </h1>
+                </div>
+                <div style={{ height: 70, width: '15%' }}>
+                    <button>Export to Excel</button>
+
+                    <Box sx={{ minWidth: 120, m: 1.5 }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Filtro</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={age}
+                                label="Tipo"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value={10}>Todos</MenuItem>
+                                <MenuItem value={10}>Pendente</MenuItem>
+                                <MenuItem value={20}>Info</MenuItem>
+                                <MenuItem value={30}>Feito</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </div>
+                <div style={{ height: 300, width: '100%' }}>
+                    <DataGrid rows={rows} columns={columns} disableColumnMenu />
+                </div>
             </div>
         </>
 
