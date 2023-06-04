@@ -95,9 +95,7 @@ const Colaboradores = () => {
     <>
       <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
-          <Typography level="display2"  sx={{ mb: 2 }}>
-            Colaboradores
-          </Typography>
+          <h1>Colaboradores</h1>
           <SearchBar updateFilter={updateFilter} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>
