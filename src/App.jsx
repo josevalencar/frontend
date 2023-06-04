@@ -8,7 +8,9 @@ function App() {
   return (
     <>
       <MiniDrawer />
-      <Router />
+      <div style={{width: "95%", float: "right"}}>
+        <Router />
+      </div>
     </>
   );
 }
