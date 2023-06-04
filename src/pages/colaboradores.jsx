@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import TabelaColaboradores from '../components/tabelaColaboradores'
 import SearchBar from '../components/searchBar'
@@ -94,7 +93,7 @@ const Colaboradores = () => {
 
   return (
     <>
-      <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"100%"}}>
+      <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
           <Typography level="display2"  sx={{ mb: 2 }}>
             Colaboradores
