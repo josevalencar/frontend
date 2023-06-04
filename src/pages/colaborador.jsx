@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from "react-router-dom"
 
 import TabelaColaborador from "../components/tabelaColaborador"
+import SelectInterval from "../components/selectInterval"
 
 const Colaborador = () => {
   let params = useParams();
@@ -44,9 +45,12 @@ const Colaborador = () => {
     <>
     <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
       <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
-        <h1 style={{marginTop:"0"}} >{colaborador.name}</h1>
-        <h2 style={{margin:"0"}} >{colaborador.rfid}</h2>
-        <TabelaColaborador rows={initialRows} columns={columns} />
+        <h1 style={{marginTop:"0", marginBottom: "0"}} >{colaborador.name}</h1>
+        <h2 style={{marginTop:"0.5%"}} >{colaborador.rfid}</h2>
+        <div style={{position:"relative", float:"left", marginBottom:"1%"}}>
+          <SelectInterval valores={[5, 10, 15, 30, 45, 60]} style={{}}></SelectInterval>
+        </div>
+        <TabelaColaborador rows={initialRows} columns={columns}/>
       </div>
     </div>
   </>
