@@ -48,6 +48,7 @@ export default function TableMain() {
                     stickyHeader
                     stripe="odd"
                     hoverRow
+                    
                 >
                     <thead>
                     <tr>

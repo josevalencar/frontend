@@ -4,7 +4,7 @@ import Mapa from '../images/Mapa.png'
 const MapaFabrica = () => {
   return (
     <div>
-        <Typography variant="h2" component="h2" align='center' paddingTop='4vh'>
+        <Typography variant="h1" component="h1" align='center' paddingTop='4vh'>
             Mapa da Fábrica
         </Typography>
         <Box
