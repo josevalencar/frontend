@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableRow, Button } from '@mui/material';
+import { Link } from 'react-router-dom'
 import React from 'react';
 import Typography from '@mui/joy/Typography';
 import TableHead from '@mui/material/TableHead';
@@ -62,9 +63,9 @@ const TableTablet = () => {
                   <TableCell>{tablet.Colaborador}</TableCell>
                   <TableCell>{tablet.Localizacao}</TableCell>
                   <TableCell>
-                    <Button variant="contained" color="primary">
+                    <Link to="/tablets/1"><Button variant="contained" color="primary">
                       Histórico
-                    </Button>
+                    </Button></Link>
                   </TableCell>
                 </TableRow>
               ))}

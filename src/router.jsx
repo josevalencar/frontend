@@ -8,6 +8,7 @@ import Roteadores from './pages/roteadores'
 import Tablets from "./pages/tablets"
 import Tablet from './pages/tablet'
 import Historico from './pages/historico'
+import PaginaNaoEncontrada from './pages/paginaNaoEncontrada'
 import React from 'react'
 
 const Router = () => {
@@ -25,6 +26,7 @@ const Router = () => {
       </Route>
       <Route path="setores" element={<Setores />} />
       <Route path="roteadores" element={<Roteadores />} />
+      <Route path="*" element={<PaginaNaoEncontrada />} />
     </Routes>
   )
 }
