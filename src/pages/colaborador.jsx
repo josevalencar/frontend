@@ -6,7 +6,7 @@ import SelectInterval from "../components/selectInterval"
 
 const Colaborador = () => {
   let params = useParams();
-  let baseUrl = "https://2d1oh9-3000.csb.app/v1/mainteiners/";
+  let baseUrl = "https://2d1oh9-3000.csb.app/v1/maintainers/";
 
   const [colaborador, atualizaColaborador] = useState('');
 

@@ -26,7 +26,7 @@ const Colaboradores = () => {
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
 
   useEffect(() => {
-    fetch("https://2d1oh9-3000.csb.app/v1/mainteiners")
+    fetch("https://2d1oh9-3000.csb.app/v1/maintainers")
       .then((response) => response.json())
       .then(data => updateRows(data))
       .catch((err) => {
