@@ -6,7 +6,8 @@ import SelectInterval from "../components/selectInterval"
 
 const Colaborador = () => {
   let params = useParams();
-  let baseUrl = "https://2d1oh9-3000.csb.app/v1/maintainers/";
+  let maintainerUrl = "https://2d1oh9-3000.csb.app/v1/maintainers/";
+  let historicUrl = "https://2d1oh9-3000.csb.app/v1/historics?maintainer=";
 
   const [rows, updateRows] = useState(
     [
@@ -31,9 +32,10 @@ const Colaborador = () => {
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [colaborador, atualizaColaborador] = useState('');
   const [filter, updateFilter] = useState(1);
+  const [historic, updateHistoric] = useState([]);
 
   useEffect(() => {
-    fetch(baseUrl + params.colaboradorId)
+    fetch(maintainerUrl + params.colaboradorId)
     .then((response) => response.json())
     .then((data) => {
       atualizaColaborador(data)
@@ -41,9 +43,19 @@ const Colaborador = () => {
     .catch((err) => {
       console.log(err.message)
     })
+
+    fetch(historicUrl + params.colaboradorId)
+    .then((response) => response.json())
+    .then((data) => {
+      updateHistoric(data)
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
+
   }, [])
 
-  useEffect(() => {
+  /*useEffect(() => {
     let allRows = rows;
     let returnArray = [];
     allRows.map((row) => {
@@ -52,9 +64,22 @@ const Colaborador = () => {
       }
     updateRowsFormatadas(returnArray)
     })
-    
 
-  }, [rows, filter])
+  }, [rows, filter])*/
+
+  useEffect(() => {
+    let filteredHistoric = [];
+    historic.map((entry) => {
+      if(entry.createdAt.slice(14,16) % filter == 0){
+        filteredHistoric.push(
+          createData(entry.esp.mac, entry.espSector, entry.createdAt)
+        )
+      }
+
+    updateRowsFormatadas(filteredHistoric)
+
+    })
+  }, [historic, filter])
 
   function createData(tablet, local, data) {
     return { tablet, local, data};
