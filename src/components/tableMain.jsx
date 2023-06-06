@@ -1,74 +1,67 @@
-import Table from '@mui/joy/Table';
-import React from 'react';
+import { Table, TableBody, TableCell, TableRow, Button } from '@mui/material';
+import { useParams, Link } from "react-router-dom"
+import { useState, useEffect } from 'react'
+import TabelaColaborador from "../components/tabelaColaborador";
+import HistorySharpIcon from '@mui/icons-material/HistorySharp';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/joy/Typography';
-import Sheet from '@mui/joy/Sheet';  
+import TableHead from '@mui/material/TableHead';
 
-function createData(Tablet, Colaborador, Localizacao) {
-  return { Tablet, Colaborador, Localizacao };
-}
 
-const rows = [
-  createData("122A", "Henrique Godas", "vulcanização"),
-  createData('2908B',"Juba bont", "Qualidade"),
-  createData('137A', "Maia Filho", "Diretoria"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('2908B',"Juba bont", "Qualidade"),
-  createData('2908B',"Juba bont", "Qualidade"),
-  createData('2908B',"Juba bont", "Qualidade"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('394A', "José Alenk", "Vulcanização"),
-  createData('137A', "Maia Filho", "Diretoria"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-  createData('2348B', "Yuri toledo", "Compressão"),
-];
+const TableTablet = () => {
+  const [rowsFormatadas, updateRowsFormatadas] = useState([])
+  const [rows, updateRows] = useState([]);
+  let params = useParams();
+  let url = "https://2d1oh9-3000.csb.app/v1/historics?orderBy=createdAt-desc";
 
-export default function TableMain() {
-    return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'}}>
-            <div>
-                <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
-                Informações
-                </Typography>
-                <Sheet sx={{ height: 400, overflow: 'auto', width: 1200 , alignItems: 'center'}}>
-                <Table
-                    aria-label="table with sticky header"
-                    stickyHeader
-                    stripe="odd"
-                    hoverRow
-                    
-                >
-                    <thead>
-                    <tr>
-                        <th>Tablet</th>
-                        <th>Colaborador</th>
-                        <th>Localização</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {rows.map((row) => (
-                        <tr key={row.Tablet}>
-                        <td>{row.Tablet}</td>
-                        <td>{row.Colaborador}</td>
-                        <td>{row.Localizacao}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </Table>
-                </Sheet>
-            </div>
-        </div>
-    );
+  useEffect(() => {
+    fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      updateRows(data)
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
+  }, [])
+
+
+  useEffect(() => {
+    let returnArray = [];
+    rows.map((tablet) => {
+      returnArray.push(
+        createData(tablet.esp.mac,tablet.maintainer? tablet.maintainer.name: undefined
+            ,tablet.espSector? tablet.espSector.name : undefined)
+      )
+    })
+    updateRowsFormatadas(returnArray)
+    console.log(rowsFormatadas)
+  }, [rows])
+
+
+  // Dados dos tablets
+  function createData(tablet,colaborador,Localizacao) {
+    return { tablet,colaborador,Localizacao};
   }
+
+  const columns = [
+    { id: 'tablet', label: 'tablet', align: 'center', minWidth: 20 },
+    { id: 'colaborador', label: 'colaborador', align: 'center', minWidth: 20 },
+    { id: 'Localizacao', label: 'Localização', align: 'center', minWidth: 20 },
+  ];
+
+
+  return (
+    <>
+    <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
+      <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
+        <h1 style={{marginTop:"0"}} >Informações</h1>
+        <TabelaColaborador rows={rowsFormatadas} columns={columns} />
+      </div>
+    </div>
+  </>
+  )
+};
+
+
+export default TableTablet;
