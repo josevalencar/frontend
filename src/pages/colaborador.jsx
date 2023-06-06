@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom"
 
 import TabelaColaborador from "../components/tabelaColaborador"
 import SelectInterval from "../components/selectInterval"
+import { EventRepeat } from '@mui/icons-material'
 
 const Colaborador = () => {
   let params = useParams();
@@ -72,7 +73,9 @@ const Colaborador = () => {
     historic.map((entry) => {
       if(entry.createdAt.slice(14,16) % filter == 0){
         filteredHistoric.push(
-          createData(entry.esp.mac, entry.espSector, entry.createdAt)
+          createData(entry.esp.mac,
+            entry.espSector? entry.espSector.name : undefined,
+            entry.createdAt.slice(8,10) + '/' + entry.createdAt.slice(5,7) + '/' + entry.createdAt.slice(0,4) + ' - ' + entry.createdAt.slice(11, 16))
         )
       }
 
