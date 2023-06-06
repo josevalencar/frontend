@@ -35,7 +35,7 @@ const TableTablet = () => {
   const [rows, updateRows] = useState([]);
 
   useEffect(() => {
-    fetch("https://2d1oh9-3000.csb.app/v1/esps")
+    fetch("https://2d1oh9-3000.csb.app/v1/esps?orderBy=createdAt-desc")
       .then((response) => response.json())
       .then(data => updateRows(data))
       .catch((err) => {
