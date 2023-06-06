@@ -4,21 +4,6 @@ import { useParams, Link } from "react-router-dom"
 import TabelaColaborador from "../components/tabelaColaborador"
 
 const Colaborador = () => {
-  /*let params = useParams();
-  let baseUrl = "https://2d1oh9-3000.csb.app/v1/mainteiners/";
-
-  const [colaborador, atualizaColaborador] = useState('');
-
-  useEffect(() => {
-    fetch(baseUrl + params.colaboradorId)
-    .then((response) => response.json())
-    .then((data) => {
-      atualizaColaborador(data)
-    })
-    .catch((err) => {
-      console.log(err.message)
-    })
-  }, [])*/
 
   function createData(colaborador, setor, data) {
     return { colaborador, setor, data};
