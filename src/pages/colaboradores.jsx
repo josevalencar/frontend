@@ -5,7 +5,9 @@ import SearchBar from '../components/searchBar'
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/joy/Typography';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import removerAcentos from '../helpers/removerAcentos'
+import removerAcentos from '../helpers/removerAcentos';
+import HistorySharpIcon from '@mui/icons-material/HistorySharp';
+import IconButton from '@mui/material/IconButton';
 
 const Colaboradores = () => {
 
@@ -55,6 +57,7 @@ const Colaboradores = () => {
         createData(<EditIcon key={'edit_' + manutentor._id} />,
         <Link to={'/colaboradores/' + manutentor._id} key={manutentor}>{manutentor.name}</Link>,
         manutentor.rfid,
+        <IconButton component={Link} to={"/colaboradores/" + manutentor._id } ><HistorySharpIcon/></IconButton>,
         <DeleteOutlineIcon key={'delete_' + manutentor._id} />)
       )
     })
@@ -66,8 +69,8 @@ const Colaboradores = () => {
     updateRowsFormatadas(newRows)
   }, [rows, filter])
 
-  function createData(editar, nome, rfid, deletar) {
-    return { editar, nome, rfid, deletar};
+  function createData(editar, nome, rfid, historico, deletar) {
+    return { editar, nome, rfid, historico, deletar};
   }
 
   const columns = [
@@ -80,6 +83,7 @@ const Colaboradores = () => {
       align: 'center',
       format: (value) => value.toLocaleString('en-US'),
     },
+    { id: 'historico', label: 'Histórico', align: 'center', minWidth: 150 },
     {
       id: 'deletar',
       label: '',
