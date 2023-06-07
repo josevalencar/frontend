@@ -8,6 +8,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import removerAcentos from '../helpers/removerAcentos';
 import HistorySharpIcon from '@mui/icons-material/HistorySharp';
 import IconButton from '@mui/material/IconButton';
+import ModalColaboradores from '../components/modalColaboradores'
 
 const Colaboradores = () => {
 
@@ -58,8 +59,8 @@ const Colaboradores = () => {
         <Link to={'/colaboradores/' + manutentor._id} key={manutentor}>{manutentor.name}</Link>,
         manutentor.rfid,
         <IconButton component={Link} to={"/colaboradores/" + manutentor._id } ><HistorySharpIcon/></IconButton>,
-        <DeleteOutlineIcon key={'delete_' + manutentor._id} />)
-      )
+        <IconButton onClick={() => handleDelete(manutentor._id)} ><DeleteOutlineIcon/></IconButton>
+      ))
     })
     for(let row of returnArray){
       if (removerAcentos(row.nome.props.children.toLowerCase()).includes(filter) || row.nome.props.children.includes(filter)){
@@ -93,6 +94,26 @@ const Colaboradores = () => {
     },
   ];
 
+  const handleDelete = (id) => {
+    fetch('https://2d1oh9-3000.csb.app/v1/maintainers/' + id, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (response.ok) {
+          // Handle successful deletion
+          console.log('Item deleted successfully! https://2d1oh9-3000.csb.app/v1/maintainers/' + id);
+        } else {
+          // Handle non-successful response
+          console.error('Error deleting item:', response.status);
+        }
+      })
+      .catch(error => {
+        // Handle network error
+        console.error('Network error:', error);
+      });
+  };
+  
+
 
 
   return (
@@ -101,6 +122,7 @@ const Colaboradores = () => {
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
           <h1>Colaboradores</h1>
           <SearchBar updateFilter={updateFilter} />
+          <ModalColaboradores />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>
       </div>
