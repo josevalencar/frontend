@@ -57,19 +57,33 @@ export default function ModalColaboradores(props) {
             onSubmit={handleSubmit}
           >
             <Input id="name" name="name" aria-describedby="nameHelper" placeholder='Nome'/>
-            <FormHelperText id="nameHelper">O nome do colaborador.</FormHelperText>
+            <FormHelperText id="nameHelper" style={{marginBottom:"10px"}}>O nome do colaborador.</FormHelperText>
 
             <Input id="rfid" name="rfid" aria-describedby="rfidHelper" placeholder='RFID' />
 
-            <FormHelperText id="rfidHelper">
+            <FormHelperText id="rfidHelper" style={{marginBottom:"10px"}}>
               O RFID atrelado ao crachá do colaborador.
             </FormHelperText>
 
-            <Input id="sector" name="sector" aria-describedby="sectorHelper" placeholder='Setor' />
+            {/*!-- <Input id="sector" name="sector" aria-describedby="sectorHelper" placeholder='Setor' />
 
             <FormHelperText id="sectorHelper">
               O setor no qual esse manutentor costuma trabalhar.
+            </FormHelperText> **/}
+
+            <select name="sector" id="sector" aria-describedby="sectorHelper" style={{color:"gray", borderColor:"gray", border:"1px"}}>
+              {props.sectors.map((sector) => {
+                if (sector.name !== null){
+                  return(<option value={sector._id}>{sector.name}</option>)
+                }
+              })}
+            </select>
+
+            <FormHelperText id="sectorHelper" style={{marginBottom:"10px"}}>
+              O setor no qual esse manutentor costuma trabalhar.
             </FormHelperText>
+
+            
 
             <Button type="submit" variant="contained">
               Cadastrar
