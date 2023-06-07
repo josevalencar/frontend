@@ -2,8 +2,9 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormCriarRoteador from './formRoteador';
+
 
 const handleDeleteRow = (id) => {
     // Replace this with your own logic to delete the row with the specified ID
@@ -26,6 +27,7 @@ const TableRoteador = ({ roteadores }) => {
         nome: roteador.routerName,
         macAddress: roteador.macAddress,
     }));
+
 
     const columns = [
         { field: 'nome', headerName: 'Roteadores', width: 600 },

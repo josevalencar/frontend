@@ -3,13 +3,14 @@ import { useParams, Link } from "react-router-dom"
 
 import TabelaColaborador from "../components/tabelaColaborador"
 import SelectInterval from "../components/selectInterval"
+import dateToSeconds from "../helpers/dateToSeconds"
 
 const Colaborador = () => {
   let params = useParams();
   let maintainerUrl = "https://2d1oh9-3000.csb.app/v1/maintainers/";
   let historicUrl = "https://2d1oh9-3000.csb.app/v1/historics?maintainer=";
 
-  const [rows, updateRows] = useState(
+  /*const [rows, updateRows] = useState(
     [
       createData(<Link to='/colaboradores/Maia'>A301</Link>, "Matéria prima", "12/11/2002 - 15:00"),
       createData(<Link to='/colaboradores/Maia'>A301</Link>, "Matéria prima", "12/11/2002 - 14:55"),
@@ -27,12 +28,14 @@ const Colaborador = () => {
       createData(<Link to='/colaboradores/Maia'>A301</Link>, "Vulcanização", "12/11/2002 - 13:55"),
       createData(<Link to='/colaboradores/Maia'>A301</Link>, "Vulcanização", "12/11/2002 - 13:50"),
     ]
-  )
+  )*/
 
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [colaborador, atualizaColaborador] = useState('');
   const [filter, updateFilter] = useState(1);
   const [historic, updateHistoric] = useState([]);
+
+  const [lastDate, updateLastDate] = useState(0);
 
   useEffect(() => {
     fetch(maintainerUrl + params.colaboradorId)
@@ -44,7 +47,8 @@ const Colaborador = () => {
       console.log(err.message)
     })
 
-    fetch(historicUrl + params.colaboradorId)
+    fetch(historicUrl + params.colaboradorId + '&orderBy=createdAt-desc')
+
     .then((response) => response.json())
     .then((data) => {
       updateHistoric(data)
@@ -69,11 +73,20 @@ const Colaborador = () => {
 
   useEffect(() => {
     let filteredHistoric = [];
+    let lastDate = 99999999999
     historic.map((entry) => {
-      if(entry.createdAt.slice(14,16) % filter == 0){
+      if(lastDate - dateToSeconds(entry.createdAt) >= filter){
+        //console.log("last date: " + lastDate)
+        //console.log("current date: " + dateToSeconds(entry.createdAt))
+        //console.log(lastDate - dateToSeconds(entry.createdAt))
+        //console.log(entry.createdAt)
+        //console.log(entry.createdAt.slice())
         filteredHistoric.push(
-          createData(entry.esp.mac, entry.espSector, entry.createdAt)
+          createData(entry.esp.mac,
+            entry.espSector? entry.espSector.name : undefined,
+            entry.createdAt.slice(8,10) + '/' + entry.createdAt.slice(5,7) + '/' + entry.createdAt.slice(0,4) + ' - ' + entry.createdAt.slice(11, 16))
         )
+        lastDate = dateToSeconds(entry.createdAt)
       }
 
     updateRowsFormatadas(filteredHistoric)
