@@ -34,6 +34,7 @@ const Colaborador = () => {
   const [colaborador, atualizaColaborador] = useState('');
   const [filter, updateFilter] = useState(1);
   const [historic, updateHistoric] = useState([]);
+
   const [lastDate, updateLastDate] = useState(0);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ const Colaborador = () => {
     })
 
     fetch(historicUrl + params.colaboradorId + '&orderBy=createdAt-desc')
+
     .then((response) => response.json())
     .then((data) => {
       updateHistoric(data)

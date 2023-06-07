@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableRoteador from '../components/roteador/tableRoteador';
 import ModalCriarRoteador from '../components/roteador/modalCreate';
 import SearchBar from '../components/roteador/searchbar';
@@ -9,6 +9,28 @@ const Roteadores = () => {
   const adicionarRoteador = (roteador) => {
     setRoteadores([...roteadores, roteador]);
   };
+
+  useEffect(() => {
+    fetch("https://2d1oh9-3000.csb.app/v1/esp-routers")
+      .then((response) => response.json())
+      .then(data => {
+        const roteadoresComMac = data.map(roteador => ({ ...roteador, macAddress: roteador.mac }));
+        setRoteadores(roteadoresComMac);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, [])
+
+  // roteadores.map((roteador) => ({
+  //   enderecoMac: roteador.mac
+  // }));
+
+  //   const rows = roteadores.map((roteador, index) => ({
+  //     id: index,
+  //     nome: roteador.routerName,
+  //     macAddress: roteador.macAddress,
+  // }));
 
   return (
     <>
@@ -21,7 +43,7 @@ const Roteadores = () => {
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <TableRoteador roteadores={roteadores}></TableRoteador>
+        <TableRoteador roteadores={roteadores} ></TableRoteador>
       </div>
     </>
   )
