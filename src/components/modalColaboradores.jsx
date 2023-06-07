@@ -20,13 +20,27 @@ const style = {
   p: 4,
 };
 
-export default function ModalColaboradores() {
+export default function ModalColaboradores(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const iframe = document.getElementById('dummyframe');
+
+    iframe.onload = () => {
+      props.handleCreate();
+      handleClose();
+    };
+
+    e.target.submit();
+  };
+
   return (
     <div>
+      <iframe name="dummyframe" id="dummyframe" style={{ display: 'none' }}></iframe>
       <Button onClick={handleOpen}>Adicionar</Button>
       <Modal
         open={open}
@@ -35,22 +49,32 @@ export default function ModalColaboradores() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-            <form name="create" method="post" action="https://2d1oh9-3000.csb.app/v1/maintainers">
-                
-                <Input id="name" name="name" aria-describedby="nameHelper" placeholder='Nome' />
-                <FormHelperText id="nameHelper">O nome do colaborador.</FormHelperText>
+          <form
+            name="create"
+            method="post"
+            action="https://2d1oh9-3000.csb.app/v1/maintainers"
+            target="dummyframe"
+            onSubmit={handleSubmit}
+          >
+            <Input id="name" name="name" aria-describedby="nameHelper" placeholder='Nome'/>
+            <FormHelperText id="nameHelper">O nome do colaborador.</FormHelperText>
 
-              
-                <Input id="rfid" name="rfid" aria-describedby="rfidHelper" placeholder='RFID' />
-                <FormHelperText id="rfidHelper">O RFID atrelado ao crachá do colaborador.</FormHelperText>
+            <Input id="rfid" name="rfid" aria-describedby="rfidHelper" placeholder='RFID' />
 
-               
-                <Input id="sector" name="sector" aria-describedby="sectorHelper" placeholder='Setor' />
-                <FormHelperText id="sectorHelper">O setor no qual esse manutentor costuma trabalhar.</FormHelperText>
+            <FormHelperText id="rfidHelper">
+              O RFID atrelado ao crachá do colaborador.
+            </FormHelperText>
 
-                <input type="submit" value="Cadastrar"></input>
+            <Input id="sector" name="sector" aria-describedby="sectorHelper" placeholder='Setor' />
 
-            </form>
+            <FormHelperText id="sectorHelper">
+              O setor no qual esse manutentor costuma trabalhar.
+            </FormHelperText>
+
+            <Button type="submit" variant="contained">
+              Cadastrar
+            </Button>
+          </form>
         </Box>
       </Modal>
     </div>
