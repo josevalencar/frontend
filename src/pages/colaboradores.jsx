@@ -14,16 +14,6 @@ import ContentDeleteModal from '../components/contentDeleteModal';
 
 const Colaboradores = () => {
 
-  /*const initialRows = [
-    createData(<EditIcon />, <Link to='/colaboradores/Maia'>Marcelo Maia</Link>, "suhbdoyas7d8sa", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Juba'>Giuliano Bontempo Domiciano</Link>, "ioasodgoy8sadsah879", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Ze'>Jose Alencar</Link>, "21873t1287ydash", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Fabeta'>Fabeta Piemonte</Link>, "13b957gj", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Tolete'>Yuri Tolete</Link>, "7921ye7821heu", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Dogoy'>Henrique Godoy</Link>, "23198y3821h", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Rafa'>Rafael Techio</Link>, "asidbiuas8", <DeleteOutlineIcon />),
-    createData(<EditIcon />, <Link to='/colaboradores/Laiza'>Laíza Ribeiro</Link>, "snajihdisa8", <DeleteOutlineIcon />),
-  ]*/
   const [rows, updateRows] = useState([]);
 
   const [filter, updateFilter] = useState('');
@@ -34,7 +24,9 @@ const Colaboradores = () => {
 
   const [deleteModals, setDeleteModals] = useState([]);
 
-  const [get, setGet] = useState([0])
+  const [get, setGet] = useState([0]);
+
+  const [sectors, setSectors] = useState([]);
 
 
   function handleOpenDelete(id){
@@ -44,7 +36,15 @@ const Colaboradores = () => {
   const handleClose = () => setOpenDelete('')
 
   useEffect(() => {
-    console.log("fetching")
+    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+      .then((response) => response.json())
+      .then(data => setSectors(data))
+      .catch((err) => {
+        console.log(err.message);
+     });
+  }, [])
+
+  useEffect(() => {
     fetch("https://2d1oh9-3000.csb.app/v1/maintainers")
       .then((response) => response.json())
       .then(data => updateRows(data))
@@ -150,7 +150,7 @@ const Colaboradores = () => {
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
           <h1>Colaboradores</h1>
           <SearchBar updateFilter={updateFilter} />
-          <ModalColaboradores handleCreate={handleCreate} />
+          <ModalColaboradores handleCreate={handleCreate} sectors={sectors} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>
         {deleteModals.map((modal) => {
