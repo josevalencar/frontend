@@ -9,6 +9,8 @@ import removerAcentos from '../helpers/removerAcentos';
 import HistorySharpIcon from '@mui/icons-material/HistorySharp';
 import IconButton from '@mui/material/IconButton';
 import ModalColaboradores from '../components/modalColaboradores'
+import ModalConfirmDelete from '../components/modalConfirmDelete';
+import ContentDeleteModal from '../components/contentDeleteModal';
 
 const Colaboradores = () => {
 
@@ -26,16 +28,30 @@ const Colaboradores = () => {
 
   const [filter, updateFilter] = useState('');
 
-  const [rowsFormatadas, updateRowsFormatadas] = useState([])
+  const [rowsFormatadas, updateRowsFormatadas] = useState([]);
+
+  const [openDelete, setOpenDelete] = useState(null);
+
+  const [deleteModals, setDeleteModals] = useState([]);
+
+  const [get, setGet] = useState([0])
+
+
+  function handleOpenDelete(id){
+    setOpenDelete('delete_' + id)
+  }
+
+  const handleClose = () => setOpenDelete('')
 
   useEffect(() => {
+    console.log("fetching")
     fetch("https://2d1oh9-3000.csb.app/v1/maintainers")
       .then((response) => response.json())
       .then(data => updateRows(data))
       .catch((err) => {
         console.log(err.message);
      });
-  }, [])
+  }, [get])
 
 
   /*useEffect(() => {
@@ -52,6 +68,7 @@ const Colaboradores = () => {
 
   useEffect(() => {
     let returnArray = [];
+    let modalsArray = [];
     let newRows = [];
     rows.map((manutentor) => {
       returnArray.push(
@@ -59,16 +76,22 @@ const Colaboradores = () => {
         <Link to={'/colaboradores/' + manutentor._id} key={manutentor}>{manutentor.name}</Link>,
         manutentor.rfid,
         <IconButton component={Link} to={"/colaboradores/" + manutentor._id } ><HistorySharpIcon/></IconButton>,
-        <IconButton onClick={() => handleDelete(manutentor._id)} ><DeleteOutlineIcon/></IconButton>
+        <IconButton onClick={() => handleOpenDelete(manutentor._id)} ><DeleteOutlineIcon/></IconButton>
       ))
+      modalsArray.push(
+        <ModalConfirmDelete open={openDelete == 'delete_' + manutentor._id}  handleClose={handleClose} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
+      )
     })
     for(let row of returnArray){
-      if (removerAcentos(row.nome.props.children.toLowerCase()).includes(filter) || row.nome.props.children.includes(filter)){
-        newRows.push(row)
+      if (row.nome.props.children !== null){
+        if (removerAcentos(row.nome.props.children.toLowerCase()).includes(filter) || row.nome.props.children.includes(filter)){
+          newRows.push(row)
+        }
       }
     }
     updateRowsFormatadas(newRows)
-  }, [rows, filter])
+    setDeleteModals(modalsArray)
+  }, [rows, filter, openDelete])
 
   function createData(editar, nome, rfid, historico, deletar) {
     return { editar, nome, rfid, historico, deletar};
@@ -101,7 +124,8 @@ const Colaboradores = () => {
       .then(response => {
         if (response.ok) {
           // Handle successful deletion
-          console.log('Item deleted successfully! https://2d1oh9-3000.csb.app/v1/maintainers/' + id);
+          setGet((former) => former + 1)
+          alert('Colaborador apagado com sucesso!');
         } else {
           // Handle non-successful response
           console.error('Error deleting item:', response.status);
@@ -111,9 +135,13 @@ const Colaboradores = () => {
         // Handle network error
         console.error('Network error:', error);
       });
+    handleClose()
   };
-  
 
+  const handleCreate = () => {
+    setGet((former) => former + 1)
+    alert('Colaborador adicionado com sucesso!');
+  }
 
 
   return (
@@ -122,9 +150,12 @@ const Colaboradores = () => {
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
           <h1>Colaboradores</h1>
           <SearchBar updateFilter={updateFilter} />
-          <ModalColaboradores />
+          <ModalColaboradores handleCreate={handleCreate} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>
+        {deleteModals.map((modal) => {
+          return modal
+        })}
       </div>
     </>
   )
