@@ -2,13 +2,15 @@ import { useState } from 'react'
 import Input from '@mui/material/Input';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
-import "../pages/colaboradores.css"
+import "../pages/colaboradores.css";
 
-const UpdateMaintainer = (props) => {
+const CreateMaintainer = (props) => {
 
     const [nome, setNome] = useState(null);
     const [rfid, setRfid] = useState(null); 
     const [sector, setSector] = useState(null);
+
+    const [error, setError] = useState(false);
 
     const handleChangeNome = (e) => {
         setNome(e.target.value);
@@ -26,8 +28,8 @@ const UpdateMaintainer = (props) => {
 
         e.preventDefault(); // Prevent the default form submission behavior
 
-        fetch("https://2d1oh9-3000.csb.app/v1/maintainers/" + props.manutentor._id, {
-            method: "PUT",
+        fetch("https://2d1oh9-3000.csb.app/v1/maintainers/", {
+            method: "POST",
             headers:{'Content-Type': 'application/json'},
             body: JSON.stringify({
                 name: nome,
@@ -37,7 +39,7 @@ const UpdateMaintainer = (props) => {
         })
         .then(res => {
             if(res.ok){
-                props.setSuccess(['atualizado', true])
+                props.setSuccess(['cadastrado', true])
             }
             else{
                 props.setError(true);
@@ -66,7 +68,7 @@ const UpdateMaintainer = (props) => {
             </div>
 
             <form
-                name="update"
+                name="create"
                 onSubmit={handleSubmit}
             >
                 <Input id="name" name="name" aria-describedby="nameHelper" placeholder='Nome' onChange={handleChangeNome} />
@@ -92,11 +94,11 @@ const UpdateMaintainer = (props) => {
                 </FormHelperText>
 
                 <Button type="submit" variant="contained">
-                    Editar
+                    Cadastrar
                 </Button>
             </form>
         </div>
     )
 }
 
-export default UpdateMaintainer
+export default CreateMaintainer
