@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
-const FormCriarRoteador = ({ adicionarRoteador, buscarRoteador }) => {
+const FormCriarRoteador = ({ adicionarRoteador, criarRoteador }) => {
   const [routerName, setRouterName] = useState('');
   const [macAddress, setMacAddress] = useState('');
 
