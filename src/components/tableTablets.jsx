@@ -5,16 +5,27 @@ import TabelaColaborador from "../components/tabelaColaborador"
 import HistorySharpIcon from '@mui/icons-material/HistorySharp';
 import IconButton from '@mui/material/IconButton';
 import ModalTablets from './modalTablets';
-
+import AlertSucess from './alerts/error';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/joy/Typography';
 import TableHead from '@mui/material/TableHead';
+import AlertERROR from './alerts/error';
+import AlertSuccess from './alerts/sucess';
 
 
 
 const TableTablet = () => {
+  function handleOpenCreate(){
+    setOpenCreate(true);
+  }
+
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [rows, updateRows] = useState([]);
+  const [get, setGet] = useState([0]);
+  const [success, setSuccess] = useState(['', false]);
+  const [error, setError] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
+  const handleCloseCreate = () => setOpenCreate(false);
 
   useEffect(() => {
     fetch("https://2d1oh9-3000.csb.app/v1/esps?orderBy=createdAt-desc")
@@ -24,7 +35,7 @@ const TableTablet = () => {
         console.log(err.message);
      });
 
-  }, [])
+  }, [get])
 
   useEffect(() => {
     let returnArray = [];
@@ -62,8 +73,10 @@ const TableTablet = () => {
     <>
     <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
       <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
+        {error?<AlertERROR setError={setError} />:null}
+        {success[1] ? <AlertSuccess setSuccess={setSuccess} type="Tablet" /> : null}
         <h1 style={{marginTop:"0"}} >Tablets</h1>
-        <ModalTablets mode="create"/>
+        <ModalTablets mode="create"  setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />
         <TabelaColaborador rows={rowsFormatadas} columns={columns} />
       </div>
     </div>
