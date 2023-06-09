@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Input from '@mui/material/Input';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
+
 import "../pages/colaboradores.css"
 
 const UpdateMaintainer = (props) => {
@@ -37,6 +38,7 @@ const UpdateMaintainer = (props) => {
         })
         .then(res => {
             if(res.ok){
+
                 props.setSuccess(['atualizado', true])
             }
             else{

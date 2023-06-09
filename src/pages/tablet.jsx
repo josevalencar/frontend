@@ -36,8 +36,8 @@ const Tablet = () => {
     let returnArray = [];
     rows.map((entry) => {
         returnArray.push(
-          createData(entry.esp.mac,entry.maintainer? entry.maintainer.name: undefined,
-            entry.espSector? entry.espSector.name : undefined,
+          createData(entry.esp.mac,entry.maintainer? entry.maintainer.name: "Colaborador sem nome",
+            entry.espSector? entry.espSector.name : "Setor sem cadastro",
             entry.createdAt.slice(8,10) + '/' + entry.createdAt.slice(5,7) + '/' + entry.createdAt.slice(0,4) + ' - ' + entry.createdAt.slice(11, 16))
         )
 

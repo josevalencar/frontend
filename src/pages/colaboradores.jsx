@@ -15,6 +15,7 @@ import CreateMaintainer from '../components/createMaintainer';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 
+
 const Colaboradores = () => {
 
   const [rows, updateRows] = useState([]);
