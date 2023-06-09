@@ -15,7 +15,8 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 
-export default function ModalTablets(props, adicionaTablet) {
+
+export default function ModalTablets(props) {
   const { mode  } = props;
   const [open, setOpen] = React.useState(false);
   const [tabletName, settabletName] = useState(null);
@@ -44,6 +45,9 @@ export default function ModalTablets(props, adicionaTablet) {
     })
     .then(() => {
         endFetch()
+    })
+    .then(()=>{
+      handleClose()
     })
     .catch((error) => console.log(error))
 }
@@ -74,10 +78,6 @@ export default function ModalTablets(props, adicionaTablet) {
 
   return (
     <div>
-      <form 
-        name="create"
-        onSubmit={handleSubmit}
-      >
         {mode === 'create'? 
         <React.Fragment>
           <Button
@@ -137,7 +137,7 @@ export default function ModalTablets(props, adicionaTablet) {
             <Button onClick={handleClose}>Cancelar</Button>
             {mode === 'create'? 
             <React.Fragment>
-                <Button type='submit' onClick={handleClose} >
+                <Button type='submit' onClick={handleSubmit}>
                     Criar
                 </Button>
             </React.Fragment>:
@@ -148,7 +148,6 @@ export default function ModalTablets(props, adicionaTablet) {
             </React.Fragment>}
           </DialogActions>
         </Dialog>
-        </form>
     </div>
   );
 }
