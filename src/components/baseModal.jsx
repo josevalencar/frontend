@@ -13,7 +13,7 @@ const style = {
     p: 4,
   };
 
-const ModalConfirmDelete = (props) => {
+const BaseModal = (props) => {
   return (
     <Modal
         open={props.open}
@@ -28,4 +28,4 @@ const ModalConfirmDelete = (props) => {
   )
 }
 
-export default ModalConfirmDelete
+export default BaseModal
