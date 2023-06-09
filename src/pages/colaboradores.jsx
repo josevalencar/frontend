@@ -3,15 +3,18 @@ import { Link } from 'react-router-dom'
 import TabelaColaboradores from '../components/tabelaColaboradores'
 import SearchBar from '../components/searchBar'
 import EditIcon from '@mui/icons-material/Edit';
-import Typography from '@mui/joy/Typography';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import removerAcentos from '../helpers/removerAcentos';
 import HistorySharpIcon from '@mui/icons-material/HistorySharp';
 import IconButton from '@mui/material/IconButton';
-import ModalColaboradores from '../components/modalColaboradores'
 import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
 import UpdateMaintainer from '../components/updateMaintainer';
+import Button from '@mui/material/Button';
+import CreateMaintainer from '../components/createMaintainer';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 const Colaboradores = () => {
 
@@ -31,6 +34,12 @@ const Colaboradores = () => {
 
   const [openUpdate, setOpenUpdate] = useState(null);
 
+  const [openCreate, setOpenCreate] = useState(false);
+
+  const [error, setError] = useState(false);
+
+  const [success, setSuccess] = useState(['', false]);
+
 
   function handleOpenDelete(id){
     setOpenDelete('delete_' + id)
@@ -40,8 +49,13 @@ const Colaboradores = () => {
     setOpenUpdate('update_' + id)
   }
 
+  function handleOpenCreate(){
+    setOpenCreate(true);
+  }
+
   const handleCloseDelete = () => setOpenDelete('');
   const handleCloseUpdate = () => setOpenUpdate('');
+  const handleCloseCreate = () => setOpenCreate(false);
 
   useEffect(() => {
     fetch("https://2d1oh9-3000.csb.app/v1/sectors")
@@ -61,19 +75,6 @@ const Colaboradores = () => {
      });
   }, [get])
 
-
-  /*useEffect(() => {
-    updateRowsFormatadas(() => {
-      let newRows = []
-      for(let row of initialRows.current){
-        if (removerAcentos(row.nome.props.children.toLowerCase()).includes(filter)){
-          newRows.push(row)
-        }
-      }
-      return newRows
-    })
-  }, [filter]);*/
-
   useEffect(() => {
     let returnArray = [];
     let modalsArray = [];
@@ -87,11 +88,12 @@ const Colaboradores = () => {
         <IconButton onClick={() => handleOpenDelete(manutentor._id)} ><DeleteOutlineIcon/></IconButton>
       ))
       modalsArray.push(
-        <BaseModal open={openDelete == 'delete_' + manutentor._id}  handleClose={handleCloseDelete} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
+        <BaseModal open={openDelete === 'delete_' + manutentor._id}  handleClose={handleCloseDelete} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
       )
       modalsArray.push(
-        <BaseModal open={openUpdate == 'update_' + manutentor._id} handleClose={handleCloseUpdate} content={<UpdateMaintainer manutentor={manutentor} sectors={sectors} setGet={setGet} handleClose={handleCloseUpdate} />} />
+        <BaseModal open={openUpdate === 'update_' + manutentor._id} handleClose={handleCloseUpdate} content={<UpdateMaintainer manutentor={manutentor} sectors={sectors} setGet={setGet} handleClose={handleCloseUpdate} setError={setError} setSuccess={setSuccess} />} />
       )
+      return null
     })
     for(let row of returnArray){
       if (row.nome.props.children !== null){
@@ -136,10 +138,10 @@ const Colaboradores = () => {
         if (response.ok) {
           // Handle successful deletion
           setGet((former) => former + 1)
-          alert('Colaborador apagado com sucesso!');
+          setSuccess(['apagado', true])
         } else {
           // Handle non-successful response
-          console.error('Error deleting item:', response.status);
+          setError(true);
         }
       })
       .catch(error => {
@@ -149,19 +151,41 @@ const Colaboradores = () => {
     handleCloseDelete()
   };
 
-  const handleCreate = () => {
-    setGet((former) => former + 1)
-    alert('Colaborador adicionado com sucesso!');
-  }
-
-
   return (
     <>
+
       <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
         <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
+          {error ? <Alert severity='error' action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setError(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></> }
+
+          {success[1] ? <Alert severity='success' action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setSuccess(['', false]);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
+
           <h1>Colaboradores</h1>
           <SearchBar updateFilter={updateFilter} />
-          <ModalColaboradores handleCreate={handleCreate} sectors={sectors} />
+          <Button onClick={handleOpenCreate}>Adicionar</Button>
+          <BaseModal open={openCreate} handleClose={handleCloseCreate} content={<CreateMaintainer sectors={sectors} setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>
         {deleteModals.map((modal) => {
