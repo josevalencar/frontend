@@ -9,8 +9,9 @@ import removerAcentos from '../helpers/removerAcentos';
 import HistorySharpIcon from '@mui/icons-material/HistorySharp';
 import IconButton from '@mui/material/IconButton';
 import ModalColaboradores from '../components/modalColaboradores'
-import ModalConfirmDelete from '../components/modalConfirmDelete';
+import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
+import UpdateMaintainer from '../components/updateMaintainer';
 
 const Colaboradores = () => {
 
@@ -28,12 +29,19 @@ const Colaboradores = () => {
 
   const [sectors, setSectors] = useState([]);
 
+  const [openUpdate, setOpenUpdate] = useState(null);
+
 
   function handleOpenDelete(id){
     setOpenDelete('delete_' + id)
   }
 
-  const handleClose = () => setOpenDelete('')
+  function handleOpenUpdate(id){
+    setOpenUpdate('update_' + id)
+  }
+
+  const handleCloseDelete = () => setOpenDelete('');
+  const handleCloseUpdate = () => setOpenUpdate('');
 
   useEffect(() => {
     fetch("https://2d1oh9-3000.csb.app/v1/sectors")
@@ -72,14 +80,17 @@ const Colaboradores = () => {
     let newRows = [];
     rows.map((manutentor) => {
       returnArray.push(
-        createData(<EditIcon key={'edit_' + manutentor._id} />,
+        createData(<IconButton onClick={() => handleOpenUpdate(manutentor._id)} ><EditIcon/></IconButton>,
         <Link to={'/colaboradores/' + manutentor._id} key={manutentor}>{manutentor.name}</Link>,
         manutentor.rfid,
         <IconButton component={Link} to={"/colaboradores/" + manutentor._id } ><HistorySharpIcon/></IconButton>,
         <IconButton onClick={() => handleOpenDelete(manutentor._id)} ><DeleteOutlineIcon/></IconButton>
       ))
       modalsArray.push(
-        <ModalConfirmDelete open={openDelete == 'delete_' + manutentor._id}  handleClose={handleClose} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
+        <BaseModal open={openDelete == 'delete_' + manutentor._id}  handleClose={handleCloseDelete} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
+      )
+      modalsArray.push(
+        <BaseModal open={openUpdate == 'update_' + manutentor._id} handleClose={handleCloseUpdate} content={<UpdateMaintainer manutentor={manutentor} sectors={sectors} setGet={setGet} handleClose={handleCloseUpdate} />} />
       )
     })
     for(let row of returnArray){
@@ -91,7 +102,7 @@ const Colaboradores = () => {
     }
     updateRowsFormatadas(newRows)
     setDeleteModals(modalsArray)
-  }, [rows, filter, openDelete])
+  }, [rows, filter, openDelete, openUpdate])
 
   function createData(editar, nome, rfid, historico, deletar) {
     return { editar, nome, rfid, historico, deletar};
@@ -135,7 +146,7 @@ const Colaboradores = () => {
         // Handle network error
         console.error('Network error:', error);
       });
-    handleClose()
+    handleCloseDelete()
   };
 
   const handleCreate = () => {
