@@ -50,7 +50,7 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-export default function ModalCriarRoteador({ adicionarRoteador }) {
+export default function ModalCriarRoteador({  adicionarRoteador }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {

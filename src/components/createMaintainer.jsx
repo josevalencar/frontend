@@ -9,7 +9,6 @@ const CreateMaintainer = (props) => {
     const [nome, setNome] = useState(null);
     const [rfid, setRfid] = useState(null); 
     const [sector, setSector] = useState(null);
-
     const [error, setError] = useState(false);
 
     const handleChangeNome = (e) => {
