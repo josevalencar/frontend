@@ -4,29 +4,35 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useEffect, useState } from 'react';
 import FormCriarRoteador from './formRoteador';
-
-
-const handleDeleteRow = (id) => {
-    // Replace this with your own logic to delete the row with the specified ID
-    console.log(`Delete row with ID ${id}`);
-}
-
-const handleEditColumn = (id) => {
-    console.log(`Editing row with ID ${id}`);
-}
+import CustomModal from './modalEdit';
 
 const TableRoteador = ({ roteadores }) => {
-    // const [rows, setRows] = useState([
-    //     { id: 1, col1: 'Roteador 1', col2: '00:1B:C9:4B:E3:57' },
-    //     { id: 2, col1: 'Roteador 2', col2: '00:1B:C9:4B:E3:57' },
-    //     { id: 3, col1: 'Roteador 3', col2: '00:1B:C9:4B:E3:57' },
-    // ]);
 
     const rows = roteadores.map((roteador, index) => ({
         id: index,
         nome: roteador.routerName,
         macAddress: roteador.macAddress,
     }));
+
+    const [open, setOpen] = useState(false);
+
+    const handleDeleteRow = (id) => {
+        // Replace this with your own logic to delete the row with the specified ID
+        console.log(`Delete row with ID ${id}`);
+    }
+
+    const handleEditColumn = (id) => {
+        console.log(`Editing row with ID ${id}`);
+        setOpen(true);
+    }
+
+    // const handleClickOpen = () => {
+    //     setOpen(true);
+    // };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
 
     const columns = [
@@ -61,6 +67,7 @@ const TableRoteador = ({ roteadores }) => {
         <>
             <div>
                 <div style={{ height: 300, width: 1200 }}>
+                    <CustomModal open={open} setOpen={setOpen} handleClose={handleClose}></CustomModal>
                     <DataGrid rows={rows} columns={columns} disableColumnMenu />
                 </div>
             </div>
