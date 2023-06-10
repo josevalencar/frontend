@@ -15,7 +15,6 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 
-
 export default function ModalTablets(props) {
   const { mode  } = props;
   const [open, setOpen] = React.useState(false);
@@ -50,6 +49,35 @@ export default function ModalTablets(props) {
       handleClose()
     })
     .catch((error) => console.log(error))
+}
+
+const handleUpdate = (e) => {
+
+  e.preventDefault(); // Prevent the default form submission behavior
+
+  fetch("https://2d1oh9-3000.csb.app/v1/esps/" + props.tablet._id , {
+      method: "PUT",
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({
+          tabletName: tabletName,
+          mac: mac
+      })
+  })
+  .then(res => {
+      if(res.ok){
+          props.setSuccess(['Atualizado', true])
+      }
+      else{
+          props.setError(true);
+      }
+  })
+  .then(() => {
+      endFetch()
+  })
+  .then(()=>{
+    handleClose()
+  })
+  .catch((error) => console.log(error))
 }
 
   const endFetch = () => {
@@ -142,7 +170,7 @@ export default function ModalTablets(props) {
                 </Button>
             </React.Fragment>:
             <React.Fragment>
-                <Button type='submit' onClick={handleClose} >
+                <Button type='submit' onClick={handleUpdate} >
                     Editar
                 </Button>
             </React.Fragment>}
