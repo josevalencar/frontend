@@ -15,9 +15,6 @@ import AlertSuccess from './alerts/sucess';
 
 
 const TableTablet = () => {
-  function handleOpenCreate(){
-    setOpenCreate(true);
-  }
 
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [rows, updateRows] = useState([]);
@@ -25,7 +22,13 @@ const TableTablet = () => {
   const [success, setSuccess] = useState(['', false]);
   const [error, setError] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(null);
   const handleCloseCreate = () => setOpenCreate(false);
+  const handleCloseUpdate = () => setOpenUpdate('');
+  
+  function handleOpenUpdate(id){
+    setOpenUpdate('update_' + id)
+  }
 
   useEffect(() => {
     fetch("https://2d1oh9-3000.csb.app/v1/esps?orderBy=createdAt-desc")
@@ -42,12 +45,12 @@ const TableTablet = () => {
 
     rows.map((tablet) => {
       returnArray.push(
-        createData( tablet.tabletName,<Link to={'/tablets/' + tablet._id} key={tablet}>{tablet.mac}</Link>,<ListItemButton sx={{justifyContent:'center'}}><ModalTablets mode="editar" key={'edit_' + tablet._id} />
+        createData( tablet.tabletName,<Link to={'/tablets/' + tablet._id} key={tablet}>{tablet.mac}</Link>,<ListItemButton sx={{justifyContent:'center'}}><ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id}  setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
         <IconButton component={Link} to={"/tablets/" + tablet._id } ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>)
       )
     })
     updateRowsFormatadas(returnArray)
-  }, [rows])
+  }, [rows,  openUpdate])
 
 
   // Dados dos tablets
