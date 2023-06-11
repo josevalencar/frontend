@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -8,7 +8,9 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import FormCriarRoteador from './formRoteador';
+import FormEditaRoteador from './formEditaRoteador';
+import { TextField, Button } from '@mui/material';
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -18,6 +20,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
         padding: theme.spacing(1),
     },
 }));
+
 
 function BootstrapDialogTitle(props) {
     const { children, onClose, ...other } = props;
@@ -48,34 +51,77 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-const CustomModal = ({ open, handleClose }) => {
+const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
+
+    const [routerName, setRouterName] = useState('');
+    const [macAddress, setMacAddress] = useState('');
+
+    const handleCreate = (e) => {
+        console.log('Router name:', routerName);
+        console.log('MAC Address:', macAddress);
+        console.log('Backend ID:', routerID);
+
+
+        e.preventDefault();
+
+        editarRoteador({ routerName, macAddress, routerID });
+        setRouterName('');
+        setMacAddress('');
+
+        console.log("Editado com sucesso!");
+    };
+
+    const handleNomeChange = (event) => {
+        setRouterName(event.target.value);
+    };
+
+    const handleMacAddressChange = (event) => {
+        setMacAddress(event.target.value);
+    };
+
     return (
         <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>Modal Title</DialogTitle>
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    Criar roteador
+                    Editar roteador
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    <FormCriarRoteador ></FormCriarRoteador>
+                    {/* <FormEditaRoteador editarRoteador={editarRoteador} routerID={routerID}></FormEditaRoteador> */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minHeight: '15vh' }}>
+                        <TextField sx={{ width: 300 }}
+                            label="Edite o nome do rastreador"
+                            value={routerName}
+                            onChange={handleNomeChange}
+                            fullWidth
+                            margin="normal"
+                        />
+
+                        <TextField sx={{ width: 300, paddingBottom: 1 }}
+                            label="Edite o endereço MAC do rastreador"
+                            value={macAddress}
+                            onChange={handleMacAddressChange}
+                            fullWidth
+                            margin="normal"
+                            dividers
+                        />
+                        <Button variant="contained" color="primary" onClick={handleCreate} sx={{ width: 100 }}>
+                            Editar
+                        </Button>
+
+                    </div>
                 </DialogContent>
-                {/* <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Save changes
-                    </Button>
-                </DialogActions> */}
             </BootstrapDialog>
         </Dialog>
     );
 };
 
-CustomModal.propTypes = {
+CustomModalEdit.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
 };
 
-export default CustomModal;
+export default CustomModalEdit;
