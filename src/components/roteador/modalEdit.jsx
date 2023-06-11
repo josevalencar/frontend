@@ -89,7 +89,8 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Editar roteador
                 </BootstrapDialogTitle>
-                <DialogContent dividers>
+                <DialogContent dividers={true}
+                >
                     {/* <FormEditaRoteador editarRoteador={editarRoteador} routerID={routerID}></FormEditaRoteador> */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minHeight: '15vh' }}>
                         <TextField sx={{ width: 300 }}
@@ -100,13 +101,13 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
                             margin="normal"
                         />
 
-                        <TextField sx={{ width: 300, paddingBottom: 1 }}
+                        <TextField
+                            sx={{ width: 300, paddingBottom: 1 }}
                             label="Edite o endereço MAC do rastreador"
                             value={macAddress}
                             onChange={handleMacAddressChange}
                             fullWidth
                             margin="normal"
-                            dividers
                         />
                         <Button variant="contained" color="primary" onClick={handleCreate} sx={{ width: 100 }}>
                             Editar

@@ -26,13 +26,24 @@ const Roteadores = () => {
 
     setRoteadores([...roteadores, roteador]);
 
+    fetch("https://2d1oh9-3000.csb.app/v1/esp-routers")
+      .then((response) => response.json())
+      .then(data => {
+        const roteadoresUpdate = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
+        setRoteadores(roteadoresUpdate);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+
   };
 
   useEffect(() => {
     fetch("https://2d1oh9-3000.csb.app/v1/esp-routers")
       .then((response) => response.json())
       .then(data => {
-        const roteadoresFetched = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name }));
+        const roteadoresFetched = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
         setRoteadores(roteadoresFetched);
       })
       .catch((err) => {
@@ -40,18 +51,21 @@ const Roteadores = () => {
       });
   }, [])
 
-  const editarRoteador = async (routerID, newName, newMac) => {
-    console.log(routerID.routerID);
-    console.log(`https://2d1oh9-3000.csb.app/v1/esp-routers/` + routerID.routerID);
+  const editarRoteador = async ({ routerName, macAddress, routerID }) => {
+    console.log(routerID);
+    console.log(`https://2d1oh9-3000.csb.app/v1/esp-routers/` + routerID);
+    console.log(`newName: ${routerName}, newMac: ${macAddress}`)
+    console.log(roteadores);
+
     try {
-      const response = await fetch(`https://2d1oh9-3000.csb.app/v1/esp-routers/` + routerID.routerID, {
+      const response = await fetch(`https://2d1oh9-3000.csb.app/v1/esp-routers/` + routerID, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          name: newName,
-          mac: newMac
+          name: routerName,
+          mac: macAddress
         })
       });
 
@@ -61,13 +75,14 @@ const Roteadores = () => {
           if (roteador._id === routerID) {
             return {
               ...roteador,
-              name: newName,
-              mac: newMac
+              routerName: routerName,
+              macAddress: macAddress
             };
           }
           return roteador;
         });
         setRoteadores(updatedRoteadores);
+        console.log(updatedRoteadores);
         // setOpen(false);
       } else {
         console.error("Erro ao editar o roteador");
