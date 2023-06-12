@@ -92,6 +92,29 @@ const Roteadores = () => {
     }
   };
 
+  const deletarRoteador = async (routerID) => {
+    console.log(`Hello: ${routerID}`);
+
+    try {
+      await fetch(`https://2d1oh9-3000.csb.app/v1/esp-routers/${routerID}`, { method: 'DELETE' });
+      console.log(`Roteador com ID ${routerID} deletado`);
+    } catch (error) {
+      console.error('Erro ao deletar roteador:', error);
+    }
+
+    fetch("https://2d1oh9-3000.csb.app/v1/esp-routers")
+      .then((response) => response.json())
+      .then(data => {
+        const roteadoresNotDeleted = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
+        setRoteadores(roteadoresNotDeleted);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+
+  }
+
   return (
     <>
       <div style={{ paddingLeft: 110 }}>
@@ -105,7 +128,7 @@ const Roteadores = () => {
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <TableRoteador roteadores={roteadores} editarRoteador={editarRoteador}></TableRoteador>
+        <TableRoteador roteadores={roteadores} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador}></TableRoteador>
       </div>
     </>
   )
