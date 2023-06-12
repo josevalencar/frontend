@@ -2,6 +2,8 @@ import * as React from 'react';
 import Typography from '@mui/joy/Typography';
 import TableNotifications from '../components/tableNotifications';
 import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectNotifications from '../components/selectNotifications';
 import EditIcon from '@mui/icons-material/Edit';
@@ -101,6 +103,7 @@ const Notifications = () => {
 
     const handleStatusChange = (id) => {
 
+        console.log("o lixo apertado vai para troca de state")
         const updatedRows = rows.map((row) => {
             if (row.id === id) {
                 console.log(row);
@@ -137,10 +140,16 @@ const Notifications = () => {
             width: 100,
             renderCell: (params) => (
                 <div>
-                    <DeleteIcon
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleDeleteRow(params.row.id)}
+                    { params.row.state === 'unchecked'?
+                        <VisibilityIcon
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleStatusChange(params.row.id)}
                         />
+                        :
+                        <VisibilityOffIcon
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleStatusChange(params.row.id)}/>
+                    }            
                 </div>
             ),
         },
@@ -177,6 +186,7 @@ const Notifications = () => {
             returnArray.push(
                 createData(notification.id, 
                 notification.content,
+                notification.state,
                 notification.createdAt,
                 <DeleteIcon
                     style={{ cursor: 'pointer' }}
@@ -213,8 +223,8 @@ const Notifications = () => {
         });
     }, [filter])
     
-    function createData( id, content, date, deletar) {
-        return { id, content, date, deletar};
+    function createData( id, content, state, date, deletar) {
+        return { id, content, state, date, deletar};
     }
         
     const handleDelete = (id) => {
