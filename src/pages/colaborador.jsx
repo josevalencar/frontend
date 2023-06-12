@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
 
 import TabelaColaborador from "../components/tabelaColaborador"
 import SelectInterval from "../components/selectInterval"
-import dateToSeconds from "../helpers/dateToSeconds"
+import dateToMinutes from "../helpers/dateToMinutes"
+import DateForm from '../components/datePicker'
 
 const Colaborador = () => {
   let params = useParams();
@@ -14,8 +15,8 @@ const Colaborador = () => {
   const [colaborador, atualizaColaborador] = useState('');
   const [filter, updateFilter] = useState(1);
   const [historic, updateHistoric] = useState([]);
-
-  const [lastDate, updateLastDate] = useState(0);
+  const [startDate, updateStartDate] = useState(0);
+  const [endDate, updateEndDate] = useState(9999999999);
 
   useEffect(() => {
     fetch(maintainerUrl + params.colaboradorId)
@@ -43,19 +44,20 @@ const Colaborador = () => {
     let filteredHistoric = [];
     let lastDate = 99999999999
     historic.map((entry) => {
-      if(lastDate - dateToSeconds(entry.createdAt) >= filter){
+      console.log(dateToMinutes(entry.createdAt), startDate, endDate)
+      if(lastDate - dateToMinutes(entry.createdAt) >= filter && dateToMinutes(entry.createdAt) >= startDate && dateToMinutes(entry.createdAt) <= endDate){
         filteredHistoric.push(
-          createData(entry.esp.mac,
+          createData(entry.esp.tabletName,
             entry.espSector? entry.espSector.name : undefined,
             entry.createdAt.slice(8,10) + '/' + entry.createdAt.slice(5,7) + '/' + entry.createdAt.slice(0,4) + ' - ' + entry.createdAt.slice(11, 16))
         )
-        lastDate = dateToSeconds(entry.createdAt)
+        lastDate = dateToMinutes(entry.createdAt)
       }
 
     updateRowsFormatadas(filteredHistoric)
 
     })
-  }, [historic, filter])
+  }, [historic, filter, startDate, endDate])
 
   function createData(tablet, local, data) {
     return { tablet, local, data};
@@ -79,8 +81,13 @@ const Colaborador = () => {
       <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
         <h1 style={{marginTop:"0", marginBottom: "0"}} >{colaborador.name}</h1>
         <h2 style={{marginTop:"0.5%", marginBottom:"0.5%"}} >{colaborador.rfid}</h2>
-        <div style={{alignItems:"left", marginBottom:"1%", width:"100%"}}>
-          <SelectInterval updateFilter={updateFilter} valores={[5, 10, 15, 30, 60]}></SelectInterval>
+        <div style={{display:"flex", flexDirection:"row", width:"100%"}}>
+          <div style={{alignItems:"left", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+            <SelectInterval updateFilter={updateFilter} valores={[5, 10, 15, 30, 60]} />
+          </div>
+          <div style={{alignItems:"center", justifyContent:"flex-end", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+            <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
+          </div>
         </div>
         <TabelaColaborador rows={rowsFormatadas} columns={columns}/>
       </div>
