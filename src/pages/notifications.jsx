@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Alert from '@mui/material/Alert';
-
+import SearchBar from '../components/searchBar'
 import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
 import { useState } from 'react';
@@ -190,7 +190,28 @@ const Notifications = () => {
         })
         updateRows(returnArray)
         setDeleteModals(modalsArray)
-    }, [ rowsFormatadas, filter, openDelete])
+    }, [ rowsFormatadas, openDelete])
+
+    React.useEffect(() => {
+        fetch("https://2d1oh9-3000.csb.app/v1/notifications?filter=" + filter)
+        .then((response) => response.json())
+        .then(data => {
+            // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+            const newData = data.map(item => ({
+                ...item,
+                createdAt: formatISODateToBR(item.createdAt),
+                id: item._id,
+            }));
+            
+                updateRowsFormatadas(newData);
+                updateRows(newData)
+                console.log("logica de filtro on rapeize")
+            })
+            // .then(data => updateRows(data))
+        .catch((err) => {
+            console.log(err.message);
+        });
+    }, [filter])
     
     function createData( id, content, date, deletar) {
         return { id, content, date, deletar};
@@ -250,7 +271,10 @@ const Notifications = () => {
                 <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
                     Notificações
                 </Typography>
-                <SelectNotifications updateFilter={updateFilter}></SelectNotifications>
+                <div>
+                    <SearchBar updateFilter={updateFilter} />
+                    <SelectNotifications updateFilter={updateFilter}></SelectNotifications>
+                </div>
                 <TableNotifications rows={rows} columns={columns}> </TableNotifications>
             </div>
             {deleteModals.map((modal) => {
