@@ -90,6 +90,16 @@ const Roteadores = () => {
     } catch (error) {
       console.error("Erro ao enviar a requisição para o backend", error);
     }
+
+    fetch("https://2d1oh9-3000.csb.app/v1/esp-routers")
+      .then((response) => response.json())
+      .then(data => {
+        const roteadoresNotEdited = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
+        setRoteadores(roteadoresNotEdited);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   const deletarRoteador = async (routerID) => {

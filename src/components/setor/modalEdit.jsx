@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import FormEditaRoteador from './formEditaRoteador';
+import FormEditaRoteador from './formEditaSetor';
 import { TextField, Button } from '@mui/material';
 
 
@@ -53,8 +53,8 @@ BootstrapDialogTitle.propTypes = {
 
 const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
 
-    const [routerName, setRouterName] = useState(null);
-    const [macAddress, setMacAddress] = useState(null);
+    const [routerName, setRouterName] = useState('');
+    const [macAddress, setMacAddress] = useState('');
 
     const handleCreate = (e) => {
         console.log('Router name:', routerName);
@@ -87,28 +87,28 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
                 open={open}
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    Editar roteador
+                    Editar setor
                 </BootstrapDialogTitle>
                 <DialogContent dividers={true}
                 >
                     {/* <FormEditaRoteador editarRoteador={editarRoteador} routerID={routerID}></FormEditaRoteador> */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minHeight: '15vh' }}>
                         <TextField sx={{ width: 300 }}
-                            label="Edite o nome do rastreador"
+                            label="Edite o nome do setor"
                             value={routerName}
                             onChange={handleNomeChange}
                             fullWidth
                             margin="normal"
                         />
 
-                        <TextField
+                        {/* <TextField
                             sx={{ width: 300, paddingBottom: 1 }}
-                            label="Edite o endereço MAC do rastreador"
+                            label="Edite o endereço MAC do setor"
                             value={macAddress}
                             onChange={handleMacAddressChange}
                             fullWidth
                             margin="normal"
-                        />
+                        /> */}
                         <Button variant="contained" color="primary" onClick={handleCreate} sx={{ width: 100 }}>
                             Editar
                         </Button>

@@ -1,19 +1,137 @@
-import { Route, Switch, useLocation } from 'react-router-dom';
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import TableSetor from '../components/setor/tableSetor';
+import ModalCriarSetor from '../components/setor/modalCreate';
+import SearchBar from '../components/setor/searchbar';
+import CustomModalEdit from '../components/setor/modalEdit';
+
 
 const Setores = () => {
-  const location = useLocation();
+  const [setores, setSetores] = useState([]);
+
+  const adicionarSetor = async (setor) => {
+    try {
+      const response = await fetch("https://2d1oh9-3000.csb.app/v1/sectors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          mac: setor.macAddress,
+          name: setor.routerName
+        })
+      });
+    } catch (error) {
+      console.error("Erro ao enviar a requisição para o backend", error);
+    }
+
+    setSetores([...setores, setor]);
+
+    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+      .then((response) => response.json())
+      .then(data => {
+        const setoresUpdate = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id }));
+        setSetores(setoresUpdate);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+
+  };
+
+  useEffect(() => {
+    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+      .then((response) => response.json())
+      .then(data => {
+        const setoresFetched = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id }));
+        setSetores(setoresFetched);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, [])
+
+  const editarRoteador = async ({ routerName, macAddress, routerID }) => {
+    console.log(routerID);
+    console.log(`https://2d1oh9-3000.csb.app/v1/sectors` + routerID);
+    console.log(`newName: ${routerName}, newMac: ${macAddress}`)
+    console.log(setores);
+
+    try {
+      const response = await fetch(`https://2d1oh9-3000.csb.app/v1/sectors` + routerID, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: routerName,
+          mac: macAddress
+        })
+      });
+
+      if (response.ok) {
+        // Atualizar a lista de roteadores com os dados atualizados
+        const updatedRoteadores = setores.map(roteador => {
+          if (roteador._id === routerID) {
+            return {
+              ...roteador,
+              routerName: routerName,
+              macAddress: macAddress
+            };
+          }
+          return roteador;
+        });
+        setSetores(updatedRoteadores);
+        console.log(updatedRoteadores);
+        // setOpen(false);
+      } else {
+        console.error("Erro ao editar o roteador");
+      }
+    } catch (error) {
+      console.error("Erro ao enviar a requisição para o backend", error);
+    }
+  };
+
+  const deletarRoteador = async (routerID) => {
+    console.log(`Hello: ${routerID}`);
+
+    try {
+      await fetch(`https://2d1oh9-3000.csb.app/v1/sectors/${routerID}`, { method: 'DELETE' });
+      console.log(`Roteador com ID ${routerID} deletado`);
+    } catch (error) {
+      console.error('Erro ao deletar roteador:', error);
+    }
+
+    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+      .then((response) => response.json())
+      .then(data => {
+        const roteadoresNotDeleted = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
+        setSetores(roteadoresNotDeleted);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+
+  }
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'}}>
-        Estou na página: {location.pathname} {/* Exibe a rota atual */}
+    <>
+      <div style={{ paddingLeft: 110 }}>
+        <h1>Setores</h1>
       </div>
-    </div>
-  );
+      <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 110, alignItems: 'center', minHeight: '10vh' }} >
+        <SearchBar ></SearchBar>
+        <ModalCriarSetor adicionarSetor={adicionarSetor}></ModalCriarSetor>
+        <CustomModalEdit roteadores={setores} editarRoteador={editarRoteador}></CustomModalEdit>
+
+
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+        <TableSetor roteadores={setores} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador}></TableSetor>
+      </div>
+    </>
+  )
 }
-    //<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'}}>
 
-
-
-export default Setores 
+export default Setores;
