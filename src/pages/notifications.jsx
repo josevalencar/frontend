@@ -28,7 +28,7 @@ const Notifications = () => {
     
     const [state, updateState] = React.useState([]);
     
-    const [openDelete, setOpenDelete] = React.useState(false);
+    const [selectedNotificationId, setSelectedNotificationId] = React.useState(false);
 
     const [deleteModals, setDeleteModals] = useState([]);
     
@@ -39,9 +39,10 @@ const Notifications = () => {
     const handleDeleteRow = (id) => {
         // Replace this with your own logic to delete the row with the specified ID
         console.log(`Delete row with ID ${id}`);
+        setSelectedNotificationId(id);
     }
 
-    const handleCloseDelete = () => setOpenDelete('');
+    // const handleCloseDelete = () => setOpenDelete('');
     
     const getCellBorderColorClass = (cellValue) => {
         if (cellValue === 'unchecked') {
@@ -103,7 +104,6 @@ const Notifications = () => {
 
     const handleStatusChange = (id) => {
 
-        console.log("o lixo apertado vai para troca de state")
         const updatedRows = rows.map((row) => {
             if (row.id === id) {
                 console.log(row);
@@ -121,12 +121,12 @@ const Notifications = () => {
         {   
             field: 'content', 
             headerName: 'Mensagem', 
-            width: 600,
+            width: 800,
         },
         {
             field: 'date',
             headerName: 'Data de aviso',
-            width: 300,
+            width: 200,
             disableColumnFilter: true,
             // renderCell: (params) => (
             //     <div className={`bordered-cell ${getCellBorderColorClass(params.value)}`}>
@@ -137,7 +137,7 @@ const Notifications = () => {
         {
             field: 'actions',
             headerName: 'Ações',
-            width: 100,
+            width: 75,
             renderCell: (params) => (
                 <div>
                     { params.row.state === 'unchecked'?
@@ -150,6 +150,9 @@ const Notifications = () => {
                         style={{ cursor: 'pointer' }}
                         onClick={() => handleStatusChange(params.row.id)}/>
                     }            
+                    <DeleteIcon
+                    style={{cursor: 'pointer'}}
+                    onClick={() => handleDeleteRow(params.row.id)}/>
                 </div>
             ),
         },
@@ -187,23 +190,23 @@ const Notifications = () => {
                 createData(notification.id, 
                 notification.content,
                 notification.state,
-                notification.createdAt,
-                <DeleteIcon
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleDeleteRow(notification.id)}
-                />
+                notification.createdAt
+                // <DeleteIcon
+                //     style={{ cursor: 'pointer' }}
+                //     onClick={() => handleDeleteRow(notification.id)}
+                // />
             ))
             modalsArray.push(
-                <BaseModal open={openDelete === 'delete_' + notification.id}  handleClose={handleCloseDelete} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
+                <BaseModal open={selectedNotificationId === notification.id}  setOpen={() => setSelectedNotificationId(notification.id)} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
                 )
                 return null
         })
         updateRows(returnArray)
         setDeleteModals(modalsArray)
-    }, [ rowsFormatadas, openDelete])
+    }, [ rowsFormatadas, selectedNotificationId])
 
     React.useEffect(() => {
-        fetch("https://2d1oh9-3000.csb.app/v1/notifications?filter=" + filter)
+        fetch(`https://2d1oh9-3000.csb.app/v1/notifications${filter ? `?filter=${filter}` : ''}`)
         .then((response) => response.json())
         .then(data => {
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
@@ -223,8 +226,8 @@ const Notifications = () => {
         });
     }, [filter])
     
-    function createData( id, content, state, date, deletar) {
-        return { id, content, state, date, deletar};
+    function createData( id, content, state, date) {
+        return { id, content, state, date};
     }
         
     const handleDelete = (id) => {
@@ -245,7 +248,7 @@ const Notifications = () => {
             // Handle network error
             console.error('Network error:', error);
           });
-        handleCloseDelete()
+        setSelectedNotificationId(null)
       };
 
     return (
@@ -283,7 +286,6 @@ const Notifications = () => {
                 </Typography>
                 <div>
                     <SearchBar updateFilter={updateFilter} />
-                    <SelectNotifications updateFilter={updateFilter}></SelectNotifications>
                 </div>
                 <TableNotifications rows={rows} columns={columns}> </TableNotifications>
             </div>

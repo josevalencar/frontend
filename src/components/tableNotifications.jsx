@@ -10,7 +10,7 @@ export default function TableNotifications(props) {
     
     return (
         <>
-            <div style={{ height: 300, width: 1200 }}>
+            <div style={{ height: 700 , width: 1200 }}>
                 <DataGrid 
                 rows={props.rows} 
                 columns={props.columns} 
