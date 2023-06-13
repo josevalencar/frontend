@@ -50,7 +50,7 @@ export default function AlertSuccess({ setSuccess, type }) {
         >
           <div>
             <Typography fontWeight="lg" mt={0.25}>
-              Success
+              Successo
             </Typography>
             <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
               {tipoModal(type)}

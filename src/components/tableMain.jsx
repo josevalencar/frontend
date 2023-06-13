@@ -31,7 +31,7 @@ const TableTablet = () => {
     rows.map((tablet) => {
       returnArray.push(
         createData(tablet.esp.mac,tablet.maintainer? tablet.maintainer.name: "Colaborador sem nome"
-            ,tablet.espSector? tablet.espSector.name : undefined)
+            ,tablet.espSector? tablet.espSector.name : "Setor não encontrado")
       )
     })
     updateRowsFormatadas(returnArray)

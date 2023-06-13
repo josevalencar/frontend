@@ -37,7 +37,7 @@ export default function AlertERROR({ setError }) {
         >
           <div>
             <Typography fontWeight="lg" mt={0.25}>
-              error
+              Erro
             </Typography>
             <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
               Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.

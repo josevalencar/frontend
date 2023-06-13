@@ -1,41 +1,22 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
 
 import TabelaColaborador from "../components/tabelaColaborador"
 import SelectInterval from "../components/selectInterval"
-import dateToSeconds from "../helpers/dateToSeconds"
+import dateToMinutes from "../helpers/dateToMinutes"
+import DateForm from '../components/datePicker'
 
 const Colaborador = () => {
   let params = useParams();
   let maintainerUrl = "https://2d1oh9-3000.csb.app/v1/maintainers/";
   let historicUrl = "https://2d1oh9-3000.csb.app/v1/historics?maintainer=";
 
-  /*const [rows, updateRows] = useState(
-    [
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Matéria prima", "12/11/2002 - 15:00"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Matéria prima", "12/11/2002 - 14:55"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Matéria prima", "12/11/2002 - 14:50"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Matéria prima", "12/11/2002 - 14:45"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:40"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:35"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:30"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:25"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:20"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:15"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Inflação", "12/11/2002 - 14:10"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Vulcanização", "12/11/2002 - 14:05"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Vulcanização", "12/11/2002 - 14:00"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Vulcanização", "12/11/2002 - 13:55"),
-      createData(<Link to='/colaboradores/Maia'>A301</Link>, "Vulcanização", "12/11/2002 - 13:50"),
-    ]
-  )*/
-
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [colaborador, atualizaColaborador] = useState('');
   const [filter, updateFilter] = useState(1);
   const [historic, updateHistoric] = useState([]);
-
-  const [lastDate, updateLastDate] = useState(0);
+  const [startDate, updateStartDate] = useState(0);
+  const [endDate, updateEndDate] = useState(9999999999);
 
   useEffect(() => {
     fetch(maintainerUrl + params.colaboradorId)
@@ -59,40 +40,24 @@ const Colaborador = () => {
 
   }, [])
 
-  /*useEffect(() => {
-    let allRows = rows;
-    let returnArray = [];
-    allRows.map((row) => {
-      if(parseInt(row.data.slice(-2))%filter == 0){
-        returnArray.push(row)
-      }
-    updateRowsFormatadas(returnArray)
-    })
-
-  }, [rows, filter])*/
-
   useEffect(() => {
     let filteredHistoric = [];
     let lastDate = 99999999999
     historic.map((entry) => {
-      if(lastDate - dateToSeconds(entry.createdAt) >= filter){
-        //console.log("last date: " + lastDate)
-        //console.log("current date: " + dateToSeconds(entry.createdAt))
-        //console.log(lastDate - dateToSeconds(entry.createdAt))
-        //console.log(entry.createdAt)
-        //console.log(entry.createdAt.slice())
+      console.log(dateToMinutes(entry.createdAt), startDate, endDate)
+      if(lastDate - dateToMinutes(entry.createdAt) >= filter && dateToMinutes(entry.createdAt) >= startDate && dateToMinutes(entry.createdAt) <= endDate){
         filteredHistoric.push(
-          createData(entry.esp.mac,
+          createData(entry.esp.tabletName,
             entry.espSector? entry.espSector.name : undefined,
             entry.createdAt.slice(8,10) + '/' + entry.createdAt.slice(5,7) + '/' + entry.createdAt.slice(0,4) + ' - ' + entry.createdAt.slice(11, 16))
         )
-        lastDate = dateToSeconds(entry.createdAt)
+        lastDate = dateToMinutes(entry.createdAt)
       }
 
     updateRowsFormatadas(filteredHistoric)
 
     })
-  }, [historic, filter])
+  }, [historic, filter, startDate, endDate])
 
   function createData(tablet, local, data) {
     return { tablet, local, data};
@@ -116,8 +81,13 @@ const Colaborador = () => {
       <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
         <h1 style={{marginTop:"0", marginBottom: "0"}} >{colaborador.name}</h1>
         <h2 style={{marginTop:"0.5%", marginBottom:"0.5%"}} >{colaborador.rfid}</h2>
-        <div style={{position:"relative", float:"left", marginBottom:"1%"}}>
-          <SelectInterval updateFilter={updateFilter} valores={[5, 10, 15, 30, 60]}></SelectInterval>
+        <div style={{display:"flex", flexDirection:"row", width:"100%"}}>
+          <div style={{alignItems:"left", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+            <SelectInterval updateFilter={updateFilter} valores={[5, 10, 15, 30, 60]} />
+          </div>
+          <div style={{alignItems:"center", justifyContent:"flex-end", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+            <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
+          </div>
         </div>
         <TabelaColaborador rows={rowsFormatadas} columns={columns}/>
       </div>

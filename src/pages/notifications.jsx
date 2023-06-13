@@ -2,15 +2,19 @@ import * as React from 'react';
 import Typography from '@mui/joy/Typography';
 import TableNotifications from '../components/tableNotifications';
 import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectNotifications from '../components/selectNotifications';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Alert from '@mui/material/Alert';
+
 import SearchBar from '../components/searchBar'
+
 import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
 import { useState } from 'react';
@@ -28,7 +32,9 @@ const Notifications = () => {
     
     const [state, updateState] = React.useState([]);
     
+
     const [selectedNotificationId, setSelectedNotificationId] = React.useState(false);
+
 
     const [deleteModals, setDeleteModals] = useState([]);
     
@@ -39,10 +45,12 @@ const Notifications = () => {
     const handleDeleteRow = (id) => {
         // Replace this with your own logic to delete the row with the specified ID
         console.log(`Delete row with ID ${id}`);
+
         setSelectedNotificationId(id);
     }
 
     // const handleCloseDelete = () => setOpenDelete('');
+
     
     const getCellBorderColorClass = (cellValue) => {
         if (cellValue === 'unchecked') {
@@ -121,12 +129,15 @@ const Notifications = () => {
         {   
             field: 'content', 
             headerName: 'Mensagem', 
+
             width: 800,
+
         },
         {
             field: 'date',
             headerName: 'Data de aviso',
             width: 200,
+
             disableColumnFilter: true,
             // renderCell: (params) => (
             //     <div className={`bordered-cell ${getCellBorderColorClass(params.value)}`}>
@@ -153,6 +164,7 @@ const Notifications = () => {
                     <DeleteIcon
                     style={{cursor: 'pointer'}}
                     onClick={() => handleDeleteRow(params.row.id)}/>
+
                 </div>
             ),
         },
@@ -198,6 +210,7 @@ const Notifications = () => {
             ))
             modalsArray.push(
                 <BaseModal open={selectedNotificationId === notification.id}  setOpen={() => setSelectedNotificationId(notification.id)} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
+
                 )
                 return null
         })
@@ -228,6 +241,7 @@ const Notifications = () => {
     
     function createData( id, content, state, date) {
         return { id, content, state, date};
+
     }
         
     const handleDelete = (id) => {
@@ -249,6 +263,7 @@ const Notifications = () => {
             console.error('Network error:', error);
           });
         setSelectedNotificationId(null)
+
       };
 
     return (
@@ -287,6 +302,7 @@ const Notifications = () => {
                 <div>
                     <SearchBar updateFilter={updateFilter} />
                 </div>
+
                 <TableNotifications rows={rows} columns={columns}> </TableNotifications>
             </div>
             {deleteModals.map((modal) => {
