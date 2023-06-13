@@ -16,7 +16,8 @@ const MapaFabrica = () => {
         <img
             src={Mapa}
             alt="Mapa da Fábrica"
-            style={{ maxWidth: '100%', maxHeight: '90%' }}  // Ajuste a largura e altura máximas conforme necessário
+            style={{ maxWidth: '100%', maxHeight: '90%' }}
+            id="imagem-mapa"  // Ajuste a largura e altura máximas conforme necessário
         />
         </Box>
     </div>
