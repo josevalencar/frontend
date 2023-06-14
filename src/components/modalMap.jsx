@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button } from '@mui/material';
+import { Modal, Button, Dialog } from '@mui/material';
 import Mapa from '../images/Mapa.png';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
@@ -30,8 +30,7 @@ const MapaModal = () => {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleAbrirModal}>Abrir Modal</Button>
-      <Modal open={open} onClose={handleFecharModal}>
+      <Dialog open={open} onClose={handleFecharModal} maxWidth={false}>
         <div
           style={{
             display: 'flex',
@@ -66,7 +65,7 @@ const MapaModal = () => {
             </div>
           </div>
         </div>
-      </Modal>
+      </Dialog>
     </div>
   );
 };

@@ -191,7 +191,7 @@ export default function MiniDrawer() {
             justifyContent: open ? 'initial' : 'space-between',
           }} 
         >
-              <IconButton  edge="start" sx={{ marginRight: 'auto'}}>
+              <IconButton onClick={handleDrawerClose}  edge="start" component={Link} to='earth' sx={{ marginRight: 'auto'}}>
                 <SettingsSharpIcon sx={{ color: '#000000' }} />
               </IconButton>
               <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes'  edge="end" sx={{ marginLeft: 'auto'}} >

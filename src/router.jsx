@@ -7,9 +7,10 @@ import Setores from './pages/setores'
 import Roteadores from './pages/roteadores'
 import Tablets from "./pages/tablets"
 import Tablet from './pages/tablet'
-import Historico from './pages/historico'
+import Viewer from './pages/earth'
 import PaginaNaoEncontrada from './pages/paginaNaoEncontrada'
 import React from 'react'
+
 
 const Router = () => {
   return (
@@ -24,6 +25,7 @@ const Router = () => {
         <Route path="" element={<Tablets/>}/>
         <Route path=":tabletId" element={<Tablet/>}/>
       </Route>
+      <Route path="earth" element={<Viewer/>} />
       <Route path="setores" element={<Setores />} />
       <Route path="roteadores" element={<Roteadores />} />
       <Route path="*" element={<PaginaNaoEncontrada />} />
