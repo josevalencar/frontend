@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../images/Frame 12.svg'
 import { styled, useTheme } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom'
@@ -25,15 +25,14 @@ import FactoryIcon from '@mui/icons-material/Factory';
 import RouterIcon from '@mui/icons-material/Router';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
 import { colors } from '@mui/joy';
 import {Switch, useLocation } from 'react-router-dom';
 
-
 const drawerWidth = 240;
 const path = ["/","/tablets","/colaboradores","/setores","/roteadores"];
 var rota = ''
-
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -101,9 +100,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
   var page = useLocation();
   
   const handleDrawerOpen = () => {
@@ -114,7 +114,7 @@ export default function MiniDrawer() {
     setOpen(false);
   };
   
-
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -195,7 +195,11 @@ export default function MiniDrawer() {
                 <SettingsSharpIcon sx={{ color: '#000000' }} />
               </IconButton>
               <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes'  edge="end" sx={{ marginLeft: 'auto'}} >
-                <NotificationsSharpIcon sx={{ color: '#000000' }} />
+                { props.haveUnread ?
+                  <NotificationsActiveIcon sx={{ color: '#000000'}}/>
+                :
+                  <NotificationsSharpIcon sx={{ color: '#000000' }} />
+                }
               </IconButton>
         </Box>
       </Drawer>
