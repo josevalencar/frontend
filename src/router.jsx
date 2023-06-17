@@ -11,11 +11,11 @@ import Historico from './pages/historico'
 import PaginaNaoEncontrada from './pages/paginaNaoEncontrada'
 import React from 'react'
 
-const Router = () => {
+const Router = (props) => {
   return (
-    <Routes>
+    <Routes updateHaveUnread={props.updateHaveUnread} >
       <Route path="/" element={<Home />} />
-      <Route path="notificacoes" element={<Notifications />} />
+      <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} />} />
       <Route path="colaboradores">
         <Route path="" element={<Colaboradores />} />
         <Route path=":colaboradorId" element={<Colaborador />} />

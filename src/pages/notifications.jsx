@@ -1,46 +1,47 @@
 import * as React from 'react';
+import App from '../App'
 import Typography from '@mui/joy/Typography';
 import TableNotifications from '../components/tableNotifications';
 import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
-
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
 import DeleteIcon from '@mui/icons-material/Delete';
-import SelectNotifications from '../components/selectNotifications';
-import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Alert from '@mui/material/Alert';
-
+import DatePicker from '../components/datePicker'
 import SearchBar from '../components/searchBar'
-
 import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
 import { useState } from 'react';
 import './notifications.css'; // Importando o arquivo CSS
 
 
-const Notifications = () => {
+const Notifications = ( {updateHaveUnread} ) => {
     
+    const [hasUnread, updateHasUnread] = React.useState(false);
+
+    const [changedNotificationState, updateChangedNotificationState] = React.useState(false)
     
+    // console.log(hasUnread)
+
     const [rows, updateRows] = React.useState([]);
 
     const [rowsFormatadas, updateRowsFormatadas] = React.useState([]);
     
     const [filter, updateFilter] = React.useState([]);
     
-    const [state, updateState] = React.useState([]);
+    const [startDate, updateStartDate] = useState(0);
+    const [endDate, updateEndDate] = useState(9999999999);
     
-
     const [selectedNotificationId, setSelectedNotificationId] = React.useState(false);
-
 
     const [deleteModals, setDeleteModals] = useState([]);
     
     const [error, setError] = React.useState(false);
     
     const [success, setSuccess] = React.useState(['', false]);
+
     
     const handleDeleteRow = (id) => {
         // Replace this with your own logic to delete the row with the specified ID
@@ -74,15 +75,39 @@ const Notifications = () => {
         
         // Formata a hora e minutos
         const time = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        console.log(`${date} ${time}`)
-
+        
     
         return `${date} ${time}`;
     }
 
+    
+    React.useEffect(() => {
+
+        console.log("o update state chamou o useEffect")
+        console.log("changedNotificationState: ")
+        console.log(changedNotificationState)
+
+        if(changedNotificationState == true){
+            console.log("changedNotifications == true")
+            fetch("https://2d1oh9-3000.csb.app/v1/notifications")
+            .then((response) => response.json())
+            .then(data => {
+                // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+                const uncheckedNotification = data.some(item => {
+                return item.state === 'unchecked';
+                });
+                console.log("uncheckedNotification: ")
+                console.log(uncheckedNotification)
+                updateHaveUnread(uncheckedNotification)
+            })
+            updateChangedNotificationState(false)
+        }
+        
+    },[ , changedNotificationState ])
+
     function UpdateState(row, newState){
-        console.log("nhaaaaa juba")
-        console.log(row)
+        console.log("nhaaaaa juba");
+        // console.log(row)
         fetch("https://2d1oh9-3000.csb.app/v1/notifications/" + row.id, {
             method: "PUT",
             headers: {'Content-Type': 'application/json'},
@@ -99,11 +124,10 @@ const Notifications = () => {
         // console.log(res)
         .then(res => {
             if(res.ok){
-                console.log("foi")
                 setSuccess(['atualizado', true])
+                updateChangedNotificationState(true);
             }
             else{
-                console.log("n foi")
                 setError(true);
             }
         })
@@ -184,12 +208,13 @@ const Notifications = () => {
             
                 updateRowsFormatadas(newData);
                 updateRows(newData)
-                console.log("fui executado 1 vez")
             })
             // .then(data => updateRows(data))
             .catch((err) => {
                 console.log(err.message);
             });
+
+            updateChangedNotificationState(true)
         }, [])
         
     React.useEffect(() => {
@@ -216,7 +241,7 @@ const Notifications = () => {
         })
         updateRows(returnArray)
         setDeleteModals(modalsArray)
-    }, [ rowsFormatadas, selectedNotificationId])
+    }, [ rowsFormatadas, selectedNotificationId, startDate, endDate])
 
     React.useEffect(() => {
         fetch(`https://2d1oh9-3000.csb.app/v1/notifications${filter ? `?filter=${filter}` : ''}`)
@@ -231,7 +256,6 @@ const Notifications = () => {
             
                 updateRowsFormatadas(newData);
                 updateRows(newData)
-                console.log("logica de filtro on rapeize")
             })
             // .then(data => updateRows(data))
         .catch((err) => {
@@ -301,6 +325,7 @@ const Notifications = () => {
                 </Typography>
                 <div>
                     <SearchBar updateFilter={updateFilter} />
+                    <DatePicker updateStartDate={updateStartDate} updateEndDate={updateEndDate}/>
                 </div>
 
                 <TableNotifications rows={rows} columns={columns}> </TableNotifications>
