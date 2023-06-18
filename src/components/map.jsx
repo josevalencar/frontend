@@ -56,7 +56,6 @@ const MapaFabrica = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

@@ -1,45 +1,57 @@
 import * as React from 'react';
+import App from '../App'
 import Typography from '@mui/joy/Typography';
 import TableNotifications from '../components/tableNotifications';
 import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SelectNotifications from '../components/selectNotifications';
-import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Alert from '@mui/material/Alert';
-
+import DatePicker from '../components/datePicker'
+import SearchBar from '../components/searchBar'
 import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
 import { useState } from 'react';
 import './notifications.css'; // Importando o arquivo CSS
 
 
-const Notifications = () => {
+const Notifications = ( {updateHaveUnread} ) => {
     
+    const [hasUnread, updateHasUnread] = React.useState(false);
+
+    const [changedNotificationState, updateChangedNotificationState] = React.useState(false)
     
+    // console.log(hasUnread)
+
     const [rows, updateRows] = React.useState([]);
 
     const [rowsFormatadas, updateRowsFormatadas] = React.useState([]);
     
     const [filter, updateFilter] = React.useState([]);
     
-    const [state, updateState] = React.useState([]);
+    const [startDate, updateStartDate] = useState(0);
+    const [endDate, updateEndDate] = useState(9999999999);
     
-    const [openDelete, setOpenDelete] = React.useState(false);
+    const [selectedNotificationId, setSelectedNotificationId] = React.useState(false);
 
     const [deleteModals, setDeleteModals] = useState([]);
     
     const [error, setError] = React.useState(false);
     
     const [success, setSuccess] = React.useState(['', false]);
+
     
     const handleDeleteRow = (id) => {
         // Replace this with your own logic to delete the row with the specified ID
         console.log(`Delete row with ID ${id}`);
+
+        setSelectedNotificationId(id);
     }
 
-    const handleCloseDelete = () => setOpenDelete('');
+    // const handleCloseDelete = () => setOpenDelete('');
+
     
     const getCellBorderColorClass = (cellValue) => {
         if (cellValue === 'unchecked') {
@@ -63,15 +75,39 @@ const Notifications = () => {
         
         // Formata a hora e minutos
         const time = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        console.log(`${date} ${time}`)
-
+        
     
         return `${date} ${time}`;
     }
 
+    
+    React.useEffect(() => {
+
+        console.log("o update state chamou o useEffect")
+        console.log("changedNotificationState: ")
+        console.log(changedNotificationState)
+
+        if(changedNotificationState == true){
+            console.log("changedNotifications == true")
+            fetch("https://2d1oh9-3000.csb.app/v1/notifications")
+            .then((response) => response.json())
+            .then(data => {
+                // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+                const uncheckedNotification = data.some(item => {
+                return item.state === 'unchecked';
+                });
+                console.log("uncheckedNotification: ")
+                console.log(uncheckedNotification)
+                updateHaveUnread(uncheckedNotification)
+            })
+            updateChangedNotificationState(false)
+        }
+        
+    },[ , changedNotificationState ])
+
     function UpdateState(row, newState){
-        console.log("nhaaaaa juba")
-        console.log(row)
+        console.log("nhaaaaa juba");
+        // console.log(row)
         fetch("https://2d1oh9-3000.csb.app/v1/notifications/" + row.id, {
             method: "PUT",
             headers: {'Content-Type': 'application/json'},
@@ -88,11 +124,10 @@ const Notifications = () => {
         // console.log(res)
         .then(res => {
             if(res.ok){
-                console.log("foi")
                 setSuccess(['atualizado', true])
+                updateChangedNotificationState(true);
             }
             else{
-                console.log("n foi")
                 setError(true);
             }
         })
@@ -118,12 +153,15 @@ const Notifications = () => {
         {   
             field: 'content', 
             headerName: 'Mensagem', 
-            width: 600,
+
+            width: 800,
+
         },
         {
             field: 'date',
             headerName: 'Data de aviso',
-            width: 300,
+            width: 200,
+
             disableColumnFilter: true,
             // renderCell: (params) => (
             //     <div className={`bordered-cell ${getCellBorderColorClass(params.value)}`}>
@@ -134,13 +172,23 @@ const Notifications = () => {
         {
             field: 'actions',
             headerName: 'Ações',
-            width: 100,
+            width: 75,
             renderCell: (params) => (
                 <div>
-                    <DeleteIcon
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleDeleteRow(params.row.id)}
+                    { params.row.state === 'unchecked'?
+                        <VisibilityIcon
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleStatusChange(params.row.id)}
                         />
+                        :
+                        <VisibilityOffIcon
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleStatusChange(params.row.id)}/>
+                    }            
+                    <DeleteIcon
+                    style={{cursor: 'pointer'}}
+                    onClick={() => handleDeleteRow(params.row.id)}/>
+
                 </div>
             ),
         },
@@ -160,12 +208,13 @@ const Notifications = () => {
             
                 updateRowsFormatadas(newData);
                 updateRows(newData)
-                console.log("fui executado 1 vez")
             })
             // .then(data => updateRows(data))
             .catch((err) => {
                 console.log(err.message);
             });
+
+            updateChangedNotificationState(true)
         }, [])
         
     React.useEffect(() => {
@@ -177,23 +226,46 @@ const Notifications = () => {
             returnArray.push(
                 createData(notification.id, 
                 notification.content,
-                notification.createdAt,
-                <DeleteIcon
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleDeleteRow(notification.id)}
-                />
+                notification.state,
+                notification.createdAt
+                // <DeleteIcon
+                //     style={{ cursor: 'pointer' }}
+                //     onClick={() => handleDeleteRow(notification.id)}
+                // />
             ))
             modalsArray.push(
-                <BaseModal open={openDelete === 'delete_' + notification.id}  handleClose={handleCloseDelete} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
+                <BaseModal open={selectedNotificationId === notification.id}  setOpen={() => setSelectedNotificationId(notification.id)} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
+
                 )
                 return null
         })
         updateRows(returnArray)
         setDeleteModals(modalsArray)
-    }, [ rowsFormatadas, filter, openDelete])
+    }, [ rowsFormatadas, selectedNotificationId, startDate, endDate])
+
+    React.useEffect(() => {
+        fetch(`https://2d1oh9-3000.csb.app/v1/notifications${filter ? `?filter=${filter}` : ''}`)
+        .then((response) => response.json())
+        .then(data => {
+            // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+            const newData = data.map(item => ({
+                ...item,
+                createdAt: formatISODateToBR(item.createdAt),
+                id: item._id,
+            }));
+            
+                updateRowsFormatadas(newData);
+                updateRows(newData)
+            })
+            // .then(data => updateRows(data))
+        .catch((err) => {
+            console.log(err.message);
+        });
+    }, [filter])
     
-    function createData( id, content, date, deletar) {
-        return { id, content, date, deletar};
+    function createData( id, content, state, date) {
+        return { id, content, state, date};
+
     }
         
     const handleDelete = (id) => {
@@ -214,7 +286,8 @@ const Notifications = () => {
             // Handle network error
             console.error('Network error:', error);
           });
-        handleCloseDelete()
+        setSelectedNotificationId(null)
+
       };
 
     return (
@@ -250,7 +323,11 @@ const Notifications = () => {
                 <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
                     Notificações
                 </Typography>
-                <SelectNotifications updateFilter={updateFilter}></SelectNotifications>
+                <div>
+                    <SearchBar updateFilter={updateFilter} />
+                    <DatePicker updateStartDate={updateStartDate} updateEndDate={updateEndDate}/>
+                </div>
+
                 <TableNotifications rows={rows} columns={columns}> </TableNotifications>
             </div>
             {deleteModals.map((modal) => {
