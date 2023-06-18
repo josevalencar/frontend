@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button } from '@mui/material';
+import { Typography } from '@mui/material';
 import MapaModal from '../modalMap';
 
-const FormCriarSetor = ({ adicionarSetor, criarRoteador , fecharModal }) => {
+const FormCriarSetor = ({ adicionarSetor, criarRoteador , fecharModal , coordenadas }) => {
   const [routerName, setRouterName] = useState('');
-  const [mostrarMapa, setMostrarMapa] = useState(false)
+
 
   const handleCreate = (e) => {
     // Lógica para criar o roteador com os dados fornecidos
     console.log('Router name:', routerName);
+    console.log('coordenadas:', coordenadas  );
     e.preventDefault();
 
-    adicionarSetor({ routerName });
+    adicionarSetor({ routerName , mapX: coordenadas.x , mapY: coordenadas.y });
     setRouterName('');
-    setMostrarMapa(true)
     fecharModal()
   };
 
@@ -23,6 +24,7 @@ const FormCriarSetor = ({ adicionarSetor, criarRoteador , fecharModal }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column',justifyContent:'center', alignItems: 'center', minHeight: '15vh' }}>
+      <Typography>Escolha no mapa o setor que deseja adicionar</Typography>
       <TextField sx={{ width: 300 }}
         label="Insira o nome do setor"
         value={routerName}
@@ -33,7 +35,6 @@ const FormCriarSetor = ({ adicionarSetor, criarRoteador , fecharModal }) => {
       <Button variant="contained" color="primary" onClick={handleCreate} sx={{ width: 100 }}>
         Próximo
       </Button>
-      {mostrarMapa && <MapaModal />}
     </div>
   );
 };

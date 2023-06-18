@@ -3,7 +3,7 @@ import TableSetor from '../components/setor/tableSetor';
 import ModalCriarSetor from '../components/setor/modalCreate';
 import SearchBar from '../components/setor/searchbar';
 import CustomModalEdit from '../components/setor/modalEdit';
-
+import MapaModal from '../components/modalMap';
 
 const Setores = () => {
   const [setores, setSetores] = useState([]);
@@ -17,7 +17,9 @@ const Setores = () => {
         },
         body: JSON.stringify({
           mac: setor.macAddress,
-          name: setor.routerName
+          name: setor.routerName,
+          mapX: setor.mapX,
+          mapY: setor.mapY
         })
       });
     } catch (error) {
@@ -29,7 +31,7 @@ const Setores = () => {
     fetch("https://2d1oh9-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
-        const setoresUpdate = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id }));
+        const setoresUpdate = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id, mapX: setor.mapX , mapY: setor.mapY }));
         setSetores(setoresUpdate);
       })
       .catch((err) => {
@@ -43,7 +45,7 @@ const Setores = () => {
     fetch("https://2d1oh9-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
-        const setoresFetched = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id }));
+        const setoresFetched = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id, mapX: setor.mapX , mapY: setor.mapY }));
         setSetores(setoresFetched);
       })
       .catch((err) => {

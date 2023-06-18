@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import FormCriarSetor from './formSetor';
 import MapaModal from '../modalMap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal} from '@mui/material';
 import Mapa from "../../images/Mapa.png"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -58,6 +58,10 @@ BootstrapDialogTitle.propTypes = {
 export default function ModalCriarSetor({ adicionarSetor }) {
     const [open, setOpen] = React.useState(false);
     const [coordenadas, setCoordenadas] = useState({ x: null, y: null });
+
+    useEffect(() => {
+        console.log('Coordenadas atualizadas:', coordenadas);
+      }, [coordenadas]);
 
     const handleImagemClick = (event) => {
         const imageElement = event.target;
@@ -122,13 +126,8 @@ export default function ModalCriarSetor({ adicionarSetor }) {
                             )}
                         </div>
                     </div>
-                    <FormCriarSetor fecharModal={handleClose} adicionarSetor={adicionarSetor} sx={{ textAlign: 'center'}}></FormCriarSetor>
+                    <FormCriarSetor fecharModal={handleClose} coordenadas={coordenadas} adicionarSetor={adicionarSetor} sx={{ textAlign: 'center'}}></FormCriarSetor>
                 </DialogContent>
-                {/* <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Save changes
-                    </Button>
-                </DialogActions> */}
             </BootstrapDialog>
         </div>
     );
