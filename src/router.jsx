@@ -10,6 +10,7 @@ import Tablet from './pages/tablet'
 import Historico from './pages/historico'
 import PaginaNaoEncontrada from './pages/paginaNaoEncontrada'
 import React from 'react'
+import Viewer from './pages/earth'
 
 const Router = () => {
   return (
@@ -21,9 +22,10 @@ const Router = () => {
         <Route path=":colaboradorId" element={<Colaborador />} />
       </Route>
       <Route path="tablets">
-        <Route path="" element={<Tablets/>}/>
-        <Route path=":tabletId" element={<Tablet/>}/>
+        <Route path="" element={<Tablets />} />
+        <Route path=":tabletId" element={<Tablet />} />
       </Route>
+      <Route path="earth" element={<Viewer />} />
       <Route path="setores" element={<Setores />} />
       <Route path="roteadores" element={<Roteadores />} />
       <Route path="*" element={<PaginaNaoEncontrada />} />
