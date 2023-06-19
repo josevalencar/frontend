@@ -4,6 +4,8 @@ import { Box, Typography } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Mapa from '../images/Mapa.png'
+import Loading from '../pages/loadingPage';
+
 
 const MapaFabrica = () => {
   const [setores, setSetores] = useState([]);
@@ -97,7 +99,7 @@ const MapaFabrica = () => {
       {/* // ) */}
       {/* // })} */}
       {
-        isLoading ? null : (
+        isLoading ? <Loading/> : (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <div style={{ position: 'relative' }}>
               <img

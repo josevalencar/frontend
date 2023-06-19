@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableRow, Button, ListItemButton } from '@mui/material';
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import React from 'react';
 import TabelaColaborador from "../components/tabelaColaborador"
 import HistorySharpIcon from '@mui/icons-material/HistorySharp';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +14,7 @@ import AlertERROR from './alerts/error';
 import AlertSuccess from './alerts/sucess';
 import SearchBar from './searchBar';
 import removerAcentos from '../helpers/removerAcentos';
+import Loading from '../pages/loadingPage';
 
 
 
@@ -25,6 +27,7 @@ const TableTablet = () => {
   const [error, setError] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const handleCloseCreate = () => setOpenCreate(false);
   const handleCloseUpdate = () => setOpenUpdate('');
 
@@ -35,9 +38,14 @@ const TableTablet = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     fetch("https://2d1oh9-3000.csb.app/v1/esps?orderBy=createdAt-desc")
       .then((response) => response.json())
-      .then(data => updateRows(data))
+      .then(data => { 
+        updateRows(data)
+        setIsLoading(false);
+      })
+
       .catch((err) => {
         console.log(err.message);
      });
@@ -91,9 +99,14 @@ const TableTablet = () => {
         {error?<AlertERROR setError={setError} />:null}
         {success[1] ? <AlertSuccess setSuccess={setSuccess} type="Tablet" /> : null}
         <h1 style={{marginTop:"0"}} >Tablets</h1>
-        <ModalTablets mode="create"  setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />
-        <SearchBar updateFilter={updateFilter} type="tablet" />
-        <TabelaColaborador rows={rowsFormatadas} columns={columns} />
+        {isLoading ?<Loading/> :(
+          <React.Fragment>
+            <ModalTablets mode="create"  setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />
+            <SearchBar updateFilter={updateFilter} type="tablet" />
+            <TabelaColaborador rows={rowsFormatadas} columns={columns} />
+          </React.Fragment>
+        )}
+        
       </div>
     </div>
   </>
