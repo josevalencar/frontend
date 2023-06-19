@@ -28,10 +28,10 @@ import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
 import { colors } from '@mui/joy';
-import {Switch, useLocation } from 'react-router-dom';
+import { Switch, useLocation } from 'react-router-dom';
 
 const drawerWidth = 240;
-const path = ["/","/tablets","/colaboradores","/setores","/roteadores"];
+const path = ["/", "/tablets", "/colaboradores", "/setores", "/roteadores"];
 var rota = ''
 
 const openedMixin = (theme) => ({
@@ -66,7 +66,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
-  backgroundColor:'#FFFFFF',
+  backgroundColor: '#FFFFFF',
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
@@ -74,7 +74,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    backgroundColor:'#FFFFFF',
+    backgroundColor: '#FFFFFF',
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -105,7 +105,7 @@ export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
 
   var page = useLocation();
-  
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -113,14 +113,12 @@ export default function MiniDrawer(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
-  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton 
+          <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -128,7 +126,7 @@ export default function MiniDrawer(props) {
             sx={{
               marginRight: 5,
               ...(open && { display: 'none' }),
-              color: '#000000' ,
+              color: '#000000',
             }}
           >
             <MenuIcon />
@@ -138,7 +136,7 @@ export default function MiniDrawer(props) {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton IconButton onClick={handleDrawerClose} edge="start" component={Link} to="/">
-              <img src={logo} alt="Logo" height={30} />
+            <img src={logo} alt="Logo" height={30} />
           </IconButton>
           <IconButton onClick={handleDrawerClose} sx={{ color: '#000000' }}>
             {theme.direction === 'rtl' ? <ChevronRightIcon sx={{ color: '#000000' }} /> : <ChevronLeftIcon />}
@@ -146,14 +144,14 @@ export default function MiniDrawer(props) {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Mapa','Tablets', 'Colaboradores', 'Setores', 'Roteadores'].map((text,index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block'  }}>
+          {['Mapa', 'Tablets', 'Colaboradores', 'Setores', 'Roteadores'].map((text, index) => (
+            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
-                {...index === 0 ? rota = path[0]: null}
-                {...index === 1 ? rota = path[1]: null}
-                {...index === 2 ? rota = path[2]: null}
-                {...index === 3 ? rota = path[3]: null}
-                {...index === 4 ? rota = path[4]: null}
+                {...index === 0 ? rota = path[0] : null}
+                {...index === 1 ? rota = path[1] : null}
+                {...index === 2 ? rota = path[2] : null}
+                {...index === 3 ? rota = path[3] : null}
+                {...index === 4 ? rota = path[4] : null}
                 component={Link}
                 to={rota}
                 IconButton onClick={handleDrawerClose}
@@ -169,12 +167,12 @@ export default function MiniDrawer(props) {
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
-                > 
-                  {index === 0 ? <IconButton><FmdGoodRoundedIcon sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index === 1 ? <IconButton><TabletMacIcon sx={{ color: page === path[0] ? '#42e6f5': '#000000'  }} /></IconButton> : null }
-                  {index === 2 ? <IconButton><GroupIcon sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index === 3 ? <IconButton><FactoryIcon  sx={{ color: '#000000' }} /></IconButton> : null }
-                  {index === 4 ? <IconButton ><RouterIcon  sx={{ color: '#000000' }} /></IconButton> : null }
+                >
+                  {index === 0 ? <IconButton><FmdGoodRoundedIcon sx={{ color: '#000000' }} /></IconButton> : null}
+                  {index === 1 ? <IconButton><TabletMacIcon sx={{ color: page === path[0] ? '#42e6f5' : '#000000' }} /></IconButton> : null}
+                  {index === 2 ? <IconButton><GroupIcon sx={{ color: '#000000' }} /></IconButton> : null}
+                  {index === 3 ? <IconButton><FactoryIcon sx={{ color: '#000000' }} /></IconButton> : null}
+                  {index === 4 ? <IconButton ><RouterIcon sx={{ color: '#000000' }} /></IconButton> : null}
 
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -183,24 +181,20 @@ export default function MiniDrawer(props) {
           ))}
         </List>
         <Box sx={{
-            position: 'fixed',
-            bottom: 0,
-            width: drawerWidth,
-            padding: '16px',
-            display: open ? 'flex' : 'none',
-            justifyContent: open ? 'initial' : 'space-between',
-          }} 
+          position: 'fixed',
+          bottom: 0,
+          width: drawerWidth,
+          padding: '16px',
+          display: open ? 'flex' : 'none',
+          justifyContent: open ? 'initial' : 'space-between',
+        }}
         >
-              <IconButton  edge="start" sx={{ marginRight: 'auto'}}>
-                <SettingsSharpIcon sx={{ color: '#000000' }} />
-              </IconButton>
-              <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes'  edge="end" sx={{ marginLeft: 'auto'}} >
-                { props.haveUnread ?
-                  <NotificationsActiveIcon sx={{ color: '#000000'}}/>
-                :
-                  <NotificationsSharpIcon sx={{ color: '#000000' }} />
-                }
-              </IconButton>
+          <IconButton onClick={handleDrawerClose} edge="start" component={Link} to='earth' sx={{ marginRight: 'auto' }}>
+            <SettingsSharpIcon sx={{ color: '#000000' }} />
+          </IconButton>
+          <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes' edge="end" sx={{ marginLeft: 'auto' }} >
+            <NotificationsSharpIcon sx={{ color: '#000000' }} />
+          </IconButton>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

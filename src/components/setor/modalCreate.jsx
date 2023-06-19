@@ -11,6 +11,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import FormCriarSetor from './formSetor';
+import MapaModal from '../modalMap';
+import { useEffect, useState } from 'react';
+import { Modal } from '@mui/material';
+import Mapa from "../../images/Mapa.png"
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -52,6 +57,20 @@ BootstrapDialogTitle.propTypes = {
 
 export default function ModalCriarSetor({ adicionarSetor }) {
     const [open, setOpen] = React.useState(false);
+    const [coordenadas, setCoordenadas] = useState({ x: null, y: null });
+
+    useEffect(() => {
+        console.log('Coordenadas atualizadas:', coordenadas);
+    }, [coordenadas]);
+
+    const handleImagemClick = (event) => {
+        const imageElement = event.target;
+        const imageRect = imageElement.getBoundingClientRect();
+        const offsetX = (event.clientX - imageRect.left) / imageRect.width;
+        const offsetY = (event.clientY - imageRect.top) / imageRect.height;
+        setCoordenadas({ x: offsetX, y: offsetY });
+    };
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -72,12 +91,44 @@ export default function ModalCriarSetor({ adicionarSetor }) {
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={open}
+                maxWidth={false}
+
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Criar setor
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    <FormCriarSetor adicionarSetor={adicionarSetor}></FormCriarSetor>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            background: '#ffffff',
+                        }}
+                    >
+                        <div style={{ position: 'relative' }}>
+                            <img
+                                src={Mapa}
+                                alt="Mapa da Fábrica"
+                                onClick={handleImagemClick}
+                                style={{ maxWidth: 900, height: 'auto', cursor: 'crosshair' }}
+                            />
+                            {coordenadas.x && coordenadas.y && (
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        left: coordenadas.x * 100 + '%',
+                                        top: coordenadas.y * 100 + '%',
+                                        transform: 'translate(-50%, -50%)',
+                                    }}
+                                >
+                                    <LocationOnIcon sx={{ color: '#1E90FF', fontSize: '24px' }} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <FormCriarSetor fecharModal={handleClose} coordenadas={coordenadas} adicionarSetor={adicionarSetor} sx={{ textAlign: 'center' }}></FormCriarSetor>
                 </DialogContent>
                 {/* <DialogActions>
                     <Button autoFocus onClick={handleClose}>
