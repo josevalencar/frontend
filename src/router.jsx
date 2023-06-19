@@ -8,13 +8,15 @@ import Roteadores from './pages/roteadores'
 import Tablets from "./pages/tablets"
 import Tablet from './pages/tablet'
 import Historico from './pages/historico'
+import SectorTablets from './pages/sectorTablets'
 import PaginaNaoEncontrada from './pages/paginaNaoEncontrada'
 import React from 'react'
 
 const Router = (props) => {
   return (
     <Routes updateHaveUnread={props.updateHaveUnread} >
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home />}/>
+      <Route path="sectorTablets/:sectorName" element={<SectorTablets />}/>
       <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} />} />
       <Route path="colaboradores">
         <Route path="" element={<Colaboradores />} />

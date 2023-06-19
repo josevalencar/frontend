@@ -9,12 +9,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Alert from '@mui/material/Alert';
-import DatePicker from '../components/datePicker'
 import SearchBar from '../components/searchBar'
 import BaseModal from '../components/baseModal';
 import ContentDeleteModal from '../components/contentDeleteModal';
 import { useState } from 'react';
+import DateForm from '../components/datePicker'
 import './notifications.css'; // Importando o arquivo CSS
+import dateToMinutes from "../helpers/dateToMinutes"
 
 
 const Notifications = ( {updateHaveUnread} ) => {
@@ -52,21 +53,6 @@ const Notifications = ( {updateHaveUnread} ) => {
 
     // const handleCloseDelete = () => setOpenDelete('');
 
-    
-    const getCellBorderColorClass = (cellValue) => {
-        if (cellValue === 'unchecked') {
-            return 'orange-border';
-        }
-        if (cellValue === 'checked') {
-            return 'green-border';
-        }
-        if (cellValue === 'INFO') {
-            return 'blue-border';
-        }
-        // Adicione mais condições aqui para outros valores e classes de cores
-        return '';
-    };
-
     function formatISODateToBR(dateStr) {
         const dateObj = new Date(dateStr);
     
@@ -80,7 +66,22 @@ const Notifications = ( {updateHaveUnread} ) => {
         return `${date} ${time}`;
     }
 
-    
+    function stringParaObjetoData(stringDataHora) {
+        const [data, hora] = stringDataHora.split(' ');
+        const [dia, mes, ano] = data.split('/');
+        const [horas, minutos] = hora.split(':');
+      
+        const objetoData = new Date();
+        objetoData.setFullYear(ano, mes - 1, dia);
+        objetoData.setHours(horas, minutos, 0, 0);
+      
+        return objetoData;
+      }
+      
+      
+      
+
+    //verifica state das notificações para troca de ícone
     React.useEffect(() => {
 
         console.log("o update state chamou o useEffect")
@@ -199,15 +200,21 @@ const Notifications = ( {updateHaveUnread} ) => {
         .then((response) => response.json())
         .then(data => {
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
-            const newData = data.map(item => ({
+
+            const newDataFormatada = data.map(item => ({
                 ...item,
                 createdAt: formatISODateToBR(item.createdAt),
+                id: item._id,
+            }));
+
+            const newData = data.map(item => ({
+                ...item,
                 id: item._id,
             })
             );
             
                 updateRowsFormatadas(newData);
-                updateRows(newData)
+                updateRows(newDataFormatada)
             })
             // .then(data => updateRows(data))
             .catch((err) => {
@@ -220,23 +227,26 @@ const Notifications = ( {updateHaveUnread} ) => {
     React.useEffect(() => {
         let returnArray = [];
         let modalsArray = [];
-        let newRows = [];
-        rows.map((notification) => {
+        rowsFormatadas.map((notification) => {
+            console.log("printando o createdAt da notificação: ")
             console.log(notification.createdAt)
-            returnArray.push(
-                createData(notification.id, 
-                notification.content,
-                notification.state,
-                notification.createdAt
-                // <DeleteIcon
-                //     style={{ cursor: 'pointer' }}
-                //     onClick={() => handleDeleteRow(notification.id)}
-                // />
-            ))
-            modalsArray.push(
-                <BaseModal open={selectedNotificationId === notification.id}  setOpen={() => setSelectedNotificationId(notification.id)} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
 
+            if((dateToMinutes(notification.createdAt) >= startDate && dateToMinutes(notification.createdAt) <= endDate) || (startDate === 0 && endDate === 9999999999))
+            {
+                returnArray.push(
+                    createData(notification.id, 
+                    notification.content,
+                    notification.state,
+                    formatISODateToBR(notification.createdAt)
+                    // <DeleteIcon
+                    //     style={{ cursor: 'pointer' }}
+                    //     onClick={() => handleDeleteRow(notification.id)}
+                    // />
+                ))
+                modalsArray.push(
+                    <BaseModal open={selectedNotificationId === notification.id}  setOpen={() => setSelectedNotificationId(notification.id)} content={<ContentDeleteModal content={notification.content} handleDelete={handleDelete} id={notification.id} />} />
                 )
+            }
                 return null
         })
         updateRows(returnArray)
@@ -250,12 +260,17 @@ const Notifications = ( {updateHaveUnread} ) => {
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
             const newData = data.map(item => ({
                 ...item,
+                createdAt: item.createdAt,
+                id: item._id,
+            }));
+            const newDataFormatada = data.map(item => ({
+                ...item,
                 createdAt: formatISODateToBR(item.createdAt),
                 id: item._id,
             }));
-            
+                // console.log(newData)
                 updateRowsFormatadas(newData);
-                updateRows(newData)
+                updateRows(newDataFormatada)
             })
             // .then(data => updateRows(data))
         .catch((err) => {
@@ -325,10 +340,14 @@ const Notifications = ( {updateHaveUnread} ) => {
                 </Typography>
                 <div>
                     <SearchBar updateFilter={updateFilter} />
-                    <DatePicker updateStartDate={updateStartDate} updateEndDate={updateEndDate}/>
+                    <div style={{display: "flex", flexDirection:"row", width:"100%"}}>
+                        <div style={{alignItems:"center", justifyContent:"flex-end", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+                            <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
+                        </div>
+                    </div>
                 </div>
 
-                <TableNotifications rows={rows} columns={columns}> </TableNotifications>
+                <TableNotifications rows={rows} columns={columns}/>
             </div>
             {deleteModals.map((modal) => {
                 return modal
