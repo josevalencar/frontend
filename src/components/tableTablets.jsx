@@ -11,6 +11,8 @@ import Typography from '@mui/joy/Typography';
 import TableHead from '@mui/material/TableHead';
 import AlertERROR from './alerts/error';
 import AlertSuccess from './alerts/sucess';
+import SearchBar from './searchBar';
+import removerAcentos from '../helpers/removerAcentos';
 
 
 
@@ -25,6 +27,8 @@ const TableTablet = () => {
   const [openUpdate, setOpenUpdate] = useState(null);
   const handleCloseCreate = () => setOpenCreate(false);
   const handleCloseUpdate = () => setOpenUpdate('');
+
+  const [filter, updateFilter] = useState('');
   
   function handleOpenUpdate(id){
     setOpenUpdate('update_' + id)
@@ -42,6 +46,7 @@ const TableTablet = () => {
 
   useEffect(() => {
     let returnArray = [];
+    let filteredArray = [];
 
     rows.map((tablet) => {
       returnArray.push(
@@ -49,8 +54,15 @@ const TableTablet = () => {
         <IconButton component={Link} to={"/tablets/" + tablet._id } ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>)
       )
     })
-    updateRowsFormatadas(returnArray)
-  }, [rows,  openUpdate])
+    returnArray.map(row => {
+      if (row.name !== null && row.tablet !== null){
+        if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter) || removerAcentos(row.tablet.props.children.toLowerCase()).includes(filter) || row.tablet.props.children.includes(filter)){
+          filteredArray.push(row)
+        }
+      }
+    })
+    updateRowsFormatadas(filteredArray)
+  }, [rows,  openUpdate, filter])
 
 
   // Dados dos tablets
@@ -80,6 +92,7 @@ const TableTablet = () => {
         {success[1] ? <AlertSuccess setSuccess={setSuccess} type="Tablet" /> : null}
         <h1 style={{marginTop:"0"}} >Tablets</h1>
         <ModalTablets mode="create"  setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />
+        <SearchBar updateFilter={updateFilter} type="tablet" />
         <TabelaColaborador rows={rowsFormatadas} columns={columns} />
       </div>
     </div>

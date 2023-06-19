@@ -183,7 +183,7 @@ const Colaboradores = () => {
           }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
 
           <h1>Colaboradores</h1>
-          <SearchBar updateFilter={updateFilter} />
+          <SearchBar updateFilter={updateFilter} type="colaborador" />
           <Button onClick={handleOpenCreate}>Adicionar</Button>
           <BaseModal open={openCreate} handleClose={handleCloseCreate} content={<CreateMaintainer sectors={sectors} setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
