@@ -3,14 +3,13 @@ import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, Html, OrbitControls, Environment, ContactShadows } from '@react-three/drei'
 import { FaMapMarkerAlt } from 'react-icons/fa'
-import { Typography } from '@mui/material'
 
 function Model(props) {
   const { nodes, materials } = useGLTF('/earth.gltf')
   const earthRef = useRef()
 
   useFrame(() => {
-    earthRef.current.rotation.y += 0.001
+    earthRef.current.rotation.y += 0.004
   })
 
   return (
@@ -54,12 +53,9 @@ function Marker({ children, ...props }) {
   )
 }
 
-export default function Viewer() {
+export default function Loading() {
   return (
     <div>
-      <Typography variant="h4" mt={3} sx={{ textAlign: 'center' }}>
-        There is no power without control.
-      </Typography>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Canvas camera={{ position: [-5, 0, 5], fov: 50 }} style={{ width: '600px', height: '600px' }}>
           <ambientLight intensity={0.5} />
