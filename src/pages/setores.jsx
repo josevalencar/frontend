@@ -8,6 +8,7 @@ import removerAcentos from '../helpers/removerAcentos';
 
 
 
+
 const Setores = () => {
   const [setores, setSetores] = useState([]);
   const [filter, updateFilter] = useState('');
@@ -153,9 +154,11 @@ const Setores = () => {
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+
       {displayedSectors !== null && (
           <TableSetor roteadores={displayedSectors} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} />
           )}
+
       </div>
     </>
   )

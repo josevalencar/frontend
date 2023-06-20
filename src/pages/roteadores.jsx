@@ -37,13 +37,16 @@ const Roteadores = () => {
         },
         body: JSON.stringify({
           mac: roteador.macAddress,
-          name: roteador.routerName
+          name: roteador.routerName,
+          sector: roteador.sectorId
         })
       });
     } catch (error) {
       console.error("Erro ao enviar a requisição para o backend", error);
     }
 
+    console.log("roteador.sector: ")
+    console.log(roteador.sector)
     setRoteadores([...roteadores, roteador]);
 
     fetch("https://sfqlqf-3000.csb.app/v1/esp-routers")
