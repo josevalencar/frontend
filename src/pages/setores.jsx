@@ -4,11 +4,30 @@ import ModalCriarSetor from '../components/setor/modalCreate';
 import SearchBar from '../components/setor/searchbar';
 import CustomModalEdit from '../components/setor/modalEdit';
 import MapaModal from '../components/modalMap';
+import removerAcentos from '../helpers/removerAcentos';
 
 
 
 const Setores = () => {
   const [setores, setSetores] = useState([]);
+  const [filter, updateFilter] = useState('');
+  const [displayedSectors, setDisplayedSectors] = useState(null);
+
+  useEffect(() => {
+    if (filter !== ''){
+      let filteredSectors = [];
+      setores.map((row) => {
+        if (row.name !== null){
+          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter)){
+            filteredSectors.push(row)
+          }
+        }
+      })
+      setDisplayedSectors(filteredSectors);
+    } else{
+      setDisplayedSectors(setores);
+    }
+  }, [setores, filter])
 
   const adicionarSetor = async (setor) => {
     try {
@@ -127,14 +146,16 @@ const Setores = () => {
         <h1>Setores</h1>
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 110, alignItems: 'center', minHeight: '10vh' }} >
-        <SearchBar ></SearchBar>
+        <SearchBar updateFilter={updateFilter} type="roteador" />
         <ModalCriarSetor adicionarSetor={adicionarSetor}></ModalCriarSetor>
         <CustomModalEdit roteadores={setores} editarRoteador={editarRoteador}></CustomModalEdit>
 
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <TableSetor roteadores={setores} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} ></TableSetor>
+      {displayedSectors !== null && (
+          <TableSetor roteadores={displayedSectors} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} />
+          )}
       </div>
     </>
   )
