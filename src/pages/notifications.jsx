@@ -90,7 +90,7 @@ const Notifications = ( {updateHaveUnread} ) => {
 
         if(changedNotificationState == true){
             console.log("changedNotifications == true")
-            fetch("https://2d1oh9-3000.csb.app/v1/notifications")
+            fetch("https://sfqlqf-3000.csb.app/v1/notifications")
             .then((response) => response.json())
             .then(data => {
                 // Mapeie os dados para criar uma nova propriedade 'id' para cada item
@@ -109,7 +109,7 @@ const Notifications = ( {updateHaveUnread} ) => {
     function UpdateState(row, newState){
         console.log("nhaaaaa juba");
         // console.log(row)
-        fetch("https://2d1oh9-3000.csb.app/v1/notifications/" + row.id, {
+        fetch("https://sfqlqf-3000.csb.app/v1/notifications/" + row.id, {
             method: "PUT",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -196,7 +196,7 @@ const Notifications = ( {updateHaveUnread} ) => {
     ];
 
     React.useEffect(() => {
-        fetch("https://2d1oh9-3000.csb.app/v1/notifications")
+        fetch("https://sfqlqf-3000.csb.app/v1/notifications")
         .then((response) => response.json())
         .then(data => {
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
@@ -254,7 +254,7 @@ const Notifications = ( {updateHaveUnread} ) => {
     }, [ rowsFormatadas, selectedNotificationId, startDate, endDate])
 
     React.useEffect(() => {
-        fetch(`https://2d1oh9-3000.csb.app/v1/notifications${filter ? `?filter=${filter}` : ''}`)
+        fetch(`https://sfqlqf-3000.csb.app/v1/notifications${filter ? `?filter=${filter}` : ''}`)
         .then((response) => response.json())
         .then(data => {
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
@@ -284,7 +284,7 @@ const Notifications = ( {updateHaveUnread} ) => {
     }
         
     const handleDelete = (id) => {
-        fetch('https://2d1oh9-3000.csb.app/v1/notifications/' + id, {
+        fetch('https://sfqlqf-3000.csb.app/v1/notifications/' + id, {
           method: 'DELETE'
         })
           .then(response => {

@@ -44,8 +44,8 @@ const SectorTablets = () => {
     }
     
     useEffect(() => {
-        // fetch(`https://2d1oh9-3000.csb.app/v1/esps${filter ? `?filter=${sectorName}` : ''}`)
-        fetch(`https://2d1oh9-3000.csb.app/v1/esps`)
+        // fetch(`https://sfqlqf-3000.csb.app/v1/esps${filter ? `?filter=${sectorName}` : ''}`)
+        fetch(`https://sfqlqf-3000.csb.app/v1/historics`)
         .then((response) => response.json())
         .then(data => {
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
@@ -84,13 +84,20 @@ const SectorTablets = () => {
         let newRows = [];
         rows.map((tablet) => {
             console.log(tablet.createdAt)
-            returnArray.push(
-                createData(tablet.id, 
-                tablet.tabletName,
-                tablet.mac,
+            const connection = tablet.connections[0];
+            console.log("connection: ");
+            console.log(connection);
+            // connection.map((connection2) => {
+
+            // })
+            if(connection){
+                returnArray.push(
+                    createData(tablet.id, 
+                    connection.wifiPotency,
+                    connection.router.mac,
                 
-                
-            ))
+                    ))
+                }
             return null
         })
         updateRows(returnArray)
@@ -104,6 +111,7 @@ const SectorTablets = () => {
         
     
 
+
     return (
         <>
             <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
@@ -116,7 +124,7 @@ const SectorTablets = () => {
                     <DatePicker updateStartDate={updateStartDate} updateEndDate={updateEndDate}/>
                 </div> */}
 
-                <TableSectorTablets rows={rows} columns={columns}> </TableSectorTablets>
+                <TableSectorTablets rows={rows} columns={columns} > </TableSectorTablets>
             </div>
             
         </>

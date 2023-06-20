@@ -5,12 +5,13 @@ import SearchBar from '../components/setor/searchbar';
 import CustomModalEdit from '../components/setor/modalEdit';
 
 
+
 const Setores = () => {
   const [setores, setSetores] = useState([]);
 
   const adicionarSetor = async (setor) => {
     try {
-      const response = await fetch("https://2d1oh9-3000.csb.app/v1/sectors", {
+      const response = await fetch("https://sfqlqf-3000.csb.app/v1/sectors", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -26,7 +27,7 @@ const Setores = () => {
 
     setSetores([...setores, setor]);
 
-    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
         const setoresUpdate = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id }));
@@ -40,7 +41,7 @@ const Setores = () => {
   };
 
   useEffect(() => {
-    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
         const setoresFetched = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id }));
@@ -53,12 +54,12 @@ const Setores = () => {
 
   const editarRoteador = async ({ routerName, macAddress, routerID }) => {
     console.log(routerID);
-    console.log(`https://2d1oh9-3000.csb.app/v1/sectors` + routerID);
+    console.log(`https://sfqlqf-3000.csb.app/v1/sectors` + routerID);
     console.log(`newName: ${routerName}, newMac: ${macAddress}`)
     console.log(setores);
 
     try {
-      const response = await fetch(`https://2d1oh9-3000.csb.app/v1/sectors` + routerID, {
+      const response = await fetch(`https://sfqlqf-3000.csb.app/v1/sectors` + routerID, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -96,13 +97,13 @@ const Setores = () => {
     console.log(`Hello: ${routerID}`);
 
     try {
-      await fetch(`https://2d1oh9-3000.csb.app/v1/sectors/${routerID}`, { method: 'DELETE' });
+      await fetch(`https://sfqlqf-3000.csb.app/v1/sectors/${routerID}`, { method: 'DELETE' });
       console.log(`Roteador com ID ${routerID} deletado`);
     } catch (error) {
       console.error('Erro ao deletar roteador:', error);
     }
 
-    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
         const roteadoresNotDeleted = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
@@ -114,6 +115,8 @@ const Setores = () => {
 
 
   }
+
+
 
   return (
     <>
@@ -128,7 +131,7 @@ const Setores = () => {
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <TableSetor roteadores={setores} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador}></TableSetor>
+        <TableSetor roteadores={setores} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} ></TableSetor>
       </div>
     </>
   )
