@@ -116,31 +116,37 @@ export default function MiniDrawer(props) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-              color: '#000000',
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton IconButton onClick={handleDrawerClose} edge="start" component={Link} to="/">
-            <img src={logo} alt="Logo" height={30} />
-          </IconButton>
-          <IconButton onClick={handleDrawerClose} sx={{ color: '#000000' }}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon sx={{ color: '#000000' }} /> : <ChevronLeftIcon />}
-          </IconButton>
+        <DrawerHeader open={open}>
+          {open === false ? (
+            <React.Fragment>
+              <IconButton
+                position="fixed"
+                open={open}
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="center"
+                sx={{
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  ...(open && { display: 'none' }),
+                  color: '#000000',
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <IconButton IconButton onClick={handleDrawerClose} edge="start" component={Link} to="/">
+                <img src={logo} alt="Logo" height={30} />
+              </IconButton>
+              <IconButton onClick={handleDrawerClose} sx={{ color: '#000000' }}>
+                {theme.direction === 'rtl' ? <ChevronRightIcon sx={{ color: '#000000' }} /> : <ChevronLeftIcon />}
+              </IconButton>
+            </React.Fragment>
+          )}
         </DrawerHeader>
         <Divider />
         <List>
@@ -192,7 +198,7 @@ export default function MiniDrawer(props) {
           <IconButton onClick={handleDrawerClose} edge="start" component={Link} to='earth' sx={{ marginRight: 'auto' }}>
             <SettingsSharpIcon sx={{ color: '#000000' }} />
           </IconButton>
-          <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes' edge="end" sx={{ marginLeft: 'auto' }} >
+          <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes' edge="end" sx={{ marginLeft: 'auto', opacity: open ? 1 : 0  }} >
             <NotificationsSharpIcon sx={{ color: '#000000' }} />
           </IconButton>
         </Box>
