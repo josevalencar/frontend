@@ -8,8 +8,8 @@ import DateForm from '../components/datePicker'
 
 const Colaborador = () => {
   let params = useParams();
-  let maintainerUrl = "https://2d1oh9-3000.csb.app/v1/maintainers/";
-  let historicUrl = "https://2d1oh9-3000.csb.app/v1/historics?maintainer=";
+  let maintainerUrl = "https://sfqlqf-3000.csb.app/v1/maintainers/";
+  let historicUrl = "https://sfqlqf-3000.csb.app/v1/historics?maintainer=";
 
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [colaborador, atualizaColaborador] = useState('');

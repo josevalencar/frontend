@@ -19,6 +19,7 @@ import dateToMinutes from "../helpers/dateToMinutes"
 import SelectType from "../components/selectType"
 
 
+
 const Notifications = ( {updateHaveUnread} ) => {
     
     const [hasUnread, updateHasUnread] = React.useState(false);
@@ -244,6 +245,7 @@ const Notifications = ( {updateHaveUnread} ) => {
                     createData(notification.id, 
                     notification.content,
                     notification.category,
+
                     notification.state,
                     formatISODateToBR(notification.createdAt)
                     // <DeleteIcon
@@ -382,7 +384,9 @@ const Notifications = ( {updateHaveUnread} ) => {
                             <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
                         </div>
                     </div>
+
                     <SelectType updateType={updateType} valores={['info', 'esp-connection', 'esp-sector', 'esp-maintainer', 'esp', 'router', 'maintainer']}/>
+
                 </div>
 
                 <TableNotifications rows={rows} columns={columns}/>

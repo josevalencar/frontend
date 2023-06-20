@@ -58,7 +58,7 @@ const Colaboradores = () => {
   const handleCloseCreate = () => setOpenCreate(false);
 
   useEffect(() => {
-    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => setSectors(data))
       .catch((err) => {
@@ -67,7 +67,7 @@ const Colaboradores = () => {
   }, [])
 
   useEffect(() => {
-    fetch("https://2d1oh9-3000.csb.app/v1/maintainers")
+    fetch("https://sfqlqf-3000.csb.app/v1/maintainers")
       .then((response) => response.json())
       .then(data => updateRows(data))
       .catch((err) => {
@@ -183,7 +183,7 @@ const Colaboradores = () => {
           }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
 
           <h1>Colaboradores</h1>
-          <SearchBar updateFilter={updateFilter} />
+          <SearchBar updateFilter={updateFilter} type="colaborador" />
           <Button onClick={handleOpenCreate}>Adicionar</Button>
           <BaseModal open={openCreate} handleClose={handleCloseCreate} content={<CreateMaintainer sectors={sectors} setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />} />
           <TabelaColaboradores rows={rowsFormatadas} columns={columns} />

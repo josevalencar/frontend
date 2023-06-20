@@ -3,10 +3,30 @@ import TableRoteador from '../components/roteador/tableRoteador';
 import ModalCriarRoteador from '../components/roteador/modalCreate';
 import SearchBar from '../components/roteador/searchbar';
 import CustomModalEdit from '../components/roteador/modalEdit';
+import removerAcentos from '../helpers/removerAcentos';
 
 
 const Roteadores = () => {
   const [roteadores, setRoteadores] = useState([]);
+  const [filter, updateFilter] = useState('');
+  const [displayedRouters, setDisplayedRouters] = useState(null);
+
+  useEffect(() => {
+    if (filter !== ''){
+      let filteredRouters = [];
+      roteadores.map((row) => {
+        if (row.name !== null){
+          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter)){
+            filteredRouters.push(row)
+          }
+        }
+      })
+      console.log(filteredRouters);
+      setDisplayedRouters(filteredRouters);
+    } else{
+      setDisplayedRouters(roteadores);
+    }
+  }, [roteadores, filter])
 
   const adicionarRoteador = async (roteador) => {
     try {
@@ -134,14 +154,16 @@ const Roteadores = () => {
         <h1>Roteadores</h1>
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 110, alignItems: 'center', minHeight: '10vh' }} >
-        <SearchBar ></SearchBar>
+        <SearchBar updateFilter={updateFilter} type="roteador" />
         <ModalCriarRoteador adicionarRoteador={adicionarRoteador}></ModalCriarRoteador>
         <CustomModalEdit roteadores={roteadores} editarRoteador={editarRoteador}></CustomModalEdit>
 
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-        <TableRoteador roteadores={roteadores} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador}></TableRoteador>
+      {displayedRouters !== null && (
+          <TableRoteador onLoad={console.log(displayedRouters)} roteadores={displayedRouters} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} />
+        )}
       </div>
     </>
   )
