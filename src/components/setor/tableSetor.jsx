@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 import FormEditaRoteador from './formSetor';
 import CustomModalEdit from './modalEdit';
 import AlertDialog from './modalDelete';
+import { useNavigate } from 'react-router-dom';
 
-const TableSetor = ({ roteadores, editarRoteador, deletarRoteador }) => {
+
+const TableSetor = ({ roteadores, editarRoteador, deletarRoteador, onRowClick }) => {
     const rows = roteadores.map((roteador, index) => ({
         id: index,
         nome: roteador.routerName,
@@ -78,13 +80,15 @@ const TableSetor = ({ roteadores, editarRoteador, deletarRoteador }) => {
         },
     ];
 
+    const navigate = useNavigate(); 
+
 
     return (
         <>
             <div>
                 <div style={{ height: 300, width: 1200 }}>
                     <CustomModalEdit open={open} setOpen={setOpen} handleClose={handleClose} editarRoteador={editarRoteador} routerID={selectedRouterID}></CustomModalEdit>
-                    <DataGrid rows={rows} columns={columns} disableColumnMenu />
+                    <DataGrid rows={rows} columns={columns} onRowClick={(params) => navigate("/sectorTablets/" + params.row.nome)} disableColumnMenu />
                     <AlertDialog open={openDelete} setOpen={setOpenDelete} handleCloseDelete={handleCloseDelete} handleDeleteRoteador={handleDeleteRoteador} routerID={selectedRouterID} id={selectedID} />
                 </div>
             </div>
