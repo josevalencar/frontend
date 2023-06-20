@@ -16,6 +16,7 @@ import { useState } from 'react';
 import DateForm from '../components/datePicker'
 import './notifications.css'; // Importando o arquivo CSS
 import dateToMinutes from "../helpers/dateToMinutes"
+import SelectType from "../components/selectType"
 
 
 const Notifications = ( {updateHaveUnread} ) => {
@@ -31,6 +32,7 @@ const Notifications = ( {updateHaveUnread} ) => {
     const [rowsFormatadas, updateRowsFormatadas] = React.useState([]);
     
     const [filter, updateFilter] = React.useState([]);
+    const [type, updateType] = React.useState([])
     
     const [startDate, updateStartDate] = useState(0);
     const [endDate, updateEndDate] = useState(9999999999);
@@ -155,8 +157,13 @@ const Notifications = ( {updateHaveUnread} ) => {
             field: 'content', 
             headerName: 'Mensagem', 
 
-            width: 800,
+            width: 600,
 
+        },
+        {
+            field: 'category',
+            headerName: 'Tipo',
+            width: 200
         },
         {
             field: 'date',
@@ -178,12 +185,12 @@ const Notifications = ( {updateHaveUnread} ) => {
                 <div>
                     { params.row.state === 'unchecked'?
                         <VisibilityIcon
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer', color: 'red' }}
                             onClick={() => handleStatusChange(params.row.id)}
                         />
                         :
                         <VisibilityOffIcon
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', color: 'blue' }}
                         onClick={() => handleStatusChange(params.row.id)}/>
                     }            
                     <DeleteIcon
@@ -236,6 +243,7 @@ const Notifications = ( {updateHaveUnread} ) => {
                 returnArray.push(
                     createData(notification.id, 
                     notification.content,
+                    notification.category,
                     notification.state,
                     formatISODateToBR(notification.createdAt)
                     // <DeleteIcon
@@ -277,9 +285,38 @@ const Notifications = ( {updateHaveUnread} ) => {
             console.log(err.message);
         });
     }, [filter])
+
+
+    React.useEffect(() => {
+        fetch(`https://sfqlqf-3000.csb.app/v1/notifications${type ? `?category=${type}` : ''}`)
+        .then((response) => response.json())
+        .then(data => {
+            // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+            const newData = data.map(item => ({
+                ...item,
+                createdAt: item.createdAt,
+                id: item._id,
+            }));
+            const newDataFormatada = data.map(item => ({
+                ...item,
+                createdAt: formatISODateToBR(item.createdAt),
+                id: item._id,
+            }));
+                // console.log(newData)
+                updateRowsFormatadas(newData);
+                updateRows(newDataFormatada)
+            })
+            // .then(data => updateRows(data))
+        .catch((err) => {
+            console.log(err.message);
+        });
+    }, [type])
+
+
+
     
-    function createData( id, content, state, date) {
-        return { id, content, state, date};
+    function createData( id, content, category, state, date) {
+        return { id, content, category, state, date};
 
     }
         
@@ -345,6 +382,7 @@ const Notifications = ( {updateHaveUnread} ) => {
                             <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
                         </div>
                     </div>
+                    <SelectType updateType={updateType} valores={['info', 'esp-connection', 'esp-sector', 'esp-maintainer', 'esp', 'router', 'maintainer']}/>
                 </div>
 
                 <TableNotifications rows={rows} columns={columns}/>
