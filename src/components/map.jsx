@@ -53,6 +53,7 @@ const MapaFabrica = () => {
     setAnchorEl(event.currentTarget);
     setSelectedSetor(setor);
     const setorId = event.target.dataset.setorId;
+    const setorName = event.target.dataset.setorName;
     setSelectedSetorId(setorId); // Atribui o valor do setorId à constante selectedSetorId
     console.log(setorId);
   };
@@ -119,7 +120,8 @@ const MapaFabrica = () => {
                   >
                     <LocationOnIcon sx={{ color: '#1E90FF', fontSize: '24px' }} aria-owns={open ? 'mouse-over-popover' : undefined}
                       aria-haspopup="true"
-                      data-setor-id={setor.name}
+                      data-setor-id={setor._id}
+                      data-setor-name={setor.name}
                       onMouseEnter={handlePopoverOpen}
                       onMouseLeave={handlePopoverClose}
                     />
