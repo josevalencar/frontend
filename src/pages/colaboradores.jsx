@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import CreateMaintainer from '../components/createMaintainer';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
+import DbmPorSetorPorHora from '../components/home/chart';
 
 
 const Colaboradores = () => {

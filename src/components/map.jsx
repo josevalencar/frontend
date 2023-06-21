@@ -101,7 +101,7 @@ const MapaFabrica = () => {
                 <strong>Tablets:</strong>
                 <ul>
                   {selectedSetorEsps.map((esp) => (
-                    <li key={esp._id}>{esp.mac}</li>
+                    <li key={esp._id}>{esp.tabletName}</li>
                   ))}
                 </ul>
               </div>
