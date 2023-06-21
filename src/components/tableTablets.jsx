@@ -63,11 +63,13 @@ const TableTablet = () => {
       )
     })
     returnArray.map(row => {
-      if (row.name !== null && row.tablet !== null) {
-        if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter) || removerAcentos(row.tablet.props.children.toLowerCase()).includes(filter) || row.tablet.props.children.includes(filter)) {
-          filteredArray.push(row)
+      if (filter !== '') {
+        if (row.name !== null && row.tablet !== null) {
+          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter) || removerAcentos(row.tablet.props.children.toLowerCase()).includes(filter) || row.tablet.props.children.includes(filter)) {
+            filteredArray.push(row)
+          }
         }
-      }
+      } else { filteredArray.push(row) }
     })
     updateRowsFormatadas(filteredArray)
   }, [rows, openUpdate, filter])
