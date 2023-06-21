@@ -377,15 +377,21 @@ const Notifications = ( {updateHaveUnread} ) => {
                 <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
                     Notificações
                 </Typography>
-                <div>
-                    <SearchBar updateFilter={updateFilter} />
-                    <div style={{display: "flex", flexDirection:"row", width:"100%"}}>
-                        <div style={{alignItems:"center", justifyContent:"flex-end", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+                <div style={{display: "flex", justifyContent: 'center', width: "100%"}}>
+                    <div style={{display: "flex", justifyContent:'left', width: "40%"}}>
+
+                        <SearchBar type="notificação" updateFilter={updateFilter} />
+                    </div>
+                    <div style={{display: "flex", justifyContent:"center", flexDirection:"row", width:"20%"}}>
+                        <div style={{alignItems:"end", justifyContent:"flex-end", marginBottom:"1%", width:"30%", flexDirection:"row", display:"flex"}}>
                             <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
                         </div>
                     </div>
 
+                    <div style={{display: 'flex', justifyContent:"center", width: "30%"}}>
+
                     <SelectType updateType={updateType} valores={['info', 'esp-connection', 'esp-sector', 'esp-maintainer', 'esp', 'router', 'maintainer']}/>
+                    </div>
 
                 </div>
 
