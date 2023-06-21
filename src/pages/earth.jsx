@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, Html, OrbitControls, Environment, ContactShadows } from '@react-three/drei'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { Typography } from '@mui/material'
+import { Height } from '@mui/icons-material'
 
 function Model(props) {
   const { nodes, materials } = useGLTF('/earth.gltf')
