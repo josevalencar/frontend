@@ -6,6 +6,7 @@ import MiniDrawer from '../components/sidebar.jsx'
 import data from "../components/home/data.json"
 import DbmPorSetorPorHora from "../components/home/chart";
 import MyResponsivePie from '../components/home/pizza';
+import Kpis from '../components/home/kpis/kpis';
 
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
     <div>
       <MapaFabrica />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "500px" }}>
+        <Kpis/>
         <MyResponsivePie/>
         <DbmPorSetorPorHora/>
         <MyResponsiveBar/>
