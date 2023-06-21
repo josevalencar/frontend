@@ -4,6 +4,8 @@ import TableMain from '../components/tableMain.jsx';
 import MyResponsiveBar from '../components/home/bar';
 import MiniDrawer from '../components/sidebar.jsx'
 import data from "../components/home/data.json"
+import DbmPorSetorPorHora from "../components/home/chart";
+import MyResponsivePie from '../components/home/pizza';
 
 
 const Home = () => {
@@ -11,7 +13,9 @@ const Home = () => {
     <div>
       <MapaFabrica />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "500px" }}>
-        <MyResponsiveBar data={data} />
+        <MyResponsivePie/>
+        <DbmPorSetorPorHora/>
+        <MyResponsiveBar/>
       </div>
       <TableMain />
     </div>

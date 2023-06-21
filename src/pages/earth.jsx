@@ -5,6 +5,7 @@ import { useGLTF, Html, OrbitControls, Environment, ContactShadows } from '@reac
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { Typography } from '@mui/material'
 import { Height } from '@mui/icons-material'
+import MyResponsivePie from '../components/home/pizza'
 
 function Model(props) {
   const { nodes, materials } = useGLTF('/earth.gltf')
@@ -69,6 +70,7 @@ export default function Viewer() {
           <ContactShadows frames={1} scale={5} position={[0, -1, 0]} far={1} blur={5} opacity={0.5} color="#204080" />
           <OrbitControls />
         </Canvas>
+        <MyResponsivePie/>
       </div>
     </div>
   )
