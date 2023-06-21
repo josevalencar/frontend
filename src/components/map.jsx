@@ -13,12 +13,14 @@ const MapaFabrica = () => {
 
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedSetor, setSelectedSetor] = useState([]);
-  const [selectedSetorId, setSelectedSetorId] = useState(null);
+  const [selectedSetorInfo, setSelectedSetorInfo] = useState(null);
+  const [selectedSetorEsps, setSelectedSetorEsps] = useState([]);
+
 
 
   useEffect(() => {
     setIsLoading(true);
-    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
         setSetores(data);
@@ -29,24 +31,6 @@ const MapaFabrica = () => {
       });
   }, [])
 
-  // const handleSetorMouseEnter = (setor) => {
-  //   setSelectedSetor({
-  //     ...setor,
-  //     popupX: setor.mapX * 100 + '%',
-  //     popupY: setor.mapY * 100 + '%',
-  //   });
-  //   console.log(setor.mapX);
-  //   console.log(setor.mapY);
-  //   setPopupOpen(true);
-  //   console.log("entrou");
-  // };
-
-  // const handleSetorMouseLeave = () => {
-  //   setPopupOpen(false);
-  //   console.log("saiu");
-
-  // };
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handlePopoverOpen = (event, setor) => {
@@ -54,16 +38,32 @@ const MapaFabrica = () => {
     setSelectedSetor(setor);
     const setorId = event.target.dataset.setorId;
     const setorName = event.target.dataset.setorName;
-    setSelectedSetorId(setorId); // Atribui o valor do setorId à constante selectedSetorId
+    setSelectedSetorInfo(setorName); // Atribui o valor do setorId à constante selectedSetorId
     console.log(setorId);
+
+    const url = "https://sfqlqf-3000.csb.app/v1/sectors/esps"; // URL da API
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const espSetor = data.find(setor => setor._id === setorId);
+        if (espSetor) {
+          const espList = espSetor.esps;
+          setSelectedSetorEsps(espList);
+          console.log(espList);
+        } else {
+          console.log("Setor não encontrado");
+        }
+      })
+      .catch(error => {
+        console.log("Ocorreu um erro:", error);
+      });
   };
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
     setSelectedSetor(null);
-    setSelectedSetorId(null); // Limpa o valor do setorId
-
-
+    setSelectedSetorInfo(null); // Limpa o valor do setorId
   };
 
   const open = Boolean(anchorEl);
@@ -94,13 +94,27 @@ const MapaFabrica = () => {
           onClose={handlePopoverClose}
           disableRestoreFocus
         >
-          <Typography sx={{ p: 1 }}>{selectedSetorId}</Typography>
+          <Typography sx={{ p: 1 }}>
+            {selectedSetorInfo}
+            {selectedSetorEsps?.length > 0 ? (
+              <div>
+                <strong>Tablets:</strong>
+                <ul>
+                  {selectedSetorEsps.map((esp) => (
+                    <li key={esp._id}>{esp.mac}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div>Nenhum tablet presente.</div>
+            )}
+          </Typography>
         </Popover>
       </div>
       {/* // ) */}
       {/* // })} */}
       {
-        isLoading ? <Loading/> : (
+        isLoading ? <Loading /> : (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <div style={{ position: 'relative' }}>
               <img
