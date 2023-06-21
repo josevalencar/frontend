@@ -348,31 +348,6 @@ const Notifications = ( {updateHaveUnread} ) => {
         <>
             <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
 
-                {error ? <Alert severity='error' action={
-                    <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                        setError(false);
-                    }}
-                    >
-                    <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></> }
-
-                {success[1] ? <Alert severity='success' action={
-                    <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                        setSuccess(['', false]);
-                    }}
-                    >
-                    <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
 
                 <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
                     Notificações
