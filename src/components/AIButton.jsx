@@ -14,6 +14,7 @@ export default function AIButton(props) {
       <Typography sx={{ marginBottom: '10px' }}>
         <strong>IA</strong>
       </Typography>
+
       <Switch 
         checked={props.isAI}
         onChange={handleChange}

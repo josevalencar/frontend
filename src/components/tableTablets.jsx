@@ -14,7 +14,9 @@ import AlertERROR from './alerts/error';
 import AlertSuccess from './alerts/sucess';
 import SearchBar from './searchBar';
 import removerAcentos from '../helpers/removerAcentos';
+import dateToLocale from '../helpers/dateToLocale';
 import Loading from '../pages/loadingPage';
+import TabletMacIcon from '@mui/icons-material/TabletMac';
 
 
 
@@ -57,10 +59,7 @@ const TableTablet = () => {
     let filteredArray = [];
 
     rows.map((tablet) => {
-      returnArray.push(
-        createData(tablet.tabletName, <Link to={'/tablets/' + tablet._id} key={tablet}>{tablet.mac}</Link>, <ListItemButton sx={{ justifyContent: 'center' }}><ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
-          <IconButton component={Link} to={"/tablets/" + tablet._id} ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>)
-      )
+      returnArray.push(createData(tablet))
     })
     returnArray.map(row => {
       if (filter !== '') {
@@ -74,24 +73,72 @@ const TableTablet = () => {
     updateRowsFormatadas(filteredArray)
   }, [rows, openUpdate, filter])
 
-
   // Dados dos tablets
-  function createData(name, tablet, Historico) {
-    return { name, tablet, Historico };
+  function createData(tablet) {
+    let color = '';
+    if (tablet.lastHistoric === null) {
+      color = "gray";
+    } else {
+      if (tablet.lastHistoric.online) {
+        color = "green"
+      } else {
+        color = "gray"
+      }
+    }
+
+    return {
+      online: tablet.lastHistoric ? (<NeonDiv color={color} />) : 'Sem Histórico',
+      name: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.tabletName ? tablet.tabletName : '-'}</Link>,
+      mac: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.mac}</Link>,
+      maintainer: tablet.lastHistoric ? (tablet.lastHistoric.maintainer ? tablet.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem Histórico',
+      router: tablet.lastHistoric ? (tablet.lastHistoric.router ? tablet.lastHistoric.router.mac : 'Sem roteador') : 'Sem Histórico',
+      sector: tablet.lastHistoric ? (tablet.lastHistoric.sector ? tablet.lastHistoric.sector.name : 'Sem sector') : 'Sem Histórico',
+      lastHistoricDate: tablet.lastHistoric ? dateToLocale(tablet.lastHistoric.createdAt) : 'Sem Histórico',
+      historic: <ListItemButton sx={{ justifyContent: 'center' }}>
+        <ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
+        <IconButton component={Link} to={"/tablets/" + tablet._id} ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>
+    };
   }
 
   const columns = [
-    { id: 'name', label: 'Nome do tablet', align: 'center', minWidth: 20 },
-    { id: 'tablet', label: 'tablet', align: 'center', minWidth: 20 },
+    { id: 'online', label: 'Online', align: 'center', minWidth: 20 },
+    { id: 'name', label: 'Apelido', align: 'center', minWidth: 20 },
+    { id: 'mac', label: 'MAC', align: 'center', minWidth: 20 },
+    { id: 'maintainer', label: 'Manutentor', align: 'center', minWidth: 20 },
+    { id: 'router', label: 'Roteador', align: 'center', minWidth: 20 },
+    { id: 'sector', label: 'Setor', align: 'center', minWidth: 20 },
+    { id: 'lastHistoricDate', label: 'Última informação', align: 'center', minWidth: 20 },
     {
-      id: 'Historico',
+      id: 'historic',
       label: 'Histórico',
       minWidth: 20,
-      align: 'center',
-      format: (value) => value.toLocaleString('en-US'),
-    },
+      align: 'center'
+    }
   ];
 
+  const NeonDiv = (props) => {
+    return (
+      props.color === "green"?
+      <div
+        style={{
+          width: '10px',
+          marginLeft: '50px',
+          height: '10px',
+          borderRadius: '50%',
+          backgroundColor: props.color,
+          boxShadow: `0 0 10px ${props.color}`,
+          animation: 'glow 1s ease-in-out infinite',
+        }}
+      ></div>:
+      <div style={{
+        width: '10px',
+        marginLeft: '50px',
+        height: '10px',
+        borderRadius: '50%',
+        backgroundColor: props.color
+      }}></div>
+    );
+  };
 
 
   return (

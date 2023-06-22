@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import FormCriarSetor from './formSetor';
 import MapaModal from '../modalMap';
 import { useEffect, useState } from 'react';
-import { Modal } from '@mui/material';
+import { Modal, TextField } from '@mui/material';
 import Mapa from "../../images/Mapa.png"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
@@ -55,13 +55,10 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-export default function ModalCriarSetor({ adicionarSetor }) {
-    const [open, setOpen] = React.useState(false);
+export default function ModalCriarSetor({ handleCreate, handleClose, setores }) {
+    const [open, setOpen] = useState(true);
     const [coordenadas, setCoordenadas] = useState({ x: null, y: null });
-
-    useEffect(() => {
-        console.log('Coordenadas atualizadas:', coordenadas);
-    }, [coordenadas]);
+    const [name, setName] = useState(null);
 
     const handleImagemClick = (event) => {
         const imageElement = event.target;
@@ -71,71 +68,91 @@ export default function ModalCriarSetor({ adicionarSetor }) {
         setCoordenadas({ x: offsetX, y: offsetY });
     };
 
+    const handleName = (e) => {
+        setName(e.target.value);
+    }
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
+    const handleSetorCreate = () => {
+        handleCreate({
+            mapX: coordenadas.x,
+            mapY: coordenadas.y,
+            name: name
+        })
+    }
+
+    const handleOnClose = () => {
         setOpen(false);
-    };
+        handleClose();
+    }
 
     return (
-        <div>
-            <Button variant="outlined" onClick={handleClickOpen} sx={{ width: 100 }}>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-                    <AddIcon></AddIcon>
-                    CRIAR
-                </div>
-            </Button>
-            <BootstrapDialog
-                onClose={handleClose}
-                aria-labelledby="customized-dialog-title"
-                open={open}
-                maxWidth={false}
-
-            >
-                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    Criar setor
-                </BootstrapDialogTitle>
-                <DialogContent dividers>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100%',
-                            background: '#ffffff',
-                        }}
-                    >
-                        <div style={{ position: 'relative' }}>
-                            <img
-                                src={Mapa}
-                                alt="Mapa da Fábrica"
-                                onClick={handleImagemClick}
-                                style={{ maxWidth: 900, height: 'auto', cursor: 'crosshair' }}
-                            />
-                            {coordenadas.x && coordenadas.y && (
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        left: coordenadas.x * 100 + '%',
-                                        top: coordenadas.y * 100 + '%',
-                                        transform: 'translate(-50%, -50%)',
-                                    }}
-                                >
-                                    <LocationOnIcon sx={{ color: '#1E90FF', fontSize: '24px' }} />
-                                </div>
-                            )}
-                        </div>
+        <BootstrapDialog
+            onClose={handleOnClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+            maxWidth={false}
+        >
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleOnClose}>
+                Criar Setor
+            </BootstrapDialogTitle>
+            <DialogContent dividers>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                        background: '#ffffff',
+                    }}
+                >
+                    <div style={{ position: 'relative' }}>
+                        <img
+                            src={Mapa}
+                            alt="Mapa da Fábrica"
+                            onClick={handleImagemClick}
+                            style={{ maxWidth: 900, height: 'auto', cursor: 'crosshair' }}
+                        />
+                        {coordenadas.x && coordenadas.y && (
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    left: coordenadas.x * 100 + '%',
+                                    top: coordenadas.y * 100 + '%',
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                            >
+                                <LocationOnIcon sx={{ color: '#f01c24', fontSize: '24px' }} />
+                            </div>
+                        )}
+                        {(setores || []).filter(setor => setor && setor.mapX && setor.mapY).map(setor => {
+                            return <div
+                                style={{
+                                    position: 'absolute',
+                                    left: setor.mapX * 100 + '%',
+                                    top: setor.mapY * 100 + '%',
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                            >
+                                <LocationOnIcon sx={{ color: '#00000', fontSize: '24px' }} />
+                            </div>
+                        })}
                     </div>
-                    <FormCriarSetor fecharModal={handleClose} coordenadas={coordenadas} adicionarSetor={adicionarSetor} sx={{ textAlign: 'center' }}></FormCriarSetor>
-                </DialogContent>
-                {/* <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Save changes
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '15vh' }}>
+                    <Typography>Escolha no mapa o setor que deseja adicionar</Typography>
+                    <TextField sx={{ width: 300 }}
+                        label="Insira o nome do setor"
+                        value={name}
+                        onChange={handleName}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <Button variant="contained" color="primary" onClick={handleSetorCreate} sx={{ width: 100 }}>
+                        Próximo
                     </Button>
-                </DialogActions> */}
-            </BootstrapDialog>
-        </div>
-    );
+
+                </div>
+            </DialogContent>
+        </BootstrapDialog>
+    )
 }

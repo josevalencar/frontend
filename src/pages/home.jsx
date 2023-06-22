@@ -9,10 +9,9 @@ import MyResponsivePie from '../components/home/pizza';
 import Kpis from '../components/home/kpis/kpis';
 import TableDashNotifications from "../components/tableDashNotifications";
 
-
 const Home = (props) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh"}}>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "10vh" }}>
         <div style={{ width: "58%", height: "60%", display: "flex", justifyContent: "center", alignItems: "center", marginLeft: "50px" }}>
           <Kpis />

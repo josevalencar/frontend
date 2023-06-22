@@ -20,6 +20,11 @@ const Roteadores = () => {
             filteredRouters.push(row)
           }
         }
+        if (row.mac !== null && !(filteredRouters.includes(row))) {
+          if (removerAcentos(row.mac.toLowerCase()).includes(filter) || row.mac.includes(filter)) {
+            filteredRouters.push(row)
+          }
+        }
       })
       console.log(filteredRouters);
       setDisplayedRouters(filteredRouters);

@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import FormEditaRoteador from './formEditaSetor';
 import { TextField, Button } from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Mapa from "../../images/Mapa.png"
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -51,78 +53,107 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
+const CustomModalEdit = ({ setorToUpdate, setores, handleUpdate, handleClose }) => {
+    const [open, setOpen] = useState(true);
+    const [coordenadas, setCoordenadas] = useState({ x: setorToUpdate ? setorToUpdate.mapX : null, y: setorToUpdate ? setorToUpdate.mapY : null });
+    const [name, setName] = useState(setorToUpdate.name ? setorToUpdate.name : null);
 
-    const [routerName, setRouterName] = useState('');
-    const [macAddress, setMacAddress] = useState('');
-
-    const handleCreate = (e) => {
-        console.log('Router name:', routerName);
-        console.log('MAC Address:', macAddress);
-        console.log('Backend ID:', routerID);
-
-
-        e.preventDefault();
-
-        editarRoteador({ routerName, macAddress, routerID });
-        setRouterName('');
-        setMacAddress('');
-
-        console.log("Editado com sucesso!");
+    const handleImagemClick = (event) => {
+        const imageElement = event.target;
+        const imageRect = imageElement.getBoundingClientRect();
+        const offsetX = (event.clientX - imageRect.left) / imageRect.width;
+        const offsetY = (event.clientY - imageRect.top) / imageRect.height;
+        setCoordenadas({ x: offsetX, y: offsetY });
     };
 
-    const handleNomeChange = (event) => {
-        setRouterName(event.target.value);
-    };
+    const handleName = (e) => {
+        setName(e.target.value);
+    }
 
-    const handleMacAddressChange = (event) => {
-        setMacAddress(event.target.value);
-    };
+    const handleSetorUpdate = () => {
+        handleUpdate({
+            ...setorToUpdate,
+            mapX: coordenadas.x,
+            mapY: coordenadas.y,
+            name
+        })
+    }
+
+    const handleOnClose = () => {
+        setOpen(false);
+        handleClose();
+    }
 
     return (
-        <Dialog onClose={handleClose} open={open}>
-            <BootstrapDialog
-                onClose={handleClose}
-                aria-labelledby="customized-dialog-title"
-                open={open}
-            >
-                <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    Editar setor
-                </BootstrapDialogTitle>
-                <DialogContent dividers={true}
+        <BootstrapDialog
+            onClose={handleOnClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+            maxWidth={false}
+        >
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleOnClose}>
+                Editar Setor
+            </BootstrapDialogTitle>
+            <DialogContent dividers>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                        background: '#ffffff',
+                    }}
                 >
-                    {/* <FormEditaRoteador editarRoteador={editarRoteador} routerID={routerID}></FormEditaRoteador> */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minHeight: '15vh' }}>
-                        <TextField sx={{ width: 300 }}
-                            label="Edite o nome do setor"
-                            value={routerName}
-                            onChange={handleNomeChange}
-                            fullWidth
-                            margin="normal"
+                    <div style={{ position: 'relative' }}>
+                        <img
+                            src={Mapa}
+                            alt="Mapa da Fábrica"
+                            onClick={handleImagemClick}
+                            style={{ maxWidth: 900, height: 'auto', cursor: 'crosshair' }}
                         />
-
-                        {/* <TextField
-                            sx={{ width: 300, paddingBottom: 1 }}
-                            label="Edite o endereço MAC do setor"
-                            value={macAddress}
-                            onChange={handleMacAddressChange}
-                            fullWidth
-                            margin="normal"
-                        /> */}
-                        <Button variant="contained" color="primary" onClick={handleCreate} sx={{ width: 100 }}>
-                            Editar
-                        </Button>
-
+                        {coordenadas.x && coordenadas.y && (
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    left: coordenadas.x * 100 + '%',
+                                    top: coordenadas.y * 100 + '%',
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                            >
+                                <LocationOnIcon sx={{ color: '#f01c24', fontSize: '24px' }} />
+                            </div>
+                        )}
+                        {(setores || []).filter(setor => setor && setor.mapX && setor.mapY && setor._id != setorToUpdate._id).map(setor => {
+                            return <div
+                                style={{
+                                    position: 'absolute',
+                                    left: setor.mapX * 100 + '%',
+                                    top: setor.mapY * 100 + '%',
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                            >
+                                <LocationOnIcon sx={{ color: '#00000', fontSize: '24px' }} />
+                            </div>
+                        })}
                     </div>
-                </DialogContent>
-            </BootstrapDialog>
-        </Dialog>
-    );
-};
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '15vh' }}>
+                    <Typography>Escolha no mapa o setor que deseja adicionar</Typography>
+                    <TextField sx={{ width: 300 }}
+                        label="Insira o nome do setor"
+                        value={name}
+                        onChange={handleName}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <Button variant="contained" color="primary" onClick={handleSetorUpdate} sx={{ width: 100 }}>
+                        Próximo
+                    </Button>
 
-CustomModalEdit.propTypes = {
-    open: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired,
+                </div>
+            </DialogContent>
+        </BootstrapDialog>
+    )
 };
 
 export default CustomModalEdit;

@@ -18,6 +18,7 @@ const Router = (props) => {
     <Routes updateHaveUnread={props.updateHaveUnread} >
       <Route path="/" element={<Home updateHaveUnread={props.updateHaveUnread} isAI={props.isAI} updateIsAI={props.updateIsAI}/>}/>
       <Route path="sectorTablets/:sectorName" element={<SectorTablets isAI={props.isAI} updateIsAI={props.updateIsAI} />}/>
+
       <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
 
       <Route path="colaboradores">
