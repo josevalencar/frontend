@@ -80,18 +80,18 @@ const Kpis = () => {
   }, [historics])
 
   return (
-    <div style={{width:"100%", height:"100%", margin:"0%", display:"flex", flexDirection:"row", justifyContent: "space-between"}}>
-        <div style={{width:"100%", height:"100%"}}>
+    <div style={{width:"100%", height:"100%", display:"flex", flexDirection:"row", justifyContent: "space-between"}}>
+        <div style={{ flex:"1", height: "100%" }}>
           <Kpi ammount={qtdColaboradores} text="Número de colaboradores" color="aquamarine" icon={<AccountCircleTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
-        <div style={{width:"100%", height:"100%"}}>
+        <div style={{ flex: "1", height: "100%" }}>
           <Kpi ammount={qtdSetores} text="Número de setores" color="lightGreen" icon={<TabletMacTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
-        <div style={{width:"100%", height:"100%"}}>
+        <div style={{ flex: "1", height: "100%" }}>
           <Kpi ammount={qtdRoteadores} text="Número de roteadores" color="red" icon={<WifiOffTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
-        <div style={{width:"100%", height:"100%"}}>
-          <Kpi ammount={tabletsUsadosRecentemente} text="Quantidade de tablets utilizados nas últimas 8 horas" color="pink" icon={<AutoGraphTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
+        <div style={{ flex: "1", height: "100%" }}>
+          <Kpi ammount={tabletsUsadosRecentemente} text="Tablets utilizados nas últimas 8 horas" color="pink" icon={<AutoGraphTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
     </div>
   )

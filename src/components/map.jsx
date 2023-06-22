@@ -70,9 +70,6 @@ const MapaFabrica = () => {
 
   return (
     <div>
-      <Typography variant="h1" component="h1" align='center' paddingTop='4vh'>
-        Mapa da Fábrica
-      </Typography>
       {/* {setores.filter(setor => setor.mapX && setor.mapY).map((setor) => { */}
       {/* // return ( */}
       <div>
@@ -120,7 +117,7 @@ const MapaFabrica = () => {
               <img
                 src={Mapa}
                 alt="Mapa da Fábrica"
-                style={{ maxWidth: 900, height: 'auto' }}
+                style={{ maxWidth: "100%", height: 'auto' }}
               />
               {setores.filter(setor => setor.mapX && setor.mapY).map((setor) => {
                 return (
