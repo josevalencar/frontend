@@ -57,9 +57,21 @@ const TableTablet = () => {
     let filteredArray = [];
 
     rows.map((tablet) => {
+      let color = '';
+      if (tablet.lastHistoric === null) {
+        color="gray";
+      }
+      else{
+        if(tablet.lastHistoric.maintainer === null){
+          color="gray"
+        }
+        else{
+          color="green"
+        }
+      }
       returnArray.push(
         createData(tablet.tabletName, <Link to={'/tablets/' + tablet._id} key={tablet}>{tablet.mac}</Link>, <ListItemButton sx={{ justifyContent: 'center' }}><ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
-          <IconButton component={Link} to={"/tablets/" + tablet._id} ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>)
+          <IconButton component={Link} to={"/tablets/" + tablet._id} ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>, <NeonDiv color={color} />)
       )
     })
     returnArray.map(row => {
@@ -76,8 +88,8 @@ const TableTablet = () => {
 
 
   // Dados dos tablets
-  function createData(name, tablet, Historico) {
-    return { name, tablet, Historico };
+  function createData(name, tablet, Historico, online) {
+    return { name, tablet, Historico, online };
   }
 
   const columns = [
@@ -90,8 +102,20 @@ const TableTablet = () => {
       align: 'center',
       format: (value) => value.toLocaleString('en-US'),
     },
+    { id: 'online', label: 'online', align: 'center', minWidth: 20 }
   ];
 
+  const NeonDiv = (props) => {
+    const divStyle = {
+      width: '1vw',
+      height: '1vw',
+      borderRadius: '50%',
+      backgroundColor: props.color,
+      boxShadow: '0 0 0.2vw ' + props.color + ', 0 0 0.4vw '+ props.color + ', 0 0 0.6vw '+ props.color + ', 0 0 0.8vw '+ props.color + '',
+    };
+  
+    return <div style={{marginLeft:"100px", width:"100%", display:"flex", flexDirection:"row", alignContent:"center", alignItems:"center"}}><div style={divStyle}></div></div>;
+  };
 
 
   return (
