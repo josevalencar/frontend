@@ -119,13 +119,27 @@ const TableTablet = () => {
   ];
 
   const NeonDiv = (props) => {
-    return <div style={{
-      width: '10px',
-      marginLeft: '50px',
-      height: '10px',
-      borderRadius: '50%',
-      backgroundColor: props.color
-    }}></div>;
+    return (
+      props.color === "green"?
+      <div
+        style={{
+          width: '10px',
+          marginLeft: '50px',
+          height: '10px',
+          borderRadius: '50%',
+          backgroundColor: props.color,
+          boxShadow: `0 0 10px ${props.color}`,
+          animation: 'glow 1s ease-in-out infinite',
+        }}
+      ></div>:
+      <div style={{
+        width: '10px',
+        marginLeft: '50px',
+        height: '10px',
+        borderRadius: '50%',
+        backgroundColor: props.color
+      }}></div>
+    );
   };
 
 
