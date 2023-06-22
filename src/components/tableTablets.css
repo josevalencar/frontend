@@ -1,0 +1,13 @@
+.blinking {
+    animation: blink-animation 1s infinite;
+  }
+  
+  @keyframes blink-animation {
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  .visible {
+    opacity: 1 !important;
+  }
