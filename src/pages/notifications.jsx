@@ -20,7 +20,8 @@ import SelectType from "../components/selectType"
 
 
 
-const Notifications = ( {updateHaveUnread} ) => {
+
+const Notifications = ( props ) => {
     
     const [hasUnread, updateHasUnread] = React.useState(false);
 
@@ -91,7 +92,7 @@ const Notifications = ( {updateHaveUnread} ) => {
         console.log("changedNotificationState: ")
         console.log(changedNotificationState)
 
-        if(changedNotificationState == true){
+        if(changedNotificationState === true){
             console.log("changedNotifications == true")
             fetch("https://sfqlqf-3000.csb.app/v1/notifications")
             .then((response) => response.json())
@@ -102,7 +103,7 @@ const Notifications = ( {updateHaveUnread} ) => {
                 });
                 console.log("uncheckedNotification: ")
                 console.log(uncheckedNotification)
-                updateHaveUnread(uncheckedNotification)
+                props.updateHaveUnread(uncheckedNotification)
             })
             updateChangedNotificationState(false)
         }
@@ -371,6 +372,7 @@ const Notifications = ( {updateHaveUnread} ) => {
                 </div>
 
                 <TableNotifications rows={rows} columns={columns}/>
+
             </div>
             {deleteModals.map((modal) => {
                 return modal

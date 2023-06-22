@@ -8,9 +8,13 @@ import React from 'react'
 function App() {
   
   const [haveUnread, updateHaveUnread] = React.useState(false);
-  const [isAI, updateIsAI] = React.useState(false);
+  const [isAI, updateIsAI] = React.useState(JSON.parse(localStorage.getItem('isAI')) || false );
   
   console.log(haveUnread)
+
+  React.useEffect(() => {
+    localStorage.setItem('isAI', JSON.stringify(isAI));
+  }, [isAI]);
 
   return (
     <>
