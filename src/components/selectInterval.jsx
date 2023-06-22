@@ -13,7 +13,7 @@ export default function SelectInterval(props) {
   };
 
   return (
-    <Box sx={{ minWidth: 120}}>
+    <Box sx={{ minWidth: 120, maxWidth:"13%"}}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Intervalo</InputLabel>
         <Select

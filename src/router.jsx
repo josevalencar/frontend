@@ -8,22 +8,27 @@ import Roteadores from './pages/roteadores'
 import Tablets from "./pages/tablets"
 import Tablet from './pages/tablet'
 import Historico from './pages/historico'
+import SectorTablets from './pages/sectorTablets'
 import PaginaNaoEncontrada from './pages/paginaNaoEncontrada'
 import React from 'react'
+import Viewer from './pages/earth'
 
-const Router = () => {
+const Router = (props) => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="notificacoes" element={<Notifications />} />
+    <Routes updateHaveUnread={props.updateHaveUnread} >
+      <Route path="/" element={<Home isAI={props.isAI} updateHaveUnread={props.updateHaveUnread} updateIsAI={props.updateIsAI} />} />
+      <Route path="sectorTablets/:id" element={<SectorTablets isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
+      <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
+
       <Route path="colaboradores">
         <Route path="" element={<Colaboradores />} />
-        <Route path=":colaboradorId" element={<Colaborador />} />
+        <Route path=":colaboradorId" element={<Colaborador isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
       </Route>
       <Route path="tablets">
-        <Route path="" element={<Tablets/>}/>
-        <Route path=":tabletId" element={<Tablet/>}/>
+        <Route path="" element={<Tablets />} />
+        <Route path=":tabletId" element={<Tablet isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
       </Route>
+      <Route path="earth" element={<Viewer />} />
       <Route path="setores" element={<Setores />} />
       <Route path="roteadores" element={<Roteadores />} />
       <Route path="*" element={<PaginaNaoEncontrada />} />

@@ -30,8 +30,8 @@ const TableTablet = () => {
     let returnArray = [];
     rows.map((tablet) => {
       returnArray.push(
-        createData(tablet.esp.mac,tablet.maintainer? tablet.maintainer.name: undefined
-            ,tablet.espSector? tablet.espSector.name : undefined)
+        createData(tablet.esp.mac,tablet.maintainer? tablet.maintainer.name: "Colaborador sem nome"
+            ,tablet.espSector? tablet.espSector.name : "Setor não encontrado")
       )
     })
     updateRowsFormatadas(returnArray)
