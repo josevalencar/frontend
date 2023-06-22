@@ -78,13 +78,11 @@ const TableTablet = () => {
     let color = '';
     if (tablet.lastHistoric === null) {
       color = "gray";
-    }
-    else {
-      if (tablet.lastHistoric.maintainer === null) {
-        color = "gray"
-      }
-      else {
+    } else {
+      if (tablet.lastHistoric.online) {
         color = "green"
+      } else {
+        color = "gray"
       }
     }
 
