@@ -7,12 +7,7 @@ const FormCriarSetor = ({ adicionarSetor, criarRoteador, fecharModal, coordenada
   const [routerName, setRouterName] = useState('');
 
   const handleCreate = (e) => {
-    // Lógica para criar o roteador com os dados fornecidos
-    console.log('Router name:', routerName);
-    console.log('coordenadas:', coordenadas);
-
     e.preventDefault();
-
     adicionarSetor({ routerName, mapX: coordenadas.x, mapY: coordenadas.y });
     setRouterName('');
     fecharModal()
