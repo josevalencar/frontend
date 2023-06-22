@@ -16,8 +16,8 @@ import Viewer from './pages/earth'
 const Router = (props) => {
   return (
     <Routes updateHaveUnread={props.updateHaveUnread} >
-      <Route path="/" element={<Home />}/>
-      <Route path="sectorTablets/:sectorName" element={<SectorTablets />}/>
+      <Route path="/" element={<Home updateHaveUnread={props.updateHaveUnread} />} />
+      <Route path="sectorTablets/:sectorName" element={<SectorTablets />} />
       <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} />} />
       <Route path="colaboradores">
         <Route path="" element={<Colaboradores />} />

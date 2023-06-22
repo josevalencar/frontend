@@ -24,16 +24,16 @@ import './tableNotifications.css';
 
 function generate(element) {
     return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-        key: value,
-    }),
+        React.cloneElement(element, {
+            key: value,
+        }),
     );
 }
 
 
 
 export default function TableDashNotifications(props) {
-    
+
     const [dense, setDense] = useState(false);
     const [secondary, setSecondary] = useState(false);
 
@@ -50,31 +50,31 @@ export default function TableDashNotifications(props) {
         console.log("changedNotificationState: ")
         console.log(changedNotificationState)
 
-        if(changedNotificationState == true){
+        if (changedNotificationState == true) {
             console.log("changedNotifications == true")
             fetch("https://sfqlqf-3000.csb.app/v1/notifications")
-            .then((response) => response.json())
-            .then(data => {
-                // Mapeie os dados para criar uma nova propriedade 'id' para cada item
-                const uncheckedNotification = data.some(item => {
-                return item.state === 'unchecked';
-                });
-                console.log("uncheckedNotification: ")
-                console.log(uncheckedNotification)
-                props.updateHaveUnread(uncheckedNotification)
-            })
+                .then((response) => response.json())
+                .then(data => {
+                    // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+                    const uncheckedNotification = data.some(item => {
+                        return item.state === 'unchecked';
+                    });
+                    console.log("uncheckedNotification: ")
+                    console.log(uncheckedNotification)
+                    props.updateHaveUnread(uncheckedNotification)
+                })
             updateChangedNotificationState(false)
         }
-        
-    },[ , changedNotificationState ])
+
+    }, [, changedNotificationState])
 
 
-    function UpdateState(row, newState){
+    function UpdateState(row, newState) {
         console.log("nhaaaaa juba");
         // console.log(row)
         fetch("https://sfqlqf-3000.csb.app/v1/notifications/" + row.id, {
             method: "PUT",
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 content: null,
                 maintainer: null,
@@ -85,13 +85,13 @@ export default function TableDashNotifications(props) {
                 state: newState
             })
         })
-        // console.log(res)
-        .then(res => {
-            if(res.ok){
-                updateChangedNotificationState(true);
-            }
-        })
-        .catch((error) => console.log(error))
+            // console.log(res)
+            .then(res => {
+                if (res.ok) {
+                    updateChangedNotificationState(true);
+                }
+            })
+            .catch((error) => console.log(error))
     }
 
     const handleStatusChange = (id) => {
@@ -99,7 +99,7 @@ export default function TableDashNotifications(props) {
         const updatedRows = rows.map((row) => {
             if (row.id === id) {
                 console.log(row);
-                UpdateState(row, (row.state === "unchecked"?"checked":"unchecked"))
+                UpdateState(row, (row.state === "unchecked" ? "checked" : "unchecked"))
                 return { ...row, state: row.state === 'unchecked' ? 'checked' : 'unchecked' };
             }
             return row;
@@ -111,15 +111,15 @@ export default function TableDashNotifications(props) {
 
     React.useEffect(() => {
         fetch("https://sfqlqf-3000.csb.app/v1/notifications")
-        .then((response) => response.json())
-        .then(data => {
-            // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+            .then((response) => response.json())
+            .then(data => {
+                // Mapeie os dados para criar uma nova propriedade 'id' para cada item
 
-            const newDataFormatada = data.map(item => ({
-                ...item,
-                id: item._id,
-            }));
-            
+                const newDataFormatada = data.map(item => ({
+                    ...item,
+                    id: item._id,
+                }));
+
                 updateRowsFormatadas(newDataFormatada);
                 updateRows(newDataFormatada)
             })
@@ -128,72 +128,72 @@ export default function TableDashNotifications(props) {
                 console.log(err.message);
             });
 
-            updateChangedNotificationState(true)
-        }, [])
+        updateChangedNotificationState(true)
+    }, [])
 
 
     React.useEffect(() => {
         let returnArray = [];
         let modalsArray = [];
 
-        for(let i = 0; i < 2; i++){
+        for (let i = 0; i < 2; i++) {
 
             console.log(rowsFormatadas)
 
-            if(rowsFormatadas.length > 0){
+            if (rowsFormatadas.length > 0) {
 
                 returnArray.push(
-                    createData(rowsFormatadas[i].id, 
-                    rowsFormatadas[i].content,
-                    rowsFormatadas[i].state
-                    // <DeleteIcon
-                    //     style={{ cursor: 'pointer' }}
-                    //     onClick={() => handleDeleteRow(notification.id)}
-                    // />
-                ))
+                    createData(rowsFormatadas[i].id,
+                        rowsFormatadas[i].content,
+                        rowsFormatadas[i].state
+                        // <DeleteIcon
+                        //     style={{ cursor: 'pointer' }}
+                        //     onClick={() => handleDeleteRow(notification.id)}
+                        // />
+                    ))
                 updateRows(returnArray)
             }
             else {
                 updateRowsFormatadas(rows)
             }
 
-        }            
-                
-    }, [ rowsFormatadas])
+        }
+
+    }, [rowsFormatadas])
 
 
-    function createData( id, content, state) {
-        return { id, content, state};
+    function createData(id, content, state) {
+        return { id, content, state };
 
     }
 
 
 
     const columns = [
-        {   
-            field: 'content', 
-            headerName: 'Mensagem', 
-    
+        {
+            field: 'content',
+            headerName: 'Mensagem',
+
             width: 400,
-    
-        },    
+
+        },
         {
             field: 'actions',
             headerName: 'Visto',
             width: 50,
             renderCell: (params) => (
                 <div>
-                    { params.row.state === 'unchecked'?
+                    {params.row.state === 'unchecked' ?
                         <VisibilityIcon
                             style={{ cursor: 'pointer' }}
                             onClick={() => handleStatusChange(params.row.id)}
                         />
                         :
                         <VisibilityOffIcon
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleStatusChange(params.row.id)}/>
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleStatusChange(params.row.id)} />
                     }
-    
+
                 </div>
             ),
         },
@@ -201,84 +201,84 @@ export default function TableDashNotifications(props) {
 
     console.log("rows[0] ")
     console.log(rows[0])
-    
+
     return (
         <>
 
-            <div style={{ display: "flex", justifyContent: "end", height: 210 , width: '40%' }}>
-                <DataGrid 
-                rows={rows} 
-                columns={columns} 
-                disableColumnMenu 
-                getRowClassName={(params) => params.row.state} 
-                pagination={false}
+            <div style={{ display: "flex", justifyContent: "end", height: 210, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    disableColumnMenu
+                    getRowClassName={(params) => params.row.state}
+                    pagination={false}
                 />
 
                 {rows.length > 0 &&
 
-                <List dense={dense}>
-                    <Typography sx={{ mt: 1, mb: 1, borderBottom: '1px solid #ccc' }} variant='h6'>
-                        Notificações
-                    </Typography>
-                    <ListItem sx={{borderBottom: '1px solid #ccc', backgroundColor: rows[0].state === 'unchecked' ? 'white' : '#ccc'}}
-                    secondaryAction={
-                        
-                        <div>
-                            { 
-                            
-                                rows[0].state === 'unchecked'?
-                                    <VisibilityIcon
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => handleStatusChange(rows[0].id)}
-                                    />
-                                    :
-                                    <VisibilityOffIcon
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => handleStatusChange(rows[0].id)}/>
+                    <List dense={dense}>
+                        <Typography sx={{ mt: 1, mb: 1, borderBottom: '1px solid #ccc' }} variant='h6'>
+                            Notificações
+                        </Typography>
+                        <ListItem sx={{ borderBottom: '1px solid #ccc', backgroundColor: rows[0].state === 'unchecked' ? 'white' : '#ccc' }}
+                            secondaryAction={
+
+                                <div>
+                                    {
+
+                                        rows[0].state === 'unchecked' ?
+                                            <VisibilityIcon
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => handleStatusChange(rows[0].id)}
+                                            />
+                                            :
+                                            <VisibilityOffIcon
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => handleStatusChange(rows[0].id)} />
+                                    }
+
+
+                                </div>
                             }
-                            
-    
-                        </div> 
-                    }
-                    >
-                    <ListItemText
-                        primary={rows[0].content}
-                        secondary={secondary ? 'Secondary text' : null}
-                    />
-                    </ListItem>
-                    <ListItem
-                    sx={{backgroundColor: rows[1].state === 'unchecked' ? 'white' : '#ccc'}}
-                    secondaryAction={
-                        
-                        <div>
-                            { 
-                            
-                                rows[1].state === 'unchecked'?
-                                    <VisibilityIcon
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => handleStatusChange(rows[1].id)}
-                                    />
-                                    :
-                                    <VisibilityOffIcon
-                                    style={{ cursor: 'pointer' }}
-                                    onClick={() => handleStatusChange(rows[1].id)}/>
+                        >
+                            <ListItemText
+                                primary={rows[0].content}
+                                secondary={secondary ? 'Secondary text' : null}
+                            />
+                        </ListItem>
+                        <ListItem
+                            sx={{ backgroundColor: rows[1].state === 'unchecked' ? 'white' : '#ccc' }}
+                            secondaryAction={
+
+                                <div>
+                                    {
+
+                                        rows[1].state === 'unchecked' ?
+                                            <VisibilityIcon
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => handleStatusChange(rows[1].id)}
+                                            />
+                                            :
+                                            <VisibilityOffIcon
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => handleStatusChange(rows[1].id)} />
+                                    }
+
+
+                                </div>
                             }
-                            
-    
-                        </div> 
-                    }
-                    >
-                    <ListItemText
-                        primary={rows[1].content}
-                        secondary={secondary ? 'Secondary text' : null}
-                    />
-                    </ListItem>
-                
-                </List>
+                        >
+                            <ListItemText
+                                primary={rows[1].content}
+                                secondary={secondary ? 'Secondary text' : null}
+                            />
+                        </ListItem>
+
+                    </List>
                 }
 
             </div>
         </>
     );
-    
+
 }; 
