@@ -8,6 +8,7 @@ import React from 'react'
 function App() {
   
   const [haveUnread, updateHaveUnread] = React.useState(false);
+  const [isAI, updateIsAI] = React.useState(false);
   
   console.log(haveUnread)
 
@@ -15,7 +16,7 @@ function App() {
     <>
       <MiniDrawer haveUnread={haveUnread} updateHaveUnread={updateHaveUnread}/>
       <div style={{width: "95%", float: "right"}}>
-        <Router updateHaveUnread={updateHaveUnread}/>
+        <Router updateHaveUnread={updateHaveUnread} isAI={isAI} updateIsAI={updateIsAI}/>
       </div>
     </>
   );

@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 
-const SectorTablets = () => {
+const SectorTablets = (props) => {
 
     const { sectorName } = useParams();
 
@@ -44,19 +44,38 @@ const SectorTablets = () => {
     }
     
     useEffect(() => {
-        // fetch(`https://sfqlqf-3000.csb.app/v1/esps${filter ? `?filter=${sectorName}` : ''}`)
-        fetch(`https://sfqlqf-3000.csb.app/v1/historics`)
+        console.log("props.isAI")
+        console.log(props.isAI)
+        console.log(`https://sfqlqf-3000.csb.app/v1/sectors/esps?filter=` + sectorName)
+        fetch(`https://sfqlqf-3000.csb.app/v1/sectors/esps?filter=` + sectorName)
+        // fetch(`https://sfqlqf-3000.csb.app/v1/historics`)
         .then((response) => response.json())
-        .then(data => {
+        .then( props.isAI ? data => {
+            
             // Mapeie os dados para criar uma nova propriedade 'id' para cada item
-            const newData = data.map(item => ({
+            const newDataIa = data[0].iaEsps.map(item => ({
                 ...item,
                 id: item._id,
             }));
-            
-                updateRowsFormatadas(newData);
-                updateRows(newData)
-            })
+                console.log("newDataIa: ")
+                console.log(newDataIa )
+                updateRowsFormatadas(newDataIa);
+                updateRows(newDataIa)
+            }
+            :
+            data => {
+                console.log("data")
+                console.log(data)
+                const newData = data[0].esps.map(item => ({
+                    ...item,
+                    id: item._id,
+                }));
+                    console.log("newData: ")
+                    console.log(newData )
+                    updateRowsFormatadas(newData);
+                    updateRows(newData)
+            }
+            )
             // .then(data => updateRows(data))
         .catch((err) => {
             console.log(err.message);
@@ -84,20 +103,24 @@ const SectorTablets = () => {
         let newRows = [];
         rows.map((tablet) => {
             console.log(tablet.createdAt)
-            const connection = tablet.connections[0];
-            console.log("connection: ");
-            console.log(connection);
             // connection.map((connection2) => {
 
             // })
-            if(connection){
+            props.isAI ? 
                 returnArray.push(
                     createData(tablet.id, 
-                    connection.wifiPotency,
-                    connection.router.mac,
+                    tablet.tabletName,
+                    tablet.mac,
                 
                     ))
-                }
+                :
+                returnArray.push(
+                    createData(tablet.id, 
+                    tablet.tabletName,
+                    tablet.mac,
+                
+                    ))
+                
             return null
         })
         updateRows(returnArray)

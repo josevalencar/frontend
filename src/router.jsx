@@ -16,16 +16,17 @@ import Viewer from './pages/earth'
 const Router = (props) => {
   return (
     <Routes updateHaveUnread={props.updateHaveUnread} >
-      <Route path="/" element={<Home updateHaveUnread={props.updateHaveUnread} />} />
-      <Route path="sectorTablets/:sectorName" element={<SectorTablets />} />
-      <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} />} />
+      <Route path="/" element={<Home isAI={props.isAI} updateIsAI={props.updateIsAI}/>}/>
+      <Route path="sectorTablets/:sectorName" element={<SectorTablets isAI={props.isAI} updateIsAI={props.updateIsAI} />}/>
+      <Route path="notificacoes" element={<Notifications updateHaveUnread={props.updateHaveUnread} isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
+
       <Route path="colaboradores">
         <Route path="" element={<Colaboradores />} />
-        <Route path=":colaboradorId" element={<Colaborador />} />
+        <Route path=":colaboradorId" element={<Colaborador isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
       </Route>
       <Route path="tablets">
         <Route path="" element={<Tablets />} />
-        <Route path=":tabletId" element={<Tablet />} />
+        <Route path=":tabletId" element={<Tablet isAI={props.isAI} updateIsAI={props.updateIsAI} />} />
       </Route>
       <Route path="earth" element={<Viewer />} />
       <Route path="setores" element={<Setores />} />

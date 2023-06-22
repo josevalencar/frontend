@@ -5,6 +5,8 @@ import Popover from '@mui/material/Popover';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Mapa from '../images/Mapa.png'
 import Loading from '../pages/loadingPage';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const MapaFabrica = () => {
@@ -67,6 +69,13 @@ const MapaFabrica = () => {
   };
 
   const open = Boolean(anchorEl);
+
+  const navigate = useNavigate(); 
+
+  const handleIconClick = (setorName) => {
+    navigate("/sectorTablets/" + setorName);
+  };
+  
 
   return (
     <div>
@@ -135,6 +144,7 @@ const MapaFabrica = () => {
                       data-setor-name={setor.name}
                       onMouseEnter={handlePopoverOpen}
                       onMouseLeave={handlePopoverClose}
+                      onClick={ () => handleIconClick(setor.name)}
                     />
                   </div>
                 )

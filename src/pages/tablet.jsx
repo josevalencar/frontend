@@ -5,7 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 import TabelaColaborador from '../components/tabelaColaborador';
 
-const Tablet = () => {
+const Tablet = (props) => {
   let params = useParams();
   let url = 'https://sfqlqf-3000.csb.app/v1/historics?esp=';
 
@@ -46,9 +46,22 @@ const Tablet = () => {
   useEffect(() => {
     fetch(url + params.tabletId + '&orderBy=createdAt-desc')
       .then((response) => response.json())
-      .then((data) => {
-        updateRows(data);
-      })
+      .then( props.isAI ? (data) => {
+        const newDataIa = data.map(item => ({
+          ...item,
+          espSector: item.iaEspSector
+        }))
+        updateRows(newDataIa);
+      }
+      :
+      (data) => {
+        const newData = data.map(item => ({
+          ...item,
+          espSector: item.espSector
+        }))
+        updateRows(newData);
+      }
+      )
       .catch((err) => {
         console.log(err.message);
       });
