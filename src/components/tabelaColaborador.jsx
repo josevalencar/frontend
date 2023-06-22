@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-export default function TabelaColaborador(props) {
+const TabelaColaborador = ({ rows, columns, renderCheckbox }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -27,7 +27,7 @@ export default function TabelaColaborador(props) {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {props.columns.map((column) => (
+              {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -39,18 +39,22 @@ export default function TabelaColaborador(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.rows
+            {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {props.columns.map((column) => {
+                    {columns.map((column) => {
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
+                          {column.id === 'verificado' ? (
+                            renderCheckbox(row)
+                          ) : (
+                            column.format && typeof value === 'number'
                             ? column.format(value)
-                            : value}
+                            : value
+                          )}
                         </TableCell>
                       );
                     })}
@@ -63,7 +67,7 @@ export default function TabelaColaborador(props) {
       <TablePagination
         rowsPerPageOptions={[3, 4, 5]}
         component="div"
-        count={props.rows.length}
+        count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -72,3 +76,5 @@ export default function TabelaColaborador(props) {
     </Paper>
   );
 }
+
+export default TabelaColaborador;

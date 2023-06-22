@@ -44,7 +44,9 @@ const SectorTablets = () => {
         { field: 'lastHistoricDate', headerName: 'Última Atualização', width: 200 },
     ];
 
-    const rows = (sector && sector.esps ? sector.esps : []).map(esp => {
+    const esps = sector && sector.esps ? sector.esps : [];
+
+    const rows = esps.map(esp => {
         const row = {
             id: esp._id,
             tabletName: esp.tabletName,

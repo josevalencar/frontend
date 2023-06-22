@@ -348,44 +348,25 @@ const Notifications = ( {updateHaveUnread} ) => {
         <>
             <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
 
-                {error ? <Alert severity='error' action={
-                    <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                        setError(false);
-                    }}
-                    >
-                    <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></> }
-
-                {success[1] ? <Alert severity='success' action={
-                    <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                        setSuccess(['', false]);
-                    }}
-                    >
-                    <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
 
                 <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
                     Notificações
                 </Typography>
-                <div>
-                    <SearchBar updateFilter={updateFilter} />
-                    <div style={{display: "flex", flexDirection:"row", width:"100%"}}>
-                        <div style={{alignItems:"center", justifyContent:"flex-end", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
+                <div style={{display: "flex", justifyContent: 'center', width: "100%"}}>
+                    <div style={{display: "flex", justifyContent:'left', width: "40%"}}>
+
+                        <SearchBar type="notificação" updateFilter={updateFilter} />
+                    </div>
+                    <div style={{display: "flex", justifyContent:"center", flexDirection:"row", width:"20%"}}>
+                        <div style={{alignItems:"end", justifyContent:"flex-end", marginBottom:"1%", width:"30%", flexDirection:"row", display:"flex"}}>
                             <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
                         </div>
                     </div>
 
+                    <div style={{display: 'flex', justifyContent:"center", width: "30%"}}>
+
                     <SelectType updateType={updateType} valores={['info', 'esp-connection', 'esp-sector', 'esp-maintainer', 'esp', 'router', 'maintainer']}/>
+                    </div>
 
                 </div>
 

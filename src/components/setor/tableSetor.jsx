@@ -11,14 +11,14 @@ const TableSetor = ({ setores, handleEdit, handleDelete, handleClick }) => {
     };
 
     const columns = [
-        { field: 'name', headerName: 'Setores', width: 850 },
-        { field: 'onMap', headerName: 'Está no mapa', width: 200 },
-        { field: 'espQuantity', headerName: 'Quantidade de Tablets', width: 200 },
-        { field: 'createdAt', headerName: 'Data Criação', width: 200 },
+        { field: 'name', headerName: 'Setores', width: 800 },
+        { field: 'onMap', headerName: 'Está no mapa', width: 150 },
+        { field: 'espQuantity', headerName: 'Quantidade de Tablets', width: 150 },
+        { field: 'createdAt', headerName: 'Data Criação', width: 150 },
         {
             field: 'actions',
             headerName: 'Ações',
-            width: "100px",
+            width: "100",
             disableColumnFilter: false,
             renderCell: (params) => (
                 <div>

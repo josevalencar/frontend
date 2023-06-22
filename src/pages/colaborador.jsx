@@ -6,7 +6,7 @@ import SelectInterval from "../components/selectInterval"
 import dateToMinutes from "../helpers/dateToMinutes"
 import DateForm from '../components/datePicker'
 
-const Colaborador = () => {
+const Colaborador = (props) => {
   let params = useParams();
   let maintainerUrl = "https://sfqlqf-3000.csb.app/v1/maintainers/";
   let historicUrl = "https://sfqlqf-3000.csb.app/v1/historics?maintainer=";
@@ -48,7 +48,13 @@ const Colaborador = () => {
       if(lastDate - dateToMinutes(entry.createdAt) >= filter && dateToMinutes(entry.createdAt) >= startDate && dateToMinutes(entry.createdAt) <= endDate){
         filteredHistoric.push(
           createData(entry.esp.tabletName,
+
+            props.isAI 
+            ?
+            entry.iaEspSector? entry.iaEspSector.name : undefined 
+            :
             entry.espSector? entry.espSector.name : undefined,
+            
             entry.createdAt.slice(8,10) + '/' + entry.createdAt.slice(5,7) + '/' + entry.createdAt.slice(0,4) + ' - ' + entry.createdAt.slice(11, 16))
         )
         lastDate = dateToMinutes(entry.createdAt)

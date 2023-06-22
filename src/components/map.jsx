@@ -5,6 +5,8 @@ import Popover from '@mui/material/Popover';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Mapa from '../images/Mapa.png'
 import Loading from '../pages/loadingPage';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const MapaFabrica = () => {
@@ -13,12 +15,14 @@ const MapaFabrica = () => {
 
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedSetor, setSelectedSetor] = useState([]);
-  const [selectedSetorId, setSelectedSetorId] = useState(null);
+  const [selectedSetorInfo, setSelectedSetorInfo] = useState(null);
+  const [selectedSetorEsps, setSelectedSetorEsps] = useState([]);
+
 
 
   useEffect(() => {
     setIsLoading(true);
-    fetch("https://2d1oh9-3000.csb.app/v1/sectors")
+    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
       .then((response) => response.json())
       .then(data => {
         setSetores(data);
@@ -29,24 +33,6 @@ const MapaFabrica = () => {
       });
   }, [])
 
-  // const handleSetorMouseEnter = (setor) => {
-  //   setSelectedSetor({
-  //     ...setor,
-  //     popupX: setor.mapX * 100 + '%',
-  //     popupY: setor.mapY * 100 + '%',
-  //   });
-  //   console.log(setor.mapX);
-  //   console.log(setor.mapY);
-  //   setPopupOpen(true);
-  //   console.log("entrou");
-  // };
-
-  // const handleSetorMouseLeave = () => {
-  //   setPopupOpen(false);
-  //   console.log("saiu");
-
-  // };
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handlePopoverOpen = (event, setor) => {
@@ -54,25 +40,45 @@ const MapaFabrica = () => {
     setSelectedSetor(setor);
     const setorId = event.target.dataset.setorId;
     const setorName = event.target.dataset.setorName;
-    setSelectedSetorId(setorId); // Atribui o valor do setorId à constante selectedSetorId
+    setSelectedSetorInfo(setorName); // Atribui o valor do setorId à constante selectedSetorId
     console.log(setorId);
+
+    const url = "https://sfqlqf-3000.csb.app/v1/sectors/esps"; // URL da API
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const espSetor = data.find(setor => setor._id === setorId);
+        if (espSetor) {
+          const espList = espSetor.esps;
+          setSelectedSetorEsps(espList);
+          console.log(espList);
+        } else {
+          console.log("Setor não encontrado");
+        }
+      })
+      .catch(error => {
+        console.log("Ocorreu um erro:", error);
+      });
   };
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
     setSelectedSetor(null);
-    setSelectedSetorId(null); // Limpa o valor do setorId
-
-
+    setSelectedSetorInfo(null); // Limpa o valor do setorId
   };
 
   const open = Boolean(anchorEl);
 
+  const navigate = useNavigate(); 
+
+  const handleIconClick = (setorName) => {
+    navigate("/sectorTablets/" + setorName);
+  };
+  
+
   return (
     <div>
-      <Typography variant="h1" component="h1" align='center' paddingTop='4vh'>
-        Mapa da Fábrica
-      </Typography>
       {/* {setores.filter(setor => setor.mapX && setor.mapY).map((setor) => { */}
       {/* // return ( */}
       <div>
@@ -94,19 +100,33 @@ const MapaFabrica = () => {
           onClose={handlePopoverClose}
           disableRestoreFocus
         >
-          <Typography sx={{ p: 1 }}>{selectedSetorId}</Typography>
+          <Typography sx={{ p: 1 }}>
+            {selectedSetorInfo}
+            {selectedSetorEsps?.length > 0 ? (
+              <div>
+                <strong>Tablets:</strong>
+                <ul>
+                  {selectedSetorEsps.map((esp) => (
+                    <li key={esp._id}>{esp.tabletName}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div>Nenhum tablet presente.</div>
+            )}
+          </Typography>
         </Popover>
       </div>
       {/* // ) */}
       {/* // })} */}
       {
-        isLoading ? <Loading/> : (
+        isLoading ? <Loading /> : (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <div style={{ position: 'relative' }}>
               <img
                 src={Mapa}
                 alt="Mapa da Fábrica"
-                style={{ maxWidth: 900, height: 'auto' }}
+                style={{ maxWidth: "100%", height: 'auto' }}
               />
               {setores.filter(setor => setor.mapX && setor.mapY).map((setor) => {
                 return (
@@ -124,6 +144,7 @@ const MapaFabrica = () => {
                       data-setor-name={setor.name}
                       onMouseEnter={handlePopoverOpen}
                       onMouseLeave={handlePopoverClose}
+                      onClick={ () => handleIconClick(setor.name)}
                     />
                   </div>
                 )

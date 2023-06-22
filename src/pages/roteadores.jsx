@@ -12,18 +12,18 @@ const Roteadores = () => {
   const [displayedRouters, setDisplayedRouters] = useState(null);
 
   useEffect(() => {
-    if (filter !== ''){
+    if (filter !== '') {
       let filteredRouters = [];
       roteadores.map((row) => {
-        if (row.name !== null){
-          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter)){
+        if (row.name !== null) {
+          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter)) {
             filteredRouters.push(row)
           }
         }
       })
       console.log(filteredRouters);
       setDisplayedRouters(filteredRouters);
-    } else{
+    } else {
       setDisplayedRouters(roteadores);
     }
   }, [roteadores, filter])
@@ -161,7 +161,7 @@ const Roteadores = () => {
 
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-      {displayedRouters !== null && (
+        {displayedRouters !== null && (
           <TableRoteador onLoad={console.log(displayedRouters)} roteadores={displayedRouters} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} />
         )}
       </div>

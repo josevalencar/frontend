@@ -199,7 +199,7 @@ export default function MiniDrawer(props) {
             <SettingsSharpIcon sx={{ color: '#000000' }} />
           </IconButton>
           <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes' edge="end" sx={{ marginLeft: 'auto', opacity: open ? 1 : 0  }} >
-            <NotificationsSharpIcon sx={{ color: '#000000' }} />
+            {props.haveUnread ? <NotificationsActiveIcon sx={{ color: '#000000'}}/> : <NotificationsSharpIcon sx={{ color: '#100000' }} />}
           </IconButton>
         </Box>
       </Drawer>
