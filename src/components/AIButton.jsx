@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/joy/Typography';
-import WifiIcon from '@mui/icons-material/Wifi';
 import Switch from '@mui/material/Switch';
 
 export default function AIButton(props) {
@@ -11,8 +10,10 @@ export default function AIButton(props) {
   };
 
   return (
-    <Box sx={{ display: 'flex', width: 200, alignItems: 'center' }}>
-      <WifiIcon />
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: 200, alignItems: 'center' }}>
+      <Typography sx={{ marginBottom: '10px' }}>
+        <strong>IA</strong>
+      </Typography>
       <Switch 
         checked={props.isAI}
         onChange={handleChange}
@@ -27,9 +28,6 @@ export default function AIButton(props) {
               backgroundColor: 'black',
             },
           }} />
-      <Typography>
-        <strong>IA</strong>
-      </Typography>
     </Box>
   );
 }
