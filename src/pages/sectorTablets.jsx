@@ -1,134 +1,92 @@
 import * as React from 'react';
 import Typography from '@mui/joy/Typography';
-import DatePicker from '../components/datePicker'
-import { Link } from 'react-router-dom'
-import TableSectorTablets from '../components/tableSectorTablets'
-import HistorySharpIcon from '@mui/icons-material/HistorySharp';
-import IconButton from '@mui/material/IconButton';
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
+import { getSetoresWithEsps } from '../services/Setores';
+import LoadingEarth from '../pages/loadingPage';
+import { DataGrid } from '@mui/x-data-grid';
+import dateToLocale from '../helpers/dateToLocale';
 
 const SectorTablets = () => {
+    const { id } = useParams();
 
-    const { sectorName } = useParams();
-
-    console.log(sectorName);
-
-    const [rows, updateRows] = useState([]);
-
-    const [rowsFormatadas, updateRowsFormatadas] = useState([]);
-    
-    const [filter, updateFilter] = useState([]);
-    
-    const [startDate, updateStartDate] = useState(0);
-    const [endDate, updateEndDate] = useState(9999999999);
-    const [selectedSectorId, setSelectedSectorId] = useState(false);
-    const [get, setGet] = useState([0]);
-    const [success, setSuccess] = useState(['', false]);
-    const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [sector, setSector] = useState({});
 
 
-    function formatISODateToBR(dateStr) {
-        const dateObj = new Date(dateStr);
-    
-        // Formata a data
-        const date = dateObj.toLocaleDateString('pt-BR');
-        
-        // Formata a hora e minutos
-        const time = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        
-        
-        return `${date} ${time}`;
-    }
-    
+    const navigator = useNavigate();
+
+    const handleCellClick = (params, event) => {
+        navigator(`/tablets/${params.row.id}`);
+    };
+
     useEffect(() => {
-        // fetch(`https://sfqlqf-3000.csb.app/v1/esps${filter ? `?filter=${sectorName}` : ''}`)
-        fetch(`https://sfqlqf-3000.csb.app/v1/historics`)
-        .then((response) => response.json())
-        .then(data => {
-            // Mapeie os dados para criar uma nova propriedade 'id' para cada item
-            const newData = data.map(item => ({
-                ...item,
-                id: item._id,
-            }));
-            
-                updateRowsFormatadas(newData);
-                updateRows(newData)
-            })
-            // .then(data => updateRows(data))
-        .catch((err) => {
-            console.log(err.message);
-        });
-    }, [])
-    
+        (async () => {
+            setIsLoading(true);
+            const sectors = await getSetoresWithEsps(`_id=${id}`);
+            if (!sectors[0]) {
+                return navigator('/setores');
+            }
+
+            setSector(sectors[0]);
+            setIsLoading(false);
+        })()
+    }, []);
+
     const columns = [
-        { field: 'name', headerName: 'Nome do tablet', width: 400 },
-        { field: 'mac', headerName: 'Endereço Mac', width: 400 },
-        {
-        field: 'historico',
-        headerName: 'Histórico',
-        width: 200,
-        renderCell: (params) => (
-            <div >
-                <IconButton component={Link} to={"/tablets/" + params.row.id } ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton>
-            </div>
-        ),
-        },
+        { field: 'tabletName', headerName: 'Nome do tablet', width: 400 },
+        { field: 'mac', headerName: 'MAC', width: 200 },
+        { field: 'maintainer', headerName: 'Manutentor', width: 200 },
+        { field: 'router', headerName: 'MAC roteador', width: 200 },
+        { field: 'online', headerName: 'Online', width: 200 },
+        { field: 'lastHistoricDate', headerName: 'Última Atualização', width: 200 },
     ];
 
-        
-    useEffect(() => {
-        let returnArray = [];
-        let newRows = [];
-        rows.map((tablet) => {
-            console.log(tablet.createdAt)
-            const connection = tablet.connections[0];
-            console.log("connection: ");
-            console.log(connection);
-            // connection.map((connection2) => {
+    const rows = (sector && sector.esps ? sector.esps : []).map(esp => {
+        const row = {
+            id: esp._id,
+            tabletName: esp.tabletName,
+            mac: esp.mac,
+            maintainer: esp.lastHistoric ? (esp.lastHistoric.maintainer ? esp.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem histórico',
+            router: esp.lastHistoric ? (esp.lastHistoric.router ? esp.lastHistoric.router.mac : 'Sem roteador') : 'Sem histórico',
+            online: esp.lastHistoric ? (esp.lastHistoric.online ? 'Sim' : 'Não') : 'Sem histórico',
+            lastHistoricDate: esp.lastHistoric ? (`${dateToLocale(esp.lastHistoric.createdAt)}`) : 'Sem histórico',
+        }
 
-            // })
-            if(connection){
-                returnArray.push(
-                    createData(tablet.id, 
-                    connection.wifiPotency,
-                    connection.router.mac,
-                
-                    ))
-                }
-            return null
-        })
-        updateRows(returnArray)
-    }, [ rowsFormatadas, selectedSectorId, startDate, endDate])
-
-    
-    function createData( id, name, mac, historico) {
-        return { id, name, mac, historico};
-
-    }
-        
-    
+        return row;
+    })
 
 
-    return (
-        <>
-            <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-
-                <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
-                    {sectorName}
-                </Typography>
-                {/* <div>
-                    <SearchBar updateFilter={updateFilter} />
-                    <DatePicker updateStartDate={updateStartDate} updateEndDate={updateEndDate}/>
-                </div> */}
-
-                <TableSectorTablets rows={rows} columns={columns} > </TableSectorTablets>
+    return <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        {isLoading || (!sector || !sector._id) ? <LoadingEarth /> : <>
+            <Typography level="display2" textAlign="start" fontSize={"40px"}>
+                {sector.name ? `Setor: ${sector.name}` : `Setor sem nome`}
+            </Typography>
+            <div style={{ fontSize: '14px', color: '#808080' }}>
+                <span style={{ marginRight: 10 }}>Última edição: <strong>{dateToLocale(sector.updatedAt)}</strong></span>
+                Criação: <strong>{dateToLocale(sector.createdAt)}</strong>
             </div>
-            
+
+            <span style={{ fontSize: '14px', color: '#808080' }}>
+                <strong>{`${sector.esps.length} tablet${sector.esps.length != 1 ? 's' : ''}`}</strong>
+                {` nesse setor`}
+            </span>
+
+            {sector.esps.length ? <div style={{ width: "97%", height: 600, marginTop: '10px' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    onCellClick={handleCellClick}
+                />
+            </div> : <Typography level="display2" textAlign="start" sx={{ mb: 2 }}>
+                {`Sem esps conectados`}
+            </Typography>}
+
         </>
-    );
+        }
+    </div >;
 }
 
 export default SectorTablets

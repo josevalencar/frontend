@@ -6,13 +6,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function AlertDialog({ open, handleCloseDelete, handleDeleteRoteador, id, routerID }) {
+export default function ModalDelete({ handleClose, handleDelete, setor }) {
 
     return (
         <div>
             <Dialog
-                open={open}
-                onClose={handleCloseDelete}
+                open={true}
+                onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -25,8 +25,8 @@ export default function AlertDialog({ open, handleCloseDelete, handleDeleteRotea
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDelete}>Cancelar</Button>
-                    <Button onClick={() => handleDeleteRoteador(id, routerID)} autoFocus>
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button onClick={() => handleDelete(setor._id)} autoFocus>
                         Deletar
                     </Button>
                 </DialogActions>

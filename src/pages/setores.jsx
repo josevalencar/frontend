@@ -1,165 +1,106 @@
 import React, { useEffect, useState } from 'react';
-import TableSetor from '../components/setor/tableSetor';
 import ModalCriarSetor from '../components/setor/modalCreate';
-import SearchBar from '../components/setor/searchbar';
+import ModalDeleteSetor from '../components/setor/modalDelete';
 import CustomModalEdit from '../components/setor/modalEdit';
-import MapaModal from '../components/modalMap';
-import removerAcentos from '../helpers/removerAcentos';
-
-
-
+import TableSetor from '../components/setor/tableSetor';
+import SearchBar from '../components/setor/searchbar';
+import LoadingEarth from '../pages/loadingPage';
+import { deleteSetor, getSetores, getSetoresWithEsps, postSetor, putSetor } from '../services/Setores';
+import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from 'react-router-dom';
 
 const Setores = () => {
   const [setores, setSetores] = useState([]);
+  const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [setorToUpdate, setSetorToUpdate] = useState({});
+  const [setorToDelete, setSetorToDelete] = useState({});
   const [filter, updateFilter] = useState('');
-  const [displayedSectors, setDisplayedSectors] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (filter !== ''){
-      let filteredSectors = [];
-      setores.map((row) => {
-        if (row.name !== null){
-          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter)){
-            filteredSectors.push(row)
-          }
-        }
-      })
-      setDisplayedSectors(filteredSectors);
-    } else{
-      setDisplayedSectors(setores);
-    }
-  }, [setores, filter])
+    (async () => {
+      setIsLoading(true);
+      const setores = await getSetoresWithEsps(filter);
+      setSetores(setores);
+      setIsLoading(false);
+    })()
+  }, [filter, lastRefresh]);
 
-  const adicionarSetor = async (setor) => {
-    try {
-      const response = await fetch("https://sfqlqf-3000.csb.app/v1/sectors", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          mac: setor.macAddress,
-          name: setor.routerName,
-          mapX: setor.mapX,
-          mapY: setor.mapY
-        })
-      });
-    } catch (error) {
-      console.error("Erro ao enviar a requisição para o backend", error);
-    }
-
-    setSetores([...setores, setor]);
-
-    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
-      .then((response) => response.json())
-      .then(data => {
-        const setoresUpdate = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id, mapX: setor.mapX, mapY: setor.mapY }));
-        setSetores(setoresUpdate);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-
-
-  };
-
-  useEffect(() => {
-    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
-      .then((response) => response.json())
-      .then(data => {
-        const setoresFetched = data.map(setor => ({ ...setor, macAddress: setor.mac, routerName: setor.name, routerID: setor._id, mapX: setor.mapX, mapY: setor.mapY }));
-        setSetores(setoresFetched);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, [])
-
-  const editarRoteador = async ({ routerName, macAddress, routerID }) => {
-    console.log(routerID);
-    console.log(`https://sfqlqf-3000.csb.app/v1/sectors` + routerID);
-    console.log(`newName: ${routerName}, newMac: ${macAddress}`)
-    console.log(setores);
-
-    try {
-      const response = await fetch(`https://sfqlqf-3000.csb.app/v1/sectors` + routerID, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: routerName,
-          mac: macAddress
-        })
-      });
-
-      if (response.ok) {
-        // Atualizar a lista de roteadores com os dados atualizados
-        const updatedRoteadores = setores.map(roteador => {
-          if (roteador._id === routerID) {
-            return {
-              ...roteador,
-              routerName: routerName,
-              macAddress: macAddress
-            };
-          }
-          return roteador;
-        });
-        setSetores(updatedRoteadores);
-        console.log(updatedRoteadores);
-        // setOpen(false);
-      } else {
-        console.error("Erro ao editar o roteador");
-      }
-    } catch (error) {
-      console.error("Erro ao enviar a requisição para o backend", error);
-    }
-  };
-
-  const deletarRoteador = async (routerID) => {
-    console.log(`Hello: ${routerID}`);
-
-    try {
-      await fetch(`https://sfqlqf-3000.csb.app/v1/sectors/${routerID}`, { method: 'DELETE' });
-      console.log(`Roteador com ID ${routerID} deletado`);
-    } catch (error) {
-      console.error('Erro ao deletar roteador:', error);
-    }
-
-    fetch("https://sfqlqf-3000.csb.app/v1/sectors")
-      .then((response) => response.json())
-      .then(data => {
-        const roteadoresNotDeleted = data.map(roteador => ({ ...roteador, macAddress: roteador.mac, routerName: roteador.name, routerID: roteador._id }));
-        setSetores(roteadoresNotDeleted);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-
-
+  const handleClickEdit = (params) => {
+    setSetorToUpdate(setores.find(setor => setor._id == params.id));
+    setShowUpdateModal(true);
   }
 
+  const handleDelete = async (id) => {
+    setShowDeleteModal(false);
+    setIsLoading(true);
+    deleteSetor(id);
+    setSetores(await getSetoresWithEsps(filter));
+    setIsLoading(false);
+  }
 
+  const handleClickDelete = async (params) => {
+    setSetorToDelete(setores.find(setor => setor._id == params.id));
+    setShowDeleteModal(true);
+  }
+
+  const handleClickCreate = async (params) => {
+    setShowCreateModal(true);
+  }
+
+  const handleClick = (params) => {
+    navigate(`/sectorTablets/${params.id}`);
+  }
+
+  const handleCreateSetor = async (setor) => {
+    setShowCreateModal(false);
+    setIsLoading(true);
+    await postSetor({
+      name: setor.name,
+      mapX: setor.mapX,
+      mapY: setor.mapY
+    });
+    setSetores(await getSetoresWithEsps(filter));
+    setIsLoading(false);
+  }
+
+  const handleUpdateSetor = async (setor) => {
+    setShowUpdateModal(false);
+    setIsLoading(true);
+    await putSetor(setor._id, setor);
+    setSetores(await getSetoresWithEsps(filter));
+    setIsLoading(false);
+  }
 
   return (
     <>
-      <div style={{ paddingLeft: 110 }}>
+      <div style={{ paddingX: 110 }}>
         <h1>Setores</h1>
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 110, alignItems: 'center', minHeight: '10vh' }} >
+        {showCreateModal ? <ModalCriarSetor setores={setores} handleCreate={handleCreateSetor} handleClose={() => { setShowCreateModal(false) }} /> : (
+          <Button variant="outlined" onClick={handleClickCreate} sx={{ width: 100 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+              <AddIcon></AddIcon>
+              CRIAR
+            </div>
+          </Button>
+        )}
+        {showUpdateModal ? <CustomModalEdit setores={setores} setorToUpdate={setorToUpdate} handleUpdate={handleUpdateSetor} handleClose={() => { setShowUpdateModal(false) }} /> : null}
+        {showDeleteModal ? <ModalDeleteSetor handleClose={() => setShowDeleteModal(false)} handleDelete={handleDelete} setor={setorToDelete} /> : null}
         <SearchBar updateFilter={updateFilter} type="roteador" />
-        <ModalCriarSetor adicionarSetor={adicionarSetor}></ModalCriarSetor>
-        <CustomModalEdit roteadores={setores} editarRoteador={editarRoteador}></CustomModalEdit>
-
-
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-
-      {displayedSectors !== null && (
-          <TableSetor roteadores={displayedSectors} editarRoteador={editarRoteador} deletarRoteador={deletarRoteador} />
-          )}
-
-      </div>
+      {isLoading ? <LoadingEarth /> : (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '97%' }} >
+          <TableSetor setores={setores} handleEdit={handleClickEdit} handleClick={handleClick} handleDelete={handleClickDelete} />
+        </div>
+      )}
     </>
   )
 }
