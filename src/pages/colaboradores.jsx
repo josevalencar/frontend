@@ -14,7 +14,6 @@ import Button from '@mui/material/Button';
 import CreateMaintainer from '../components/createMaintainer';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
-import Kpis from '../components/home/kpis/kpis';
 
 
 const Colaboradores = () => {
@@ -156,39 +155,46 @@ const Colaboradores = () => {
     <>
 
       <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
-        <div style={{width:"80%", display:"flex", flexDirection:"column", alignItems:"center", marginTop:"2px"}}>
-          {error ? <Alert severity='error' action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setError(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></> }
+        <div style={{ width: "80%", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <h1 style={{ marginTop: "0" }}>Colaboradores</h1>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            {error ? <Alert severity='error' action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setError(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></> }
 
-          {success[1] ? <Alert severity='success' action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setSuccess(['', false]);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
-
-          <h1>Colaboradores</h1>
+            {success[1] ? <Alert severity='success' action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setSuccess(['', false]);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
+          </div>
+        </div>
+        <div style={{ width: "80%", display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
           <SearchBar updateFilter={updateFilter} type="colaborador" />
           <Button onClick={handleOpenCreate}>Adicionar</Button>
           <BaseModal open={openCreate} handleClose={handleCloseCreate} content={<CreateMaintainer sectors={sectors} setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />} />
-          <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
         </div>
+          <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
+            <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
+          </div>
         {deleteModals.map((modal) => {
           return modal
         })}

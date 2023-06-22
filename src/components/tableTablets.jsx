@@ -16,6 +16,7 @@ import SearchBar from './searchBar';
 import removerAcentos from '../helpers/removerAcentos';
 import dateToLocale from '../helpers/dateToLocale';
 import Loading from '../pages/loadingPage';
+import TabletMacIcon from '@mui/icons-material/TabletMac';
 
 
 
@@ -58,7 +59,6 @@ const TableTablet = () => {
     let filteredArray = [];
 
     rows.map((tablet) => {
-      console.log(tablet, 'hehe')
       returnArray.push(createData(tablet))
     })
     returnArray.map(row => {
@@ -75,16 +75,30 @@ const TableTablet = () => {
 
   // Dados dos tablets
   function createData(tablet) {
+    let color = '';
+    if (tablet.lastHistoric === null) {
+      color = "gray";
+    }
+    else {
+      if (tablet.lastHistoric.maintainer === null) {
+        color = "gray"
+      }
+      else {
+        color = "green"
+      }
+    }
+
     return {
-      online: tablet.lastHistoric ? (tablet.lastHistoric.online ? 'Sim' : 'Não') : 'Sem Histórico',
-      name: tablet.tabletName ? tablet.tabletName : '-',
-      mac: tablet.mac,
+      online: tablet.lastHistoric ? (<NeonDiv color={color} />) : 'Sem Histórico',
+      name: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.tabletName ? tablet.tabletName : '-'}</Link>,
+      mac: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.mac}</Link>,
       maintainer: tablet.lastHistoric ? (tablet.lastHistoric.maintainer ? tablet.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem Histórico',
       router: tablet.lastHistoric ? (tablet.lastHistoric.router ? tablet.lastHistoric.router.mac : 'Sem roteador') : 'Sem Histórico',
       sector: tablet.lastHistoric ? (tablet.lastHistoric.sector ? tablet.lastHistoric.sector.name : 'Sem sector') : 'Sem Histórico',
       lastHistoricDate: tablet.lastHistoric ? dateToLocale(tablet.lastHistoric.createdAt) : 'Sem Histórico',
-      historic: <ListItemButton sx={{ justifyContent: 'center' }}><ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
-        <IconButton component={Link} to={"/tablets/" + tablet._id} ><Link to={'/tablets/' + tablet._id} key={tablet}>{tablet.mac}</Link><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>
+      historic: <ListItemButton sx={{ justifyContent: 'center' }}>
+        <ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
+        <IconButton component={Link} to={"/tablets/" + tablet._id} ><HistorySharpIcon sx={{ color: '#000000' }} /></IconButton></ListItemButton>
     };
   }
 
@@ -100,11 +114,19 @@ const TableTablet = () => {
       id: 'historic',
       label: 'Histórico',
       minWidth: 20,
-      align: 'center',
-      format: (value) => value.toLocaleString('en-US'),
-    },
+      align: 'center'
+    }
   ];
 
+  const NeonDiv = (props) => {
+    return <div style={{
+      width: '10px',
+      marginLeft: '50px',
+      height: '10px',
+      borderRadius: '50%',
+      backgroundColor: props.color
+    }}></div>;
+  };
 
 
   return (
