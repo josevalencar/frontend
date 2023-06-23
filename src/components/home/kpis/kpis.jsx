@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import Kpi from './kpi'
-import TabletMacTwoToneIcon from '@mui/icons-material/TabletMacTwoTone';
+import FactoryIcon from '@mui/icons-material/Factory'
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import AutoGraphTwoToneIcon from '@mui/icons-material/AutoGraphTwoTone';
-import WifiOffTwoToneIcon from '@mui/icons-material/WifiOffTwoTone';
+import RouterIcon from '@mui/icons-material/Router';
 import dateToSeconds from '../../../helpers/dateToMinutes';
 
 const Kpis = () => {
@@ -85,10 +85,10 @@ const Kpis = () => {
           <Kpi ammount={qtdColaboradores} text="Número de colaboradores" color="aquamarine" icon={<AccountCircleTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
         <div style={{ flex: "1", height: "100%" }}>
-          <Kpi ammount={qtdSetores} text="Número de setores" color="lightGreen" icon={<TabletMacTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
+          <Kpi ammount={qtdSetores} text="Número de setores" color="lightGreen" icon={<FactoryIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
         <div style={{ flex: "1", height: "100%" }}>
-          <Kpi ammount={qtdRoteadores} text="Número de roteadores" color="red" icon={<WifiOffTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />
+          <Kpi ammount={qtdRoteadores} text="Número de roteadores" color="red" icon={<RouterIcon sx={{width:"50%", height:"50%"}}/>} />
         </div>
         <div style={{ flex: "1", height: "100%" }}>
           <Kpi ammount={tabletsUsadosRecentemente} text="Tablets utilizados nas últimas 8 horas" color="pink" icon={<AutoGraphTwoToneIcon sx={{width:"50%", height:"50%"}}/>} />

@@ -131,7 +131,7 @@ const Colaboradores = () => {
   ];
 
   const handleDelete = (id) => {
-    fetch('https://2d1oh9-3000.csb.app/v1/maintainers/' + id, {
+    fetch('https://sfqlqf-3000.csb.app/v1/maintainers/' + id, {
       method: 'DELETE'
     })
       .then(response => {
