@@ -79,7 +79,7 @@ const Roteadores = () => {
       });
   }, [])
 
-  const editarRoteador = async ({ routerName, macAddress, routerID }) => {
+  const editarRoteador = async ({ routerName, macAddress, routerID, sectorId }) => {
     console.log(routerID);
     console.log(`https://sfqlqf-3000.csb.app/v1/esp-routers/` + routerID);
     console.log(`newName: ${routerName}, newMac: ${macAddress}`)
@@ -93,7 +93,8 @@ const Roteadores = () => {
         },
         body: JSON.stringify({
           name: routerName,
-          mac: macAddress
+          mac: macAddress,
+          sector: sectorId
         })
       });
 
@@ -104,7 +105,8 @@ const Roteadores = () => {
             return {
               ...roteador,
               routerName: routerName,
-              macAddress: macAddress
+              macAddress: macAddress,
+              sector: sectorId
             };
           }
           return roteador;
