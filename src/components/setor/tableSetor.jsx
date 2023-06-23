@@ -39,7 +39,7 @@ const TableSetor = ({ setores, handleEdit, handleDelete, handleClick }) => {
         const createdAt = new Date(setor.createdAt);
         return {
             id: setor._id,
-            name: setor.name,
+            name: setor.name ? setor.name : '-',
             onMap: setor.mapX && setor.mapY ? 'Sim' : 'Não',
             espQuantity: setor.esps.length,
             createdAt: `${createdAt.toLocaleDateString('pt-br')} ${createdAt.toLocaleTimeString('pt-br', { hour: '2-digit', minute: '2-digit' })}`

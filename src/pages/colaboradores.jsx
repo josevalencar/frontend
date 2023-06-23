@@ -14,7 +14,8 @@ import Button from '@mui/material/Button';
 import CreateMaintainer from '../components/createMaintainer';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
-
+import dateToLocale from '../helpers/dateToLocale';
+import { ListItemButton } from '@mui/material';
 
 const Colaboradores = () => {
 
@@ -41,15 +42,15 @@ const Colaboradores = () => {
   const [success, setSuccess] = useState(['', false]);
 
 
-  function handleOpenDelete(id){
+  function handleOpenDelete(id) {
     setOpenDelete('delete_' + id)
   }
 
-  function handleOpenUpdate(id){
+  function handleOpenUpdate(id) {
     setOpenUpdate('update_' + id)
   }
 
-  function handleOpenCreate(){
+  function handleOpenCreate() {
     setOpenCreate(true);
   }
 
@@ -63,7 +64,7 @@ const Colaboradores = () => {
       .then(data => setSectors(data))
       .catch((err) => {
         console.log(err.message);
-     });
+      });
   }, [])
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const Colaboradores = () => {
       .then(data => updateRows(data))
       .catch((err) => {
         console.log(err.message);
-     });
+      });
   }, [get])
 
   useEffect(() => {
@@ -80,24 +81,18 @@ const Colaboradores = () => {
     let modalsArray = [];
     let newRows = [];
     rows.map((manutentor) => {
-      returnArray.push(
-        createData(<IconButton onClick={() => handleOpenUpdate(manutentor._id)} ><EditIcon/></IconButton>,
-        <Link to={'/colaboradores/' + manutentor._id} key={manutentor}>{manutentor.name}</Link>,
-        manutentor.rfid,
-        <IconButton component={Link} to={"/colaboradores/" + manutentor._id } ><HistorySharpIcon/></IconButton>,
-        <IconButton onClick={() => handleOpenDelete(manutentor._id)} ><DeleteOutlineIcon/></IconButton>
-      ))
+      returnArray.push(createData(manutentor))
       modalsArray.push(
-        <BaseModal open={openDelete === 'delete_' + manutentor._id}  handleClose={handleCloseDelete} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
+        <BaseModal open={openDelete === 'delete_' + manutentor._id} handleClose={handleCloseDelete} content={<ContentDeleteModal nome={manutentor.name} handleDelete={handleDelete} id={manutentor._id} />} />
       )
       modalsArray.push(
         <BaseModal open={openUpdate === 'update_' + manutentor._id} handleClose={handleCloseUpdate} content={<UpdateMaintainer manutentor={manutentor} sectors={sectors} setGet={setGet} handleClose={handleCloseUpdate} setError={setError} setSuccess={setSuccess} />} />
       )
       return null
     })
-    for(let row of returnArray){
-      if (row.nome.props.children !== null){
-        if (removerAcentos(row.nome.props.children.toLowerCase()).includes(filter) || row.nome.props.children.includes(filter)){
+    for (let row of returnArray) {
+      if (row.name) {
+        if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter)) {
           newRows.push(row)
         }
       }
@@ -106,28 +101,31 @@ const Colaboradores = () => {
     setDeleteModals(modalsArray)
   }, [rows, filter, openDelete, openUpdate])
 
-  function createData(editar, nome, rfid, historico, deletar) {
-    return { editar, nome, rfid, historico, deletar};
+  function createData(maintainer) {
+    const lastHistoric = maintainer.lastHistoric;
+
+    return {
+      name: maintainer.name,
+      rfid: maintainer.rfid,
+      router: lastHistoric ? (lastHistoric.router ? <Link to={`/roteadores`}>{lastHistoric.router.mac}</Link> : '-') : 'Sem histórico',
+      esp: lastHistoric ? (lastHistoric.esp ? (<Link to={`/tablets/${lastHistoric.esp._id}`}>{lastHistoric.esp.tabletName ? lastHistoric.esp.tabletName : lastHistoric.esp.mac}</Link>) : '-') : 'Sem histórico',
+      sector: lastHistoric ? (lastHistoric.espSector ? <Link to={`/sectorTablets/${lastHistoric.espSector._id}`}>{lastHistoric.espSector.name}</Link> : '-') : 'Sem histórico',
+      lastHistoricDate: lastHistoric ? (dateToLocale(lastHistoric.createdAt)) : 'Sem histórico',
+      actions: <ListItemButton sx={{ justifyContent: 'center' }}>
+        <IconButton onClick={() => handleOpenUpdate(maintainer._id)} ><EditIcon /></IconButton>
+        <IconButton onClick={() => handleOpenDelete(maintainer._id)} ><DeleteOutlineIcon /></IconButton>
+      </ListItemButton>
+    };
   }
 
   const columns = [
-    { id: 'editar', label: '', align: 'center', minWidth: 20 },
-    { id: 'nome', label: 'Nome', align: 'center', minWidth: 150 },
-    {
-      id: 'rfid',
-      label: 'RFID',
-      minWidth: 150,
-      align: 'center',
-      format: (value) => value.toLocaleString('en-US'),
-    },
-    { id: 'historico', label: 'Histórico', align: 'center', minWidth: 150 },
-    {
-      id: 'deletar',
-      label: '',
-      minWidth: 20,
-      align: 'center',
-      format: (value) => value.toLocaleString('en-US'),
-    },
+    { id: 'name', label: 'Nome', align: 'center', minWidth: 20 },
+    { id: 'rfid', label: 'RFID', align: 'center', minWidth: 20 },
+    { id: 'router', label: 'Roteador Atual', align: 'center', minWidth: 20 },
+    { id: 'esp', label: 'Tablet Atual', align: 'center', minWidth: 20 },
+    { id: 'sector', label: 'Setor Atual', align: 'center', minWidth: 20 },
+    { id: 'lastHistoricDate', label: 'Última Atualização', align: 'center', minWidth: 20 },
+    { id: 'actions', label: 'Ações', align: 'center', minWidth: 20 },
   ];
 
   const handleDelete = (id) => {
@@ -154,7 +152,7 @@ const Colaboradores = () => {
   return (
     <>
 
-      <div style={{display:"flex", flexDirection:"column", alignItems:"center", width:"100%", height:"80%"}}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "80%" }}>
         <div style={{ width: "80%", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2px" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
             <h1 style={{ marginTop: "0" }}>Colaboradores</h1>
@@ -171,7 +169,7 @@ const Colaboradores = () => {
               >
                 <CloseIcon fontSize="inherit" />
               </IconButton>
-            }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></> }
+            }>Algo deu errado. Verifique as informações inseridas e, se o erro persistir, peça ajuda a um administrador.</Alert> : <></>}
 
             {success[1] ? <Alert severity='success' action={
               <IconButton
@@ -184,7 +182,7 @@ const Colaboradores = () => {
               >
                 <CloseIcon fontSize="inherit" />
               </IconButton>
-            }>Colaborador {success[0]} com sucesso.</Alert> : <></> }
+            }>Colaborador {success[0]} com sucesso.</Alert> : <></>}
           </div>
         </div>
         <div style={{ width: "80%", display: "flex", justifyContent: "flex-end", marginBottom: "8px" }}>
@@ -192,9 +190,9 @@ const Colaboradores = () => {
           <Button onClick={handleOpenCreate}>Adicionar</Button>
           <BaseModal open={openCreate} handleClose={handleCloseCreate} content={<CreateMaintainer sectors={sectors} setGet={setGet} handleClose={handleCloseCreate} setError={setError} setSuccess={setSuccess} />} />
         </div>
-          <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
-            <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
-          </div>
+        <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
+          <TabelaColaboradores rows={rowsFormatadas} columns={columns} />
+        </div>
         {deleteModals.map((modal) => {
           return modal
         })}
