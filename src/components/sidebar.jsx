@@ -29,6 +29,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
 import { colors } from '@mui/joy';
 import { Switch, useLocation } from 'react-router-dom';
+import AIButton from './AIButton';
 
 const drawerWidth = 240;
 const path = ["/", "/tablets", "/colaboradores", "/setores", "/roteadores"];
@@ -114,7 +115,7 @@ export default function MiniDrawer(props) {
     setOpen(false);
   };
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader open={open}>
@@ -128,10 +129,10 @@ export default function MiniDrawer(props) {
                 onClick={handleDrawerOpen}
                 edge="center"
                 sx={{
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                  ...(open && { display: 'none' }),
-                  color: '#000000',
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  ...(open && { display: "none" }),
+                  color: "#000000",
                 }}
               >
                 <MenuIcon />
@@ -139,67 +140,141 @@ export default function MiniDrawer(props) {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <IconButton IconButton onClick={handleDrawerClose} edge="start" component={Link} to="/">
+              <IconButton
+                IconButton
+                onClick={handleDrawerClose}
+                edge="start"
+                component={Link}
+                to="/"
+              >
                 <img src={logo} alt="Logo" height={30} />
               </IconButton>
-              <IconButton onClick={handleDrawerClose} sx={{ color: '#000000' }}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon sx={{ color: '#000000' }} /> : <ChevronLeftIcon />}
+              <IconButton onClick={handleDrawerClose} sx={{ color: "#000000" }}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon sx={{ color: "#000000" }} />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
               </IconButton>
             </React.Fragment>
           )}
         </DrawerHeader>
         <Divider />
         <List>
-          {['Mapa', 'Tablets', 'Colaboradores', 'Setores', 'Roteadores'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                {...index === 0 ? rota = path[0] : null}
-                {...index === 1 ? rota = path[1] : null}
-                {...index === 2 ? rota = path[2] : null}
-                {...index === 3 ? rota = path[3] : null}
-                {...index === 4 ? rota = path[4] : null}
-                component={Link}
-                to={rota}
-                IconButton onClick={handleDrawerClose}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+          {["Mapa", "Tablets", "Colaboradores", "Setores", "Roteadores"].map(
+            (text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  {...(index === 0 ? (rota = path[0]) : null)}
+                  {...(index === 1 ? (rota = path[1]) : null)}
+                  {...(index === 2 ? (rota = path[2]) : null)}
+                  {...(index === 3 ? (rota = path[3]) : null)}
+                  {...(index === 4 ? (rota = path[4]) : null)}
+                  component={Link}
+                  to={rota}
+                  IconButton
+                  onClick={handleDrawerClose}
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
                   }}
                 >
-                  {index === 0 ? <IconButton><FmdGoodRoundedIcon sx={{ color: '#000000' }} /></IconButton> : null}
-                  {index === 1 ? <IconButton><TabletMacIcon sx={{ color: page === path[0] ? '#42e6f5' : '#000000' }} /></IconButton> : null}
-                  {index === 2 ? <IconButton><GroupIcon sx={{ color: '#000000' }} /></IconButton> : null}
-                  {index === 3 ? <IconButton><FactoryIcon sx={{ color: '#000000' }} /></IconButton> : null}
-                  {index === 4 ? <IconButton ><RouterIcon sx={{ color: '#000000' }} /></IconButton> : null}
-
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {index === 0 ? (
+                      <IconButton>
+                        <FmdGoodRoundedIcon sx={{ color: "#000000" }} />
+                      </IconButton>
+                    ) : null}
+                    {index === 1 ? (
+                      <IconButton>
+                        <TabletMacIcon
+                          sx={{
+                            color: page === path[0] ? "#42e6f5" : "#000000",
+                          }}
+                        />
+                      </IconButton>
+                    ) : null}
+                    {index === 2 ? (
+                      <IconButton>
+                        <GroupIcon sx={{ color: "#000000" }} />
+                      </IconButton>
+                    ) : null}
+                    {index === 3 ? (
+                      <IconButton>
+                        <FactoryIcon sx={{ color: "#000000" }} />
+                      </IconButton>
+                    ) : null}
+                    {index === 4 ? (
+                      <IconButton>
+                        <RouterIcon sx={{ color: "#000000" }} />
+                      </IconButton>
+                    ) : null}
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            )
+          )}
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              IconButton
+              onClick={handleDrawerClose}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <AIButton isAI={props.isAI} updateIsAI={props.updateIsAI} />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
         </List>
-        <Box sx={{
-          position: 'fixed',
-          bottom: 0,
-          width: drawerWidth,
-          padding: '16px',
-          display: open ? 'flex' : 'none',
-          justifyContent: open ? 'initial' : 'space-between',
-        }}
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            width: drawerWidth,
+            padding: "16px",
+            display: open ? "flex" : "none",
+            justifyContent: open ? "space-between" : "space-between",
+            alignItems: open ? "center" : "center",
+          }}
         >
-          <IconButton onClick={handleDrawerClose} edge="start" component={Link} to='earth' sx={{ marginRight: 'auto' }}>
-            <SettingsSharpIcon sx={{ color: '#000000' }} />
+          <IconButton
+            onClick={handleDrawerClose}
+            edge="start"
+            component={Link}
+            to="earth"
+          >
+            <SettingsSharpIcon sx={{ color: "#000000" }} />
           </IconButton>
-          <IconButton onClick={handleDrawerClose} component={Link} to='notificacoes' edge="end" sx={{ marginLeft: 'auto', opacity: open ? 1 : 0  }} >
-            {props.haveUnread ? <NotificationsActiveIcon sx={{ color: '#000000'}}/> : <NotificationsSharpIcon sx={{ color: '#100000' }} />}
+          <IconButton
+            onClick={handleDrawerClose}
+            component={Link}
+            to="notificacoes"
+            edge="end"
+            sx={{ opacity: open ? 1 : 0 }}
+          >
+            {props.haveUnread ? (
+              <NotificationsActiveIcon sx={{ color: "#000000" }} />
+            ) : (
+              <NotificationsSharpIcon sx={{ color: "#100000" }} />
+            )}
           </IconButton>
         </Box>
       </Drawer>
