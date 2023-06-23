@@ -187,12 +187,12 @@ const Notifications = ( props ) => {
                 <div>
                     { params.row.state === 'unchecked'?
                         <VisibilityIcon
-                            style={{ cursor: 'pointer', color: 'red' }}
+                            style={{ cursor: 'pointer' }}
                             onClick={() => handleStatusChange(params.row.id)}
                         />
                         :
                         <VisibilityOffIcon
-                        style={{ cursor: 'pointer', color: 'blue' }}
+                        style={{ cursor: 'pointer' }}
                         onClick={() => handleStatusChange(params.row.id)}/>
                     }            
                     <DeleteIcon
