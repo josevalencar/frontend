@@ -90,9 +90,9 @@ const TableTablet = () => {
       online: tablet.lastHistoric ? (<NeonDiv color={color} />) : 'Sem Histórico',
       name: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.tabletName ? tablet.tabletName : '-'}</Link>,
       mac: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.mac}</Link>,
-      maintainer: tablet.lastHistoric ? (tablet.lastHistoric.maintainer ? tablet.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem Histórico',
-      router: tablet.lastHistoric ? (tablet.lastHistoric.router ? tablet.lastHistoric.router.mac : 'Sem roteador') : 'Sem Histórico',
-      sector: tablet.lastHistoric ? (tablet.lastHistoric.espSector ? tablet.lastHistoric.espSector.name : 'Sem sector') : 'Sem Histórico',
+      maintainer: tablet.lastHistoric ? (tablet.lastHistoric.maintainer ? <Link to={'/colaboradores/' + tablet.lastHistoric.maintainer._id} >{tablet.lastHistoric.maintainer.name}</Link> : 'Sem manutentor') : 'Sem Histórico',
+      router: tablet.lastHistoric ? (tablet.lastHistoric.router ? <Link to={'/roteadores'}>{tablet.lastHistoric.router.mac}</Link> : 'Sem roteador') : 'Sem Histórico',
+      sector: tablet.lastHistoric ? (tablet.lastHistoric.espSector ? <Link to={'/sectorTablets/' + tablet.lastHistoric.espSector._id} >{tablet.lastHistoric.espSector.name}</Link> : 'Sem sector') : 'Sem Histórico',
       lastHistoricDate: tablet.lastHistoric ? dateToLocale(tablet.lastHistoric.createdAt) : 'Sem Histórico',
       historic: <ListItemButton sx={{ justifyContent: 'center' }}>
         <ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
