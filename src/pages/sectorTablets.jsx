@@ -51,8 +51,8 @@ const SectorTablets = () => {
             id: esp._id,
             tabletName: esp.tabletName,
             mac: esp.mac,
-            maintainer: esp.lastHistoric ? (esp.lastHistoric.maintainer ? esp.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem histórico',
-            router: esp.lastHistoric ? (esp.lastHistoric.router ? esp.lastHistoric.router.mac : 'Sem roteador') : 'Sem histórico',
+            maintainer: esp.lastHistoric ? (esp.lastHistoric.maintainer ? (esp.lastHistoric.maintainer.name ? esp.lastHistoric.maintainer.name : '-') : 'Sem manutentor') : 'Sem histórico',
+            router: esp.lastHistoric ? (esp.lastHistoric.router ? (esp.lastHistoric.router.mac ? esp.lastHistoric.router.mac : '-') : 'Sem roteador') : 'Sem histórico',
             online: esp.lastHistoric ? (esp.lastHistoric.online ? 'Sim' : 'Não') : 'Sem histórico',
             lastHistoricDate: esp.lastHistoric ? (`${dateToLocale(esp.lastHistoric.createdAt)}`) : 'Sem histórico',
         }
