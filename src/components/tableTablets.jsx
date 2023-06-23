@@ -62,9 +62,10 @@ const TableTablet = () => {
       returnArray.push(createData(tablet))
     })
     returnArray.map(row => {
+      console.log(row);
       if (filter !== '') {
-        if (row.name !== null && row.tablet !== null) {
-          if (removerAcentos(row.name.toLowerCase()).includes(filter) || row.name.includes(filter) || removerAcentos(row.tablet.props.children.toLowerCase()).includes(filter) || row.tablet.props.children.includes(filter)) {
+        if (row.realName !== null && row.tablet !== null) {
+          if (removerAcentos(row.realName.toLowerCase()).includes(filter) || row.realName.includes(filter) || removerAcentos(row.realName.toLowerCase()).includes(filter) || row.realName.includes(filter)) {
             filteredArray.push(row)
           }
         }
@@ -87,6 +88,7 @@ const TableTablet = () => {
     }
 
     return {
+      realName: tablet.tabletName,
       online: tablet.lastHistoric ? (<NeonDiv color={color} />) : 'Sem Histórico',
       name: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.tabletName ? tablet.tabletName : '-'}</Link>,
       mac: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.mac}</Link>,
