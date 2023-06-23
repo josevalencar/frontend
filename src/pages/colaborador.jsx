@@ -13,7 +13,7 @@ const Colaborador = (props) => {
 
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [colaborador, atualizaColaborador] = useState('');
-  const [filter, updateFilter] = useState(1);
+  const [filter, updateFilter] = useState(0);
   const [historic, updateHistoric] = useState([]);
   const [startDate, updateStartDate] = useState(0);
   const [endDate, updateEndDate] = useState(9999999999);
@@ -44,7 +44,7 @@ const Colaborador = (props) => {
     let filteredHistoric = [];
     let lastDate = 99999999999
     historic.map((entry) => {
-      console.log(dateToMinutes(entry.createdAt), startDate, endDate)
+      console.log("AAAAAAAAAcurrent: " + dateToMinutes(entry.createdAt))
       if(lastDate - dateToMinutes(entry.createdAt) >= filter && dateToMinutes(entry.createdAt) >= startDate && dateToMinutes(entry.createdAt) <= endDate){
         filteredHistoric.push(
           createData(entry.esp.tabletName,
@@ -89,7 +89,7 @@ const Colaborador = (props) => {
         <h2 style={{marginTop:"0.5%", marginBottom:"0.5%"}} >{colaborador.rfid}</h2>
         <div style={{display:"flex", flexDirection:"row", width:"100%"}}>
           <div style={{alignItems:"left", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
-            <SelectInterval updateFilter={updateFilter} valores={[5, 10, 15, 30, 60]} />
+            <SelectInterval updateFilter={updateFilter} valores={[1, 5, 10, 15, 30, 60]} />
           </div>
           <div style={{alignItems:"center", justifyContent:"flex-end", marginBottom:"1%", width:"50%", flexDirection:"row", display:"flex"}}>
             <p style={{color:"gray"}}>De</p> <DateForm updateDate={updateStartDate} /> <p style={{color:"gray"}}>a</p> <DateForm updateDate={updateEndDate} />
