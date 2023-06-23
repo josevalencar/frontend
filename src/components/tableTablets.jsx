@@ -92,7 +92,7 @@ const TableTablet = () => {
       mac: <Link to={'/tablets/' + tablet._id} key={tablet._id}>{tablet.mac}</Link>,
       maintainer: tablet.lastHistoric ? (tablet.lastHistoric.maintainer ? tablet.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem Histórico',
       router: tablet.lastHistoric ? (tablet.lastHistoric.router ? tablet.lastHistoric.router.mac : 'Sem roteador') : 'Sem Histórico',
-      sector: tablet.lastHistoric ? (tablet.lastHistoric.sector ? tablet.lastHistoric.sector.name : 'Sem sector') : 'Sem Histórico',
+      sector: tablet.lastHistoric ? (tablet.lastHistoric.espSector ? tablet.lastHistoric.espSector.name : 'Sem sector') : 'Sem Histórico',
       lastHistoricDate: tablet.lastHistoric ? dateToLocale(tablet.lastHistoric.createdAt) : 'Sem Histórico',
       historic: <ListItemButton sx={{ justifyContent: 'center' }}>
         <ModalTablets onClick={() => handleOpenUpdate(tablet._id)} mode="editar" handleClose={handleCloseUpdate} id={tablet._id} key={'edit_' + tablet._id} setGet={setGet} setError={setError} setSuccess={setSuccess} tablet={tablet} />
@@ -118,25 +118,25 @@ const TableTablet = () => {
 
   const NeonDiv = (props) => {
     return (
-      props.color === "green"?
-      <div
-        style={{
+      props.color === "green" ?
+        <div
+          style={{
+            width: '10px',
+            marginLeft: '50px',
+            height: '10px',
+            borderRadius: '50%',
+            backgroundColor: props.color,
+            boxShadow: `0 0 10px ${props.color}`,
+            animation: 'glow 1s ease-in-out infinite',
+          }}
+        ></div> :
+        <div style={{
           width: '10px',
           marginLeft: '50px',
           height: '10px',
           borderRadius: '50%',
-          backgroundColor: props.color,
-          boxShadow: `0 0 10px ${props.color}`,
-          animation: 'glow 1s ease-in-out infinite',
-        }}
-      ></div>:
-      <div style={{
-        width: '10px',
-        marginLeft: '50px',
-        height: '10px',
-        borderRadius: '50%',
-        backgroundColor: props.color
-      }}></div>
+          backgroundColor: props.color
+        }}></div>
     );
   };
 
