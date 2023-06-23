@@ -18,7 +18,7 @@ function App() {
 
   return (
     <>
-      <MiniDrawer haveUnread={haveUnread} updateHaveUnread={updateHaveUnread}/>
+      <MiniDrawer haveUnread={haveUnread} updateHaveUnread={updateHaveUnread} isAI={isAI} updateIsAI={updateIsAI}/>
       <div style={{width: "95%", float: "right"}}>
         <Router updateHaveUnread={updateHaveUnread} isAI={isAI} updateIsAI={updateIsAI}/>
       </div>

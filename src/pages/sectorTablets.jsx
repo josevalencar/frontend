@@ -22,6 +22,30 @@ const SectorTablets = () => {
         navigator(`/tablets/${params.row.id}`);
     };
 
+    const NeonDiv = (props) => {
+        return (
+          props.color === "green"?
+          <div
+            style={{
+              width: '10px',
+              marginLeft: '50px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: props.color,
+              boxShadow: `0 0 10px ${props.color}`,
+              animation: 'glow 1s ease-in-out infinite',
+            }}
+          ></div>:
+          <div style={{
+            width: '10px',
+            marginLeft: '50px',
+            height: '10px',
+            borderRadius: '50%',
+            backgroundColor: props.color
+          }}></div>
+        );
+      };
+
     useEffect(() => {
         (async () => {
             setIsLoading(true);
@@ -36,24 +60,47 @@ const SectorTablets = () => {
     }, []);
 
     const columns = [
-        { field: 'tabletName', headerName: 'Nome do tablet', width: 400 },
-        { field: 'mac', headerName: 'MAC', width: 200 },
-        { field: 'maintainer', headerName: 'Manutentor', width: 200 },
+        { field: 'tabletName', headerName: 'Nome do tablet', width: 260 },
+        { field: 'mac', headerName: 'MAC', width: 170 },
+        { field: 'maintainer', headerName: 'Manutentor', width: 170 },
         { field: 'router', headerName: 'MAC roteador', width: 200 },
-        { field: 'online', headerName: 'Online', width: 200 },
-        { field: 'lastHistoricDate', headerName: 'Última Atualização', width: 200 },
+        { field: 'online', headerName: 'Online', width: 125, renderCell: (params) => {
+            let color = '';
+            console.log("params: ")
+            console.log(params)
+            // console.log("params.row: ")
+            // console.log()
+
+            if (params.row.lastHistoric === 'Sem histórico') {
+                color = "gray";
+            } else {
+                color = params.value;
+            }
+            return <NeonDiv color={color} />;
+        } },
+        { field: 'lastHistoricDate', headerName: 'Última Atualização', width: 170 },
     ];
 
     const esps = sector && sector.esps ? sector.esps : [];
-
+    
     const rows = esps.map(esp => {
+        let color = '';
+        if (esp.lastHistoric === null) {
+          color = "gray";
+        } else {
+          if (esp.lastHistoric.online) {
+            color = "green"
+          } else {
+            color = "gray"
+          }
+        }
         const row = {
             id: esp._id,
             tabletName: esp.tabletName,
             mac: esp.mac,
-            maintainer: esp.lastHistoric ? (esp.lastHistoric.maintainer ? esp.lastHistoric.maintainer.name : 'Sem manutentor') : 'Sem histórico',
-            router: esp.lastHistoric ? (esp.lastHistoric.router ? esp.lastHistoric.router.mac : 'Sem roteador') : 'Sem histórico',
-            online: esp.lastHistoric ? (esp.lastHistoric.online ? 'Sim' : 'Não') : 'Sem histórico',
+            maintainer: esp.lastHistoric ? (esp.lastHistoric.maintainer ? (esp.lastHistoric.maintainer.name ? esp.lastHistoric.maintainer.name : '-') : 'Sem manutentor') : 'Sem histórico',
+            router: esp.lastHistoric ? (esp.lastHistoric.router ? (esp.lastHistoric.router.mac ? esp.lastHistoric.router.mac : '-') : 'Sem roteador') : 'Sem histórico',
+            online: esp.lastHistoric ? color : 'Sem Histórico',
             lastHistoricDate: esp.lastHistoric ? (`${dateToLocale(esp.lastHistoric.createdAt)}`) : 'Sem histórico',
         }
 
@@ -61,7 +108,7 @@ const SectorTablets = () => {
     })
 
 
-    return <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    return <div className="selectDiv" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', marginLeft: '5%' }}>
         {isLoading || (!sector || !sector._id) ? <LoadingEarth /> : <>
             <Typography level="display2" textAlign="start" fontSize={"40px"}>
                 {sector.name ? `Setor: ${sector.name}` : `Setor sem nome`}
@@ -76,7 +123,7 @@ const SectorTablets = () => {
                 {` nesse setor`}
             </span>
 
-            {sector.esps.length ? <div style={{ width: "97%", height: 600, marginTop: '10px' }}>
+            {sector.esps.length ? <div style={{ width: "97%", height: '100%', marginTop: '10px' }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}

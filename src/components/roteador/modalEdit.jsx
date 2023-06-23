@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import FormEditaRoteador from './formEditaRoteador';
 import { TextField, Button } from '@mui/material';
+import SelectSector from '../selectSector'
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -55,20 +56,23 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
 
     const [routerName, setRouterName] = useState(null);
     const [macAddress, setMacAddress] = useState(null);
+    const [sector, updateSector] = useState('');
+    const [valores, updateValores] = useState([]);
+    const [sectorId, updateSectorId] = useState('');
+    
 
-    const handleCreate = (e) => {
+    const handleEdit = (e) => {
+        // Lógica para criar o roteador com os dados fornecidos
         console.log('Router name:', routerName);
         console.log('MAC Address:', macAddress);
-        console.log('Backend ID:', routerID);
-
+        console.log('Sector: ', sector);
+        console.log('SectorId: ', sectorId);
 
         e.preventDefault();
-
-        editarRoteador({ routerName, macAddress, routerID });
+        editarRoteador({ routerName, macAddress, routerID, sectorId });
         setRouterName('');
         setMacAddress('');
-
-        console.log("Editado com sucesso!");
+        updateSector('');
     };
 
     const handleNomeChange = (event) => {
@@ -78,6 +82,70 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
     const handleMacAddressChange = (event) => {
         setMacAddress(event.target.value);
     };
+
+    React.useEffect(() => {
+    
+        fetch("https://sfqlqf-3000.csb.app/v1/sectors")
+        .then((response) => response.json())
+        .then(data => {
+        data.map((item) => {
+            if(item.name == sector) {
+            const id = item._id
+            updateSectorId(id)
+            }
+        });
+        console.log(valores)
+
+        })
+        .catch ((error) => {
+        console.log(error.message);
+        console.log("oi rafa techio")
+        return [];
+        });
+    }, [sector]);
+
+
+    React.useEffect(() => {
+    
+        fetch("https://sfqlqf-3000.csb.app/v1/sectors")
+        .then((response) => response.json())
+        .then(data => {
+        const valores2 = data.map((item) => item.name);
+        const ids = data.map((item) => item.id);
+        updateValores(valores2)
+        updateSectorId(ids)
+        console.log(valores)
+
+        })
+        .catch ((error) => {
+        console.log(error.message);
+        console.log("oi rafa techio")
+        return [];
+        });
+    }, []);
+
+    // const handleCreate = (e) => {
+    //     console.log('Router name:', routerName);
+    //     console.log('MAC Address:', macAddress);
+    //     console.log('Backend ID:', routerID);
+
+
+    //     e.preventDefault();
+
+    //     editarRoteador({ routerName, macAddress, routerID, sectorId });
+    //     setRouterName('');
+    //     setMacAddress('');
+
+    //     console.log("Editado com sucesso!");
+    // };
+
+    // const handleNomeChange = (event) => {
+    //     setRouterName(event.target.value);
+    // };
+
+    // const handleMacAddressChange = (event) => {
+    //     setMacAddress(event.target.value);
+    // };
 
     return (
         <Dialog onClose={handleClose} open={open}>
@@ -109,7 +177,8 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
                             fullWidth
                             margin="normal"
                         />
-                        <Button variant="contained" color="primary" onClick={handleCreate} sx={{ width: 100 }}>
+                        <SelectSector updateSector={updateSector} updateSectorId={updateSectorId} valores={valores} />
+                        <Button variant="contained" color="primary" onClick={handleEdit} sx={{ width: 100, marginTop:'5%' }}>
                             Editar
                         </Button>
 

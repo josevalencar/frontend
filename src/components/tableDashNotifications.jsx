@@ -46,12 +46,12 @@ export default function TableDashNotifications(props) {
 
     React.useEffect(() => {
 
-        console.log("o update state chamou o useEffect")
-        console.log("changedNotificationState: ")
-        console.log(changedNotificationState)
+        // console.log("o update state chamou o useEffect")
+        // console.log("changedNotificationState: ")
+        // console.log(changedNotificationState)
 
         if (changedNotificationState == true) {
-            console.log("changedNotifications == true")
+            // console.log("changedNotifications == true")
             fetch("https://sfqlqf-3000.csb.app/v1/notifications")
                 .then((response) => response.json())
                 .then(data => {
@@ -59,8 +59,8 @@ export default function TableDashNotifications(props) {
                     const uncheckedNotification = data.some(item => {
                         return item.state === 'unchecked';
                     });
-                    console.log("uncheckedNotification: ")
-                    console.log(uncheckedNotification)
+                    // console.log("uncheckedNotification: ")
+                    // console.log(uncheckedNotification)
                     props.updateHaveUnread(uncheckedNotification)
                 })
             updateChangedNotificationState(false)
@@ -70,7 +70,7 @@ export default function TableDashNotifications(props) {
 
 
     function UpdateState(row, newState) {
-        console.log("nhaaaaa juba");
+        // console.log("nhaaaaa juba");
         // console.log(row)
         fetch("https://sfqlqf-3000.csb.app/v1/notifications/" + row.id, {
             method: "PUT",
@@ -98,7 +98,7 @@ export default function TableDashNotifications(props) {
 
         const updatedRows = rows.map((row) => {
             if (row.id === id) {
-                console.log(row);
+                // console.log(row);
                 UpdateState(row, (row.state === "unchecked" ? "checked" : "unchecked"))
                 return { ...row, state: row.state === 'unchecked' ? 'checked' : 'unchecked' };
             }
@@ -110,25 +110,31 @@ export default function TableDashNotifications(props) {
 
 
     React.useEffect(() => {
-        fetch("https://sfqlqf-3000.csb.app/v1/notifications")
-            .then((response) => response.json())
-            .then(data => {
-                // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+        const fetchData = () => {
+            fetch("https://sfqlqf-3000.csb.app/v1/notifications")
+                .then((response) => response.json())
+                .then(data => {
+                    // Mapeie os dados para criar uma nova propriedade 'id' para cada item
 
-                const newDataFormatada = data.map(item => ({
-                    ...item,
-                    id: item._id,
-                }));
+                    const newDataFormatada = data.map(item => ({
+                        ...item,
+                        id: item._id,
+                    }));
 
-                updateRowsFormatadas(newDataFormatada);
-                updateRows(newDataFormatada)
-            })
-            // .then(data => updateRows(data))
-            .catch((err) => {
-                console.log(err.message);
-            });
+                    updateRowsFormatadas(newDataFormatada);
+                    updateRows(newDataFormatada)
+                })
+                // .then(data => updateRows(data))
+                .catch((err) => {
+                    console.log(err.message);
+                });
 
-        updateChangedNotificationState(true)
+            updateChangedNotificationState(true)
+
+            setTimeout(fetchData, 10000);
+        }
+
+        fetchData();
     }, [])
 
 
@@ -138,7 +144,7 @@ export default function TableDashNotifications(props) {
 
         for (let i = 0; i < 2; i++) {
 
-            console.log(rowsFormatadas)
+            // console.log(rowsFormatadas)
 
             if (rowsFormatadas.length > 0) {
 
@@ -199,8 +205,8 @@ export default function TableDashNotifications(props) {
         },
     ];
 
-    console.log("rows[0] ")
-    console.log(rows[0])
+    // console.log("rows[0] ")
+    // console.log(rows[0])
 
     return (
         <>
