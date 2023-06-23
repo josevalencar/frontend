@@ -9,7 +9,7 @@ function Model(props) {
   const earthRef = useRef()
 
   useFrame(() => {
-    earthRef.current.rotation.y += 0.004
+    earthRef.current.rotation.y += 0.010
   })
 
   return (
@@ -56,8 +56,8 @@ function Marker({ children, ...props }) {
 export default function Loading() {
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Canvas camera={{ position: [-5, 0, 5], fov: 50 }} style={{ width: '600px', height: '600px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <Canvas camera={{ position: [-5, 0, 5], fov: 50 }} style={{ width: '100%', height: '50%' }}>
           <ambientLight intensity={0.5} />
           <Model position={[0, 0.25, 0]} />
           <Environment preset="city" />

@@ -9,29 +9,35 @@ import { ResponsiveBar } from '@nivo/bar'
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-const MyResponsiveBar = () => {
-    const [barData, setBarData] = useState([]);
+const MyResponsiveBar = ({ sectors }) => {
+    // const [barData, setBarData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('https://sfqlqf-3000.csb.app/v1/sectors/esps');
-                const dataFromBackend = await response.json();
+    const barData = sectors.map((item) => ({
+        "setor": item.name,
+        "tablets": item.esps.length,
+        "tablets color": "hsl(338, 70%, 50%)"
+    }));
 
-                const newData = dataFromBackend.map((item) => ({
-                    "setor": item.name,
-                    "tablets": item.esps.length,
-                    "tablets color": "hsl(338, 70%, 50%)"
-                }));
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await fetch('https://sfqlqf-3000.csb.app/v1/sectors/esps');
+    //             const dataFromBackend = await response.json();
 
-                setBarData(newData);
-            } catch (error) {
-                console.error('Erro ao obter os dados do backend:', error);
-            }
-        };
+    //             const newData = dataFromBackend.map((item) => ({
+    //                 "setor": item.name,
+    //                 "tablets": item.esps.length,
+    //                 "tablets color": "hsl(338, 70%, 50%)"
+    //             }));
 
-        fetchData();
-    }, []);
+    //             setBarData(newData);
+    //         } catch (error) {
+    //             console.error('Erro ao obter os dados do backend:', error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
 
     return (
 

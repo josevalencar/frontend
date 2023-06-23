@@ -1,22 +1,4 @@
-const BASE_URL = 'https://sfqlqf-3000.csb.app/v1/';
-
-const normalizeFilter = (filter) => {
-    let stringfiedFilter = '';
-    if(filter) {
-        if(typeof filter == 'string'){
-            if(filter.includes('=')){
-                stringfiedFilter = filter
-            }else {
-                stringfiedFilter = `filter=${filter}`
-            }
-        } else if(typeof filter == 'object'){
-            stringfiedFilter = Object.entries(filter).map(entrie => {
-                return `${entrie[0]}=${entrie[1]}`
-            }).join('&');
-        }
-    }
-    return stringfiedFilter;
-}
+import { BASE_URL, normalizeFilter } from "./Service";
 
 export const getSetoresWithEsps = (filter) => {
     return new Promise((resolve, reject) => {
