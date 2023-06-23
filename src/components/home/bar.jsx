@@ -9,12 +9,13 @@ import { ResponsiveBar } from '@nivo/bar'
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-const MyResponsiveBar = ({ sectors }) => {
+const MyResponsiveBar = ({ isAI, sectors }) => {
     // const [barData, setBarData] = useState([]);
-
+    console.log("sectors")
+    console.log(sectors)
     const barData = sectors.map((item) => ({
         "setor": item.name,
-        "tablets": item.esps.length,
+        "tablets": isAI ? item.iaEsps.length : item.esps.length,
         "tablets color": "hsl(338, 70%, 50%)"
     }));
 
@@ -97,18 +98,16 @@ const MyResponsiveBar = ({ sectors }) => {
             axisTop={null}
             axisRight={null}
             axisBottom={{
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: 'Tablets',
+                tickValues: [],
+                legend: 'N° de Tablets',
                 legendPosition: 'middle',
-                legendOffset: 32
+                legendOffset: 12
             }}
             axisLeft={{
                 tickSize: 10,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'Setores',
+                // legend: 'Setores',
                 legendPosition: 'middle',
                 legendOffset: -40
             }}
