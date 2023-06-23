@@ -27,7 +27,7 @@ const CreateMaintainer = (props) => {
 
         e.preventDefault(); // Prevent the default form submission behavior
 
-        fetch("https://2d1oh9-3000.csb.app/v1/maintainers/", {
+        fetch("https://sfqlqf-3000.csb.app/v1/maintainers/", {
             method: "POST",
             headers:{'Content-Type': 'application/json'},
             body: JSON.stringify({

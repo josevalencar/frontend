@@ -27,7 +27,7 @@ const UpdateMaintainer = (props) => {
 
         e.preventDefault(); // Prevent the default form submission behavior
 
-        fetch("https://2d1oh9-3000.csb.app/v1/maintainers/" + props.manutentor._id, {
+        fetch("https://sfqlqf-3000.csb.app/v1/maintainers/" + props.manutentor._id, {
             method: "PUT",
             headers:{'Content-Type': 'application/json'},
             body: JSON.stringify({

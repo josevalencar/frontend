@@ -12,7 +12,7 @@ const TableTablet = () => {
   const [rowsFormatadas, updateRowsFormatadas] = useState([])
   const [rows, updateRows] = useState([]);
   let params = useParams();
-  let url = "https://2d1oh9-3000.csb.app/v1/historics?orderBy=createdAt-desc";
+  let url = "https://sfqlqf-3000.csb.app/v1/historics?orderBy=createdAt-desc";
 
   useEffect(() => {
     fetch(url)
