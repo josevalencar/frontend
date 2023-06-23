@@ -59,6 +59,7 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
     const [sector, updateSector] = useState('');
     const [valores, updateValores] = useState([]);
     const [sectorId, updateSectorId] = useState('');
+    
 
     const handleEdit = (e) => {
         // Lógica para criar o roteador com os dados fornecidos
@@ -68,7 +69,7 @@ const CustomModalEdit = ({ open, handleClose, editarRoteador, routerID }) => {
         console.log('SectorId: ', sectorId);
 
         e.preventDefault();
-        editarRoteador({ routerName, macAddress, sector, sectorId });
+        editarRoteador({ routerName, macAddress, routerID, sectorId });
         setRouterName('');
         setMacAddress('');
         updateSector('');
