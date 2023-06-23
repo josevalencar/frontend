@@ -10,7 +10,7 @@ import AlertDialog from './modalDelete';
 const TableRoteador = ({ roteadores, editarRoteador, deletarRoteador }) => {
     const rows = roteadores.map((roteador, index) => ({
         id: index,
-        nome: roteador.routerName,
+        nome: roteador.routerName || 'Sem nome',
         macAddress: roteador.macAddress,
         routerID: roteador._id
     }));
