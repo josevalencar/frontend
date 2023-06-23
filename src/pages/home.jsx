@@ -41,23 +41,29 @@ const Home = (props) => {
     setIsLoadingRouters(true);
 
     const fetchData = async () => {
-      setEsps(await getEsps());
-      setIsLoadingEsps(false);
+      try{
 
-      setMaintainers(await getMaintainers());
-      setIsLoadingMaintainers(false);
+        setEsps(await getEsps(props.isAI, ''));
+        setIsLoadingEsps(false);
 
-      setSectors(await getSetoresWithEsps());
-      setIsLoadingSectors(false);
+        setMaintainers(await getMaintainers());
+        setIsLoadingMaintainers(false);
 
-      setRouters(await getRouters());
-      setIsLoadingRouters(false);
+        setSectors(await getSetoresWithEsps());
+        setIsLoadingSectors(false);
 
-      setHistorics(await getHistorics());
-      setIsLoadingHistorics(false);
+        setRouters(await getRouters());
+        setIsLoadingRouters(false);
 
-      setTimeout(fetchData, 7000);
-    };
+        setHistorics(await getHistorics());
+        setIsLoadingHistorics(false);
+
+        setTimeout(fetchData, 12000);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    
 
     fetchData();
 
@@ -68,9 +74,9 @@ const Home = (props) => {
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       {isLoadingEsps && isLoadingHistorics && isLoadingSectors && isLoadingMaintainers && isLoadingRouters ? <Loading /> : <>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "10vh" }}>
-          <div style={{ width: "58%", height: "60%", display: "flex", justifyContent: "center", alignItems: "center", marginLeft: "50px" }}>
+          <div style={{ width: "69%", height: "67%", display: "flex", justifyContent: "center", alignItems: "center", marginLeft: "50px", marginTop: '-5%' }}>
             {/* <Kpis /> */}
-            <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: "10%" }}>
               <div style={{ flex: "1", height: "100%" }}>
                 {!isLoadingMaintainers ? <Kpi
                   ammount={maintainers.length}
@@ -94,7 +100,7 @@ const Home = (props) => {
                   icon={<RouterIcon sx={{ width: "50%", height: "50%" }} />}
                 /> : null}
               </div>
-              <div style={{ flex: "1", height: "100%" }}>
+              <div style={{ flex: "1", height: "100%", width: '100%' }}>
                 {!isLoadingEsps && !isLoadingHistorics ? <Kpi
                   ammount={(() => {
                     if (!historics.length) return 0;
@@ -116,11 +122,11 @@ const Home = (props) => {
               </div>
             </div>
           </div>
-          <div style={{ width: "30%", height: "300%", marginLeft: "100px", marginRight: "60px" }}>
+          <div style={{ width: "30%", height: "300%", marginLeft: "2%", marginRight: "2%" }}>
             <TableDashNotifications updateHaveUnread={props.updateHaveUnread} />
             <div style={{ width: "110%" }}>
               <div style={{ height: "300px" }}>
-                {!isLoadingSectors ? <MyResponsiveBar sectors={sectors} /> : <Loading />}
+                {!isLoadingSectors ? <MyResponsiveBar isAI={props.isAI} sectors={sectors} /> : <Loading />}
               </div>
               <div style={{ height: "260px" }}>
                 {!isLoadingEsps ? <MyResponsivePie esps={esps} /> : <Loading />}
@@ -129,8 +135,8 @@ const Home = (props) => {
           </div>
         </div>
         <div style={{ display: "flex", height: "25vh", marginTop: "4%" }}>
-          <div style={{ width: "60%", height: "100%", marginLeft: "2vw" }}>
-            {!isLoadingSectors && !isLoadingHistorics ? <DbmPorSetorPorHora sectors={sectors} historics={historics} /> : <Loading />}
+          <div style={{ width: "70%", height: "100%", marginLeft: "2vw" }}>
+            {!isLoadingSectors && !isLoadingHistorics ? <DbmPorSetorPorHora sectors={sectors} historics={historics} isAI={props.isAI} /> : <Loading />}
           </div>
         </div>
         <div style={{ display: "flex", height: "calc(65vh - 3% - 25vh)", marginTop: "0.5%" }}>

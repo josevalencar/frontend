@@ -2,7 +2,7 @@ import { ResponsiveLine } from '@nivo/line';
 import { useState, useEffect } from 'react';
 import dateToSeconds from '../../helpers/dateToMinutes';
 
-const DbmPorSetorPorHora = ({ sectors, historics }) => {
+const DbmPorSetorPorHora = ({ sectors, historics, isAI }) => {
 
   // const [data, setData] = useState([]);
   // const [sectors, setSectors] = useState([]);
@@ -64,8 +64,9 @@ const DbmPorSetorPorHora = ({ sectors, historics }) => {
         let numberOfHistorics = 0;
         let firstTime = null;
         historics.map((historic) => {
-          if (historic.espSector !== null) {
-            if (historic.espSector._id === sector._id && dateToSeconds(historic.createdAt) <= currentDate - 60 * i && dateToSeconds(historic.createdAt) >= currentDate - 60 * (i + 1)) {
+
+          if ( (isAI ? historic.iaEspSector : historic.espSector) !== null) {
+            if ((isAI ? historic.iaEspSector._id : historic.espSector._id ) === sector._id && dateToSeconds(historic.createdAt) <= currentDate - 60 * i && dateToSeconds(historic.createdAt) >= currentDate - 60 * (i + 1)) {
               /*dataForSector.push({x : historic.createdAt.slice(11,16),
                                   y: parseInt(historic.wifiPotency)})*/
               if (firstTime === null) {
@@ -143,11 +144,12 @@ const DbmPorSetorPorHora = ({ sectors, historics }) => {
       useMesh={true}
       legends={[
         {
-          anchor: 'bottom-right',
-          direction: 'column',
+          
+          anchor: 'top',
+          direction: 'row',
           justify: false,
-          translateX: 100,
-          translateY: 0,
+          translateX: 0,
+          translateY: -50,
           itemsSpacing: 0,
           itemDirection: 'left-to-right',
           itemWidth: 80,
