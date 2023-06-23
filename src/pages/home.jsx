@@ -41,23 +41,29 @@ const Home = (props) => {
     setIsLoadingRouters(true);
 
     const fetchData = async () => {
-      setEsps(await getEsps(props.isAI, ''));
-      setIsLoadingEsps(false);
+      try{
 
-      setMaintainers(await getMaintainers());
-      setIsLoadingMaintainers(false);
+        setEsps(await getEsps(props.isAI, ''));
+        setIsLoadingEsps(false);
 
-      setSectors(await getSetoresWithEsps());
-      setIsLoadingSectors(false);
+        setMaintainers(await getMaintainers());
+        setIsLoadingMaintainers(false);
 
-      setRouters(await getRouters());
-      setIsLoadingRouters(false);
+        setSectors(await getSetoresWithEsps());
+        setIsLoadingSectors(false);
 
-      setHistorics(await getHistorics());
-      setIsLoadingHistorics(false);
+        setRouters(await getRouters());
+        setIsLoadingRouters(false);
 
-      setTimeout(fetchData, 7000);
-    };
+        setHistorics(await getHistorics());
+        setIsLoadingHistorics(false);
+
+        setTimeout(fetchData, 12000);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    
 
     fetchData();
 
