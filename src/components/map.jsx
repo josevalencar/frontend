@@ -70,12 +70,12 @@ const MapaFabrica = () => {
 
   const open = Boolean(anchorEl);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const handleIconClick = (setorName) => {
-    navigate("/sectorTablets/" + setorName);
+  const handleIconClick = (id) => {
+    navigate("/sectorTablets/" + id);
   };
-  
+
 
   return (
     <div>
@@ -144,7 +144,7 @@ const MapaFabrica = () => {
                       data-setor-name={setor.name}
                       onMouseEnter={handlePopoverOpen}
                       onMouseLeave={handlePopoverClose}
-                      onClick={ () => handleIconClick(setor.name)}
+                      onClick={() => handleIconClick(setor._id)}
                     />
                   </div>
                 )
