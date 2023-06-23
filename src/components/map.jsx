@@ -138,6 +138,7 @@ const MapaFabrica = ({ sectorsWithEsps }) => {
                     top: setor.mapY * 100 + '%',
                     transform: 'translate(-50%, -50%)',
                   }}
+                  key={setor._id}
                 >
                   <LocationOnIcon sx={{ color: setor.esps.length ? '#2d8517' : '#000000', fontSize: '24px' }} aria-owns={open ? 'mouse-over-popover' : undefined}
                     aria-haspopup="true"

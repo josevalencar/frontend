@@ -44,29 +44,13 @@ export default function TableDashNotifications(props) {
     const [changedNotificationState, updateChangedNotificationState] = React.useState(false);
 
 
-    React.useEffect(() => {
-
-        // console.log("o update state chamou o useEffect")
-        // console.log("changedNotificationState: ")
-        // console.log(changedNotificationState)
-
-        if (changedNotificationState == true) {
-            // console.log("changedNotifications == true")
-            fetch("https://sfqlqf-3000.csb.app/v1/notifications")
-                .then((response) => response.json())
-                .then(data => {
-                    // Mapeie os dados para criar uma nova propriedade 'id' para cada item
-                    const uncheckedNotification = data.some(item => {
-                        return item.state === 'unchecked';
-                    });
-                    // console.log("uncheckedNotification: ")
-                    // console.log(uncheckedNotification)
-                    props.updateHaveUnread(uncheckedNotification)
-                })
-            updateChangedNotificationState(false)
-        }
-
-    }, [, changedNotificationState])
+    if (changedNotificationState == true && rows && rows.length) {
+        const uncheckedNotification = rows.some(item => {
+            return item.state === 'unchecked';
+        });
+        props.updateHaveUnread(uncheckedNotification)
+        updateChangedNotificationState(false)
+    }
 
 
     function UpdateState(row, newState) {
@@ -111,66 +95,59 @@ export default function TableDashNotifications(props) {
 
     React.useEffect(() => {
         const fetchData = () => {
-            fetch("https://sfqlqf-3000.csb.app/v1/notifications")
-                .then((response) => response.json())
-                .then(data => {
-                    // Mapeie os dados para criar uma nova propriedade 'id' para cada item
+            try {
+                fetch("https://sfqlqf-3000.csb.app/v1/notifications")
+                    .then((response) => response.json())
+                    .then(data => {
+                        // Mapeie os dados para criar uma nova propriedade 'id' para cada item
 
-                    const newDataFormatada = data.map(item => ({
-                        ...item,
-                        id: item._id,
-                    }));
+                        const newDataFormatada = data.map(item => ({
+                            ...item,
+                            id: item._id,
+                        }));
 
-                    updateRowsFormatadas(newDataFormatada);
-                    updateRows(newDataFormatada)
-                })
-                // .then(data => updateRows(data))
-                .catch((err) => {
-                    console.log(err.message);
-                });
+                        updateRowsFormatadas(newDataFormatada);
+                        updateRows(newDataFormatada)
 
-            updateChangedNotificationState(true)
+                        let returnArray = [];
+                        if (rowsFormatadas.length > 0) {
+                            for (let i = 0; i < 2; i++) {
+                                if (rowsFormatadas[i]) {
+                                    returnArray.push(
+                                        createData(rowsFormatadas[i].id,
+                                            rowsFormatadas[i].content,
+                                            rowsFormatadas[i].state
+                                        ))
+                                }
 
-            setTimeout(fetchData, 10000);
+                            }
+
+
+                            updateRows(returnArray)
+                        }
+                        else {
+                            updateRowsFormatadas(rows)
+                        }
+                    })
+                    // .then(data => updateRows(data))
+                    .catch((err) => {
+                        console.log(err.message);
+                    });
+
+                updateChangedNotificationState(true)
+
+                setTimeout(fetchData, 10000);
+            } catch (error) {
+                console.error(error);
+            }
+
         }
 
         fetchData();
     }, [])
 
-
-    React.useEffect(() => {
-        let returnArray = [];
-        let modalsArray = [];
-
-        for (let i = 0; i < 2; i++) {
-
-            // console.log(rowsFormatadas)
-
-            if (rowsFormatadas.length > 0) {
-
-                returnArray.push(
-                    createData(rowsFormatadas[i].id,
-                        rowsFormatadas[i].content,
-                        rowsFormatadas[i].state
-                        // <DeleteIcon
-                        //     style={{ cursor: 'pointer' }}
-                        //     onClick={() => handleDeleteRow(notification.id)}
-                        // />
-                    ))
-                updateRows(returnArray)
-            }
-            else {
-                updateRowsFormatadas(rows)
-            }
-
-        }
-
-    }, [rowsFormatadas])
-
-
     function createData(id, content, state) {
         return { id, content, state };
-
     }
 
 
